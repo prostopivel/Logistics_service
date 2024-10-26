@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0u3rJ6SIxQkuGmkMddx6aUH7KRUd4Sp1nnABvJa9GjWd9QHJE+F5gNVbKxpmkHm+cHK9N2tV+TLq0rT7gDf2Tg==",
+  "dgSpecHash": "lov1U6dQCzzZSUkBtefBdBMpvqSKdBIMwEF7kTRqjGkx7NA8LmSLC9UIRXDJrmSBQOIRpo5KrJw5+m848P/t2A==",
   "success": true,
-  "projectFilePath": "D:\\Logistics service\\Taxi-App\\Logistics service.csproj",
+  "projectFilePath": "D:\\Logistics service\\Logistics_service\\Logistics service.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Pavel\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Pavel\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

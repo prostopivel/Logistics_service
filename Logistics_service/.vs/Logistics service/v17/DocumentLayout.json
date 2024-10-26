@@ -1,58 +1,70 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Logistics service\\Taxi-App\\",
+  "WorkspaceRootPath": "D:\\Logistics service\\Logistics_service\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\taxi-app\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\taxi-app\\views\\shared\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\shared\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\taxi-app\\views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\taxi-app\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Taxi-App\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Taxi-App\\views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\taxi-app\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|d:\\logistics service\\taxi-app\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Logistics_service\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Taxi-App\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Logistics_service\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Logistics_service\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Logistics_service\\views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\shared\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\shared\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Logistics_service\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\taxi-app\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\taxi-app\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Taxi-App\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Logistics_service\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Taxi-App\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -62,41 +74,79 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Error.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\Error.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\Error.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\Error.cshtml",
-              "RelativeToolTip": "Views\\Shared\\Error.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-26T12:36:33.315Z",
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-26T12:59:50.44Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
+              "Title": "_ViewStart.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\_ViewStart.cshtml",
+              "RelativeDocumentMoniker": "Views\\_ViewStart.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\_ViewStart.cshtml",
+              "RelativeToolTip": "Views\\_ViewStart.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-26T12:59:24.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-26T12:57:42.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Error.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\Error.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Error.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\Error.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Error.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-26T12:36:33.315Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "_ViewImports.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\_ViewImports.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewImports.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\_ViewImports.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\_ViewImports.cshtml",
               "RelativeToolTip": "Views\\_ViewImports.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAYAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-10-26T12:12:16.805Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "_ValidationScriptsPartial.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "RelativeToolTip": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -105,63 +155,61 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "_Layout.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_Layout.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAABuAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-10-26T12:11:52.709Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "ErrorViewModel.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Models\\ErrorViewModel.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\ErrorViewModel.cs",
               "RelativeDocumentMoniker": "Models\\ErrorViewModel.cs",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Models\\ErrorViewModel.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\ErrorViewModel.cs",
               "RelativeToolTip": "Models\\ErrorViewModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAbAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-26T12:11:41.344Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-26T12:11:41.344Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Controllers\\HomeController.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Controllers\\HomeController.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\HomeController.cs",
               "RelativeToolTip": "Controllers\\HomeController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-26T12:11:29.845Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-26T12:11:29.845Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\Home\\Index.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Home\\Index.cshtml",
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAZAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAABrAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-10-26T12:11:05.707Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "_ValidationScriptsPartial.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "RelativeToolTip": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -169,11 +217,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "_Layout.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_Layout.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACUAAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -181,11 +229,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 4,
               "Title": "_ViewStart.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\_ViewStart.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\_ViewStart.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewStart.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\_ViewStart.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\_ViewStart.cshtml",
               "RelativeToolTip": "Views\\_ViewStart.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -193,11 +241,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "_ViewImports.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Views\\_ViewImports.cshtml",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewImports.cshtml",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Views\\_ViewImports.cshtml",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\_ViewImports.cshtml",
               "RelativeToolTip": "Views\\_ViewImports.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -205,11 +253,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Controllers\\HomeController.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Controllers\\HomeController.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\HomeController.cs",
               "RelativeToolTip": "Controllers\\HomeController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -217,16 +265,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Taxi-App\\Program.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\Logistics service\\Taxi-App\\Program.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Program.cs",
               "RelativeToolTip": "Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-26T11:39:46.088Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-26T11:39:46.088Z"
             }
           ]
         }

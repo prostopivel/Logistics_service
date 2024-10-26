@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Logistics service\\Taxi-App\\Logistics service.csproj": {}
+    "D:\\Logistics service\\Logistics_service\\Logistics service.csproj": {}
   },
   "projects": {
-    "D:\\Logistics service\\Taxi-App\\Logistics service.csproj": {
+    "D:\\Logistics service\\Logistics_service\\Logistics service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Logistics service\\Taxi-App\\Logistics service.csproj",
+        "projectUniqueName": "D:\\Logistics service\\Logistics_service\\Logistics service.csproj",
         "projectName": "Logistics service",
-        "projectPath": "D:\\Logistics service\\Taxi-App\\Logistics service.csproj",
+        "projectPath": "D:\\Logistics service\\Logistics_service\\Logistics service.csproj",
         "packagesPath": "C:\\Users\\Pavel\\.nuget\\packages\\",
-        "outputPath": "D:\\Logistics service\\Taxi-App\\obj\\",
+        "outputPath": "D:\\Logistics service\\Logistics_service\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
