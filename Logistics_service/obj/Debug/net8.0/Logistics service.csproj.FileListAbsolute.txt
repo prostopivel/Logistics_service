@@ -288,3 +288,13 @@ D:\Logistics service\Logistics_service\obj\Debug\net8.0\refint\Logistics service
 D:\Logistics service\Logistics_service\obj\Debug\net8.0\Logistics service.pdb
 D:\Logistics service\Logistics_service\obj\Debug\net8.0\Logistics service.genruntimeconfig.cache
 D:\Logistics service\Logistics_service\obj\Debug\net8.0\ref\Logistics service.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\System.IO.Pipelines.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\System.Text.Encodings.Web.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\System.Text.Json.dll
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+D:\Logistics service\Logistics_service\obj\Debug\net8.0\Logistics service.sourcelink.json
