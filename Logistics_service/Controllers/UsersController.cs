@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Logistics_service.Data;
 using Logistics_service.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Logistics_service.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator, Manager")]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -39,9 +41,29 @@ namespace Logistics_service.Controllers
             return user;
         }
 
-        // POST: api/users
-        [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(User user)
+        // POST: api/users/customer
+        [HttpPost("customer")]
+        public async Task<ActionResult<Customer>> CreateCustomer(Customer user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        }
+
+        // POST: api/users/manager
+        [HttpPost("manager")]
+        public async Task<ActionResult<Manager>> CreateManager(Manager user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        }
+
+        // POST: api/users/administrator
+        [HttpPost("administrator")]
+        public async Task<ActionResult<Administrator>> CreateAdministrator(Administrator user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();

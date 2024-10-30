@@ -2,9 +2,6 @@
 {
     public class Administrator : User
     {
-        public List<Order>? AllOrders { get; set; }
-        public List<Vehicle>? Vehicles { get; set; }
-
         public void ViewAllOrders()
         {
             // Логика просмотра всех заказов

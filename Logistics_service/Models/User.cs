@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Logistics_service.Models
 {
@@ -11,8 +12,8 @@ namespace Logistics_service.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Role is required")]
-        [StringLength(50, ErrorMessage = "Role cannot be longer than 50 characters")]
-        public string Role { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public UserRole Role { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
@@ -21,8 +22,6 @@ namespace Logistics_service.Models
         [Required(ErrorMessage = "Password hash is required")]
         [MinLength(8, ErrorMessage = "Password must be longer than 8 characters")]
         public string PasswordHash { get; set; }
-
-        public List<Notification>? Notifications { get; set; }
 
         public void Login()
         {
@@ -33,5 +32,12 @@ namespace Logistics_service.Models
         {
             // Логика выхода из системы
         }
+    }
+
+    public enum UserRole
+    {
+        Customer,
+        Manager,
+        Administrator
     }
 }

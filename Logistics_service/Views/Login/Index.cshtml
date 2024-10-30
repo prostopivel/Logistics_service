@@ -1,0 +1,28 @@
+﻿@model Logistics_service.Models.LoginRequest
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+</head>
+<body>
+    <h1>Вход в систему</h1>
+    <form asp-controller="Auth" asp-action="Login" method="post">
+        <div asp-validation-summary="All">
+            <div>
+                <h2>Введите логин:</h2>
+                <input type="text" asp-for="Email" id="email" /><br />
+            </div>
+            <div>
+                <h2>Введите пароль:</h2>
+                <input type="password" asp-for="Password" id="password" /><br />
+            </div>
+            <div>
+                <input type="submit" value="Войти" /><br />
+            </div>
+        </div>
+    </form>
+</body>
+</html>

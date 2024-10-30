@@ -4,8 +4,6 @@ namespace Logistics_service.Models
 {
     public class Manager : User
     {
-        public List<Vehicle>? AssignedVehicles { get; set; }
-
         public void AssignVehicle(Customer customer, Vehicle vehicle)
         {
             // Логика назначения машины заказчику

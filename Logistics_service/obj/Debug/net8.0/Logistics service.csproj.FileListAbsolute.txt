@@ -298,3 +298,4 @@ D:\Logistics service\Logistics_service\bin\Debug\net8.0\System.Text.Encodings.We
 D:\Logistics service\Logistics_service\bin\Debug\net8.0\System.Text.Json.dll
 D:\Logistics service\Logistics_service\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 D:\Logistics service\Logistics_service\obj\Debug\net8.0\Logistics service.sourcelink.json
+D:\Logistics service\Logistics_service\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

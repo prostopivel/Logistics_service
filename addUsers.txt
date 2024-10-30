@@ -1,0 +1,3 @@
+curl -X POST https://localhost:7020/api/users/administrator -H "Content-Type: application/json" -d "{\"name\": \"Admin User\", \"role\": \"Administrator\", \"email\": \"admin.user@example.com\", \"passwordHash\": \"hashed_password\"}"
+curl -X POST https://localhost:7020/api/users/customer -H "Content-Type: application/json" -d "{\"name\": \"Customer User\", \"role\": \"Customer\", \"email\": \"customer.user@example.com\", \"passwordHash\": \"hashed_password\", \"address\": \"123 Main St\"}"
+curl -X POST https://localhost:7020/api/users/manager -H "Content-Type: application/json" -d "{\"name\": \"Manager User\", \"role\": \"Manager\", \"email\": \"manager.user@example.com\", \"passwordHash\": \"hashed_password\"}"
