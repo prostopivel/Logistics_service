@@ -2,8 +2,85 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h2 class="text-center">Добро пожаловать в Logistic</h2>
-    <p class="text-center">Сервис для заказа транспорта для различных целей в любую точку России и Беларуси</p>
-    <p>Войти <a href="api/login">здесь</a></p>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logistic Service</title>
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const role = urlParams.get('role');
+
+        window.onload = function () {
+            var currentUrl = window.location.href;
+            var loginLink = document.querySelector('a[href*="api/auth/login"]');
+            loginLink.href += encodeURIComponent(currentUrl.split('?')[0]);
+
+            if (token && role) {
+                localStorage.setItem('token', token);
+                localStorage.setItem('role', role);
+
+                let customerLink = document.querySelector('a[href*="api/dashboard/customer"]');
+                let managerLink = document.querySelector('a[href*="api/dashboard/manager"]');
+                let adminLink = document.querySelector('a[href*="api/dashboard/admin"]');
+
+                customerLink.href = `/api/dashboard/customer?token=${encodeURIComponent(token)}&role=${encodeURIComponent(role)}`;
+                managerLink.href = `/api/dashboard/manager?token=${encodeURIComponent(token)}&role=${encodeURIComponent(role)}`;
+                adminLink.href = `/api/dashboard/admin?token=${encodeURIComponent(token)}&role=${encodeURIComponent(role)}`;
+
+                switch (role) {
+                    case 'Administrator':
+                        customerLink.parentElement.classList.remove('hidden');
+                        managerLink.parentElement.classList.remove('hidden');
+                        adminLink.parentElement.classList.remove('hidden');
+                        break;
+                    case 'Manager':
+                        customerLink.parentElement.classList.remove('hidden');
+                        managerLink.parentElement.classList.remove('hidden');
+                        adminLink.parentElement.classList.add('hidden');
+                        break;
+                    case 'Customer':
+                        customerLink.parentElement.classList.remove('hidden');
+                        managerLink.parentElement.classList.add('hidden');
+                        adminLink.parentElement.classList.add('hidden');
+                        break;
+                    default:
+                        customerLink.parentElement.classList.add('hidden');
+                        managerLink.parentElement.classList.add('hidden');
+                        adminLink.parentElement.classList.add('hidden');
+                        break;
+                }
+            } else {
+                let customerLink = document.querySelector('a[href*="api/dashboard/customer"]');
+                let managerLink = document.querySelector('a[href*="api/dashboard/manager"]');
+                let adminLink = document.querySelector('a[href*="api/dashboard/admin"]');
+
+                customerLink.parentElement.classList.add('hidden');
+                managerLink.parentElement.classList.add('hidden');
+                adminLink.parentElement.classList.add('hidden');
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="text-center">
+        <h2 class="text-center">Добро пожаловать в Logistic</h2>
+        <p class="text-center">Сервис для заказа транспорта для различных целей в любую точку России и Беларуси</p>
+        <p>Войти <a href="/api/auth/login?returnUrl=">здесь</a></p>
+    </div>
+    <div>
+        <p class="hidden">Для Заказчика <a href="/api/dashboard/customer?token=&role=">здесь</a></p>
+        <p class="hidden">Для Менеджера <a href="/api/dashboard/manager?token=&role=">здесь</a></p>
+        <p class="hidden">Для Администратора <a href="/api/dashboard/admin?token=&role=">здесь</a></p>
+    </div>
+</body>
+</html>

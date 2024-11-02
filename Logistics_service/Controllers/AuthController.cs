@@ -9,7 +9,8 @@ namespace Logistics_service.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    [Authorize]
+    public class AuthController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly string _secretKey;
@@ -24,35 +25,47 @@ namespace Logistics_service.Controllers
             _audience = configuration["Jwt:Audience"];
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] string email, [FromForm] string password)
+        //api/auth/login
+        [HttpGet("login")]
+        [AllowAnonymous]
+        public IActionResult Login(string returnUrl = null)
         {
-            var request = new LoginRequest
+            ViewBag.returnUrl = returnUrl ?? Url.Content("~/");
+            return View();
+        }
+
+        //api/auth/login
+        [HttpPost("login")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([FromForm] LoginRequest request, string returnUrl = null)
+        {
+            if (!ModelState.IsValid)
             {
-                Email = email,
-                Password = password
-            };
+                return View("Login", request);
+            }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null || !VerifyPassword(user, request.Password))
             {
-                return Unauthorized();
+                return View("Unauthorized");
             }
 
             var token = JwtTokenGenerator.GenerateToken(user, _secretKey, _issuer, _audience);
 
-            switch (user.Role)
+            // Сохраняем токен в куки
+            Response.Cookies.Append("jwtToken", token, new CookieOptions
             {
-                case UserRole.Administrator:
-                    return RedirectToAction("AdminDashboard", "Dashboard");
-                case UserRole.Manager:
-                    return RedirectToAction("ManagerDashboard", "Dashboard");
-                case UserRole.Customer:
-                    return RedirectToAction("CustomerDashboard", "Dashboard");
-                default:
-                    return Unauthorized();
-            }
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.Now.AddMinutes(30)
+            });
+
+            if (returnUrl == null)
+                return Redirect($"/home/index?token={token}&role={user.Role}");
+            else
+                return Redirect($"{returnUrl}?token={token}&role={user.Role}");
         }
 
         private bool VerifyPassword(User user, string password)
