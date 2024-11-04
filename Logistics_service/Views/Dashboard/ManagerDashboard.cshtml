@@ -6,8 +6,26 @@
 <html>
 <head>
     <title>Manager Dashboard</title>
+    <style>
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+            .button-container button {
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+    </style>
 </head>
 <body>
     <h1>Manager Dashboard</h1>
+    <div class="button-container">
+        <button onclick="location.href='@Url.Action("AssignCar", "Manager")'">Назначить машину</button>
+        <button onclick="location.href='@Url.Action("UpdateRoute", "Manager")'">Обновить маршрут</button>
+        <button onclick="location.href='@Url.Action("InformClient", "Manager")'">Информировать клиента</button>
+    </div>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿namespace Logistics_service
+﻿namespace Logistics_service.JWT
 {
     public class JwtSettings
     {

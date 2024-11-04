@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using Logistics_service.Data;
 using Logistics_service.Models;
 using Microsoft.AspNetCore.Authorization;
+using Logistics_service.JWT;
 
 namespace Logistics_service.Controllers
 {
@@ -53,14 +53,6 @@ namespace Logistics_service.Controllers
             }
 
             var token = JwtTokenGenerator.GenerateToken(user, _secretKey, _issuer, _audience);
-
-            // Сохраняем токен в куки
-            Response.Cookies.Append("jwtToken", token, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                Expires = DateTime.Now.AddMinutes(30)
-            });
 
             if (returnUrl == null)
                 return Redirect($"/home/index?token={token}&role={user.Role}");
