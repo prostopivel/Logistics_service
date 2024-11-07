@@ -1,8 +1,7 @@
 using Logistics_service.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace Logistics_service
 {
@@ -21,6 +20,8 @@ namespace Logistics_service
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession(); // Добавляем middleware для сессий
 
             using (var scope = app.Services.CreateScope())
             {
@@ -74,20 +75,22 @@ namespace Logistics_service
                     policy.RequireRole("Customer"));
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
+            // Настройка сессий
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = "https://LogisticService",
-                ValidAudience = "https://LogisticService/api",
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("logisticServiceByPavelBykov2005!"))
-            };
-        });
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            // Настройка аутентификации
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/Auth/Login");
+                    options.AccessDeniedPath = new PathString("/Auth/AccessDenied");
+                });
         }
     }
 }

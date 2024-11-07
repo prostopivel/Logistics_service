@@ -1,28 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Logistics_service.Data;
+﻿using Logistics_service.Data;
 using Logistics_service.Models;
 using Microsoft.AspNetCore.Authorization;
-using Logistics_service.JWT;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
+using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Logistics_service.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class AuthController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly string _secretKey;
-        private readonly string _issuer;
-        private readonly string _audience;
 
-        public AuthController(ApplicationDbContext context, IConfiguration configuration)
+        public AuthController(ApplicationDbContext context)
         {
             _context = context;
-            _secretKey = configuration["Jwt:SecretKey"];
-            _issuer = configuration["Jwt:Issuer"];
-            _audience = configuration["Jwt:Audience"];
         }
 
         //api/auth/login
@@ -52,12 +47,28 @@ namespace Logistics_service.Controllers
                 return View("Unauthorized");
             }
 
-            var token = JwtTokenGenerator.GenerateToken(user, _secretKey, _issuer, _audience);
+            string nonce = DigestAlg.GenerateNonce();
+
+            string digestResponse = DigestAlg.GenerateDigestResponse(user.Email, nonce);
+
+            // Сохранение информации о пользователе в сессии
+            HttpContext.Session.SetString("Username", user.Email);
+            HttpContext.Session.SetString("DigestResponse", digestResponse);
+            HttpContext.Session.SetString("Nonce", nonce);
+            HttpContext.Session.SetString("Role", user.Role.ToString());
+
+            Response.Cookies.Append("Digest", digestResponse, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
+
 
             if (returnUrl == null)
-                return Redirect($"/home/index?token={token}&role={user.Role}");
+                return Redirect($"/home/index");
             else
-                return Redirect($"{returnUrl}?token={token}&role={user.Role}");
+                return Redirect(returnUrl);
         }
 
         private bool VerifyPassword(User user, string password)

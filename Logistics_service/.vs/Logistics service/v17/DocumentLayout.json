@@ -3,184 +3,32 @@
   "WorkspaceRootPath": "D:\\Logistics service\\Logistics_service\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\controllers\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\dashboard\\customerdashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\dashboard\\customerdashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\dashboard\\managerdashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\dashboard\\managerdashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\controllers\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\admin\\viewallorders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\admin\\viewallorders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\dashboard\\admindashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\dashboard\\admindashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\customer\\viewmap.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\customer\\viewmap.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\customer\\createrequest.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\customer\\createrequest.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\customer\\vieworders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\customer\\vieworders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\manager\\informclient.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\manager\\informclient.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\manager\\updateroute.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\manager\\updateroute.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\manager\\assigncar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\manager\\assigncar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\admin\\viewmap.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\admin\\viewmap.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\admin\\managetransport.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\admin\\managetransport.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\admin\\addmanager.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\admin\\addmanager.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\admin\\viewallmanagers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\admin\\viewallmanagers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\admin\\viewallcustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\admin\\viewallcustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\controllers\\errorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\errorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\digestalg.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:digestalg.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\shared\\notfound.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\shared\\notfound.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\views\\shared\\unauthorized.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\shared\\unauthorized.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|d:\\logistics service\\logistics_service\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\logistics service.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:logistics service.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|D:\\Logistics service\\Logistics_service\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Taxi-App.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\administrator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\administrator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\map.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\map.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|D:\\Logistics service\\Logistics_service\\models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{43B0A611-94B5-4FFE-9780-A6061090F764}|Logistics service.csproj|solutionrelative:models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Logistics service\\Logistics_service\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Logistics service\\Logistics_service\\jwtvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:jwtvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Logistics service\\Logistics_service\\jwttokengenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:jwttokengenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -190,428 +38,89 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Customer.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\Customer.cs",
-              "RelativeDocumentMoniker": "Controllers\\Customer.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\Customer.cs",
-              "RelativeToolTip": "Controllers\\Customer.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-04T17:41:23.567Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Manager.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\Manager.cs",
-              "RelativeDocumentMoniker": "Controllers\\Manager.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\Manager.cs",
-              "RelativeToolTip": "Controllers\\Manager.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAJAAAA",
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-04T17:40:14.843Z",
+              "WhenOpened": "2024-11-06T09:21:53.766Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Admin.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\Admin.cs",
-              "RelativeDocumentMoniker": "Controllers\\Admin.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\Admin.cs",
-              "RelativeToolTip": "Controllers\\Admin.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAowBkAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-04T17:37:14.937Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ViewMap.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Customer\\ViewMap.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\ViewMap.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Customer\\ViewMap.cshtml",
-              "RelativeToolTip": "Views\\Customer\\ViewMap.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:36:11.524Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "CreateRequest.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Customer\\CreateRequest.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\CreateRequest.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Customer\\CreateRequest.cshtml",
-              "RelativeToolTip": "Views\\Customer\\CreateRequest.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:36:01.993Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "ViewOrders.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Customer\\ViewOrders.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\ViewOrders.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Customer\\ViewOrders.cshtml",
-              "RelativeToolTip": "Views\\Customer\\ViewOrders.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:35:47.142Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "InformClient.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Manager\\InformClient.cshtml",
-              "RelativeDocumentMoniker": "Views\\Manager\\InformClient.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Manager\\InformClient.cshtml",
-              "RelativeToolTip": "Views\\Manager\\InformClient.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:35:18.969Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "UpdateRoute.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Manager\\UpdateRoute.cshtml",
-              "RelativeDocumentMoniker": "Views\\Manager\\UpdateRoute.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Manager\\UpdateRoute.cshtml",
-              "RelativeToolTip": "Views\\Manager\\UpdateRoute.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:35:07.529Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "AssignCar.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Manager\\AssignCar.cshtml",
-              "RelativeDocumentMoniker": "Views\\Manager\\AssignCar.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Manager\\AssignCar.cshtml",
-              "RelativeToolTip": "Views\\Manager\\AssignCar.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:34:45.745Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "ViewMap.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewMap.cshtml",
-              "RelativeDocumentMoniker": "Views\\Admin\\ViewMap.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewMap.cshtml",
-              "RelativeToolTip": "Views\\Admin\\ViewMap.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:33:45.301Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "ManageTransport.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ManageTransport.cshtml",
-              "RelativeDocumentMoniker": "Views\\Admin\\ManageTransport.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ManageTransport.cshtml",
-              "RelativeToolTip": "Views\\Admin\\ManageTransport.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:33:26.013Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ViewAllOrders.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewAllOrders.cshtml",
-              "RelativeDocumentMoniker": "Views\\Admin\\ViewAllOrders.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewAllOrders.cshtml",
-              "RelativeToolTip": "Views\\Admin\\ViewAllOrders.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:33:16.238Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "AddManager.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\AddManager.cshtml",
-              "RelativeDocumentMoniker": "Views\\Admin\\AddManager.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\AddManager.cshtml",
-              "RelativeToolTip": "Views\\Admin\\AddManager.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:33:04.706Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "ViewAllManagers.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewAllManagers.cshtml",
-              "RelativeDocumentMoniker": "Views\\Admin\\ViewAllManagers.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewAllManagers.cshtml",
-              "RelativeToolTip": "Views\\Admin\\ViewAllManagers.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:32:54.667Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "ViewAllCustomers.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewAllCustomers.cshtml",
-              "RelativeDocumentMoniker": "Views\\Admin\\ViewAllCustomers.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Admin\\ViewAllCustomers.cshtml",
-              "RelativeToolTip": "Views\\Admin\\ViewAllCustomers.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T17:32:44.994Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ManagerDashboard.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Dashboard\\ManagerDashboard.cshtml",
-              "RelativeDocumentMoniker": "Views\\Dashboard\\ManagerDashboard.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Dashboard\\ManagerDashboard.cshtml",
-              "RelativeToolTip": "Views\\Dashboard\\ManagerDashboard.cshtml",
-              "ViewState": "AQIAABIAAAAAAAAAAAAAAB4AAAAHAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-02T10:32:57.849Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CustomerDashboard.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Dashboard\\CustomerDashboard.cshtml",
-              "RelativeDocumentMoniker": "Views\\Dashboard\\CustomerDashboard.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Dashboard\\CustomerDashboard.cshtml",
-              "RelativeToolTip": "Views\\Dashboard\\CustomerDashboard.cshtml",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAAB0AAAAHAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-02T10:32:38.796Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "ErrorController.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\ErrorController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ErrorController.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\ErrorController.cs",
-              "RelativeToolTip": "Controllers\\ErrorController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAsAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-02T10:11:55.116Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "Unauthorized.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\Unauthorized.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\Unauthorized.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\Unauthorized.cshtml",
-              "RelativeToolTip": "Views\\Shared\\Unauthorized.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAA2AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-02T10:11:26.533Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "NotFound.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\NotFound.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\NotFound.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Shared\\NotFound.cshtml",
-              "RelativeToolTip": "Views\\Shared\\NotFound.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAxAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-02T10:10:23.445Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 42,
-              "Title": "JwtSettings.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\JwtSettings.cs",
-              "RelativeDocumentMoniker": "JwtSettings.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\JwtSettings.cs",
-              "RelativeToolTip": "JwtSettings.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-31T10:06:29.995Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 43,
-              "Title": "JwtValidator.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\JwtValidator.cs",
-              "RelativeDocumentMoniker": "JwtValidator.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\JwtValidator.cs",
-              "RelativeToolTip": "JwtValidator.cs",
-              "ViewState": "AQIAACUAAAAAAAAAAAAQwDQAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-31T10:01:09.051Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AdminDashboard.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Dashboard\\AdminDashboard.cshtml",
-              "RelativeDocumentMoniker": "Views\\Dashboard\\AdminDashboard.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Dashboard\\AdminDashboard.cshtml",
-              "RelativeToolTip": "Views\\Dashboard\\AdminDashboard.cshtml",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAAB4AAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-31T08:30:50.03Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "DashboardController.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\DashboardController.cs",
-              "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\DashboardController.cs",
-              "RelativeToolTip": "Controllers\\DashboardController.cs",
-              "ViewState": "AQIAADAAAAAAAAAAAAAiwEYAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T19:38:22.098Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
               "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Home\\Index.cshtml",
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AQIAACEAAAAAAAAAAAAAAGcAAAAHAAAA",
+              "ViewState": "AQIAABMAAAAAAAAAAAAgwFcAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-30T11:31:00.963Z",
+              "WhenOpened": "2024-11-06T09:19:43.21Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "LoginRequest.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\LoginRequest.cs",
-              "RelativeDocumentMoniker": "Models\\LoginRequest.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\LoginRequest.cs",
-              "RelativeToolTip": "Models\\LoginRequest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAsAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T11:18:39.577Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Views\\Auth\\Login.cshtml",
-              "RelativeDocumentMoniker": "Views\\Auth\\Login.cshtml",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Views\\Auth\\Login.cshtml",
-              "RelativeToolTip": "Views\\Auth\\Login.cshtml",
-              "ViewState": "AQIAAAQAAAAAAAAAAADwvyUAAAAHAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-30T11:17:26.947Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AQIAAC8AAAAAAAAAAAAgwDYAAABeAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-29T15:12:33.165Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 44,
-              "Title": "JwtTokenGenerator.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\JwtTokenGenerator.cs",
-              "RelativeDocumentMoniker": "JwtTokenGenerator.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\JwtTokenGenerator.cs",
-              "RelativeToolTip": "JwtTokenGenerator.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAxwBkAAAAtAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-29T15:04:27.046Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "Logistics service.csproj",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Logistics service.csproj",
-              "RelativeDocumentMoniker": "Logistics service.csproj",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Logistics service.csproj",
-              "RelativeToolTip": "Logistics service.csproj",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-10-29T13:58:53.88Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "Controllers\\UsersController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABYAAAAZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T12:26:42.411Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAA0AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-10-27T11:27:38.775Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Logistics service\\Logistics_service\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAABcAAAAAAAAAAAAIwCIAAABCAAAA",
+              "ViewState": "AQIAAEYAAAAAAAAAAAAgwE8AAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:26:53.865Z"
+              "WhenOpened": "2024-11-05T19:09:43.389Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 0,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "Controllers\\DashboardController.cs",
+              "ViewState": "AQIAACkAAAAAAAAAAAAtwDgAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T17:29:20.929Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AQIAABIAAAAAAAAAAAAQwEEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T17:29:05.215Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DigestAlg.cs",
+              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\DigestAlg.cs",
+              "RelativeDocumentMoniker": "DigestAlg.cs",
+              "ToolTip": "D:\\Logistics service\\Logistics_service\\DigestAlg.cs",
+              "RelativeToolTip": "DigestAlg.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAawBAAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T16:36:54.571Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -620,138 +129,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-26T11:39:46.088Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 35,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAcAAAAuAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:22:34.579Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 37,
-              "Title": "Map.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Map.cs",
-              "RelativeDocumentMoniker": "Models\\Map.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Map.cs",
-              "RelativeToolTip": "Models\\Map.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAATAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:02:34.653Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 41,
-              "Title": "Notification.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Notification.cs",
-              "RelativeDocumentMoniker": "Models\\Notification.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Notification.cs",
-              "RelativeToolTip": "Models\\Notification.cs",
-              "ViewState": "AQIAAAUAAAAAAAAAAAAAwAYAAAATAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:02:16.426Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 40,
-              "Title": "Point.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Point.cs",
-              "RelativeDocumentMoniker": "Models\\Point.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Point.cs",
-              "RelativeToolTip": "Models\\Point.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAA1wBAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:01:59.241Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 36,
-              "Title": "Route.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Route.cs",
-              "RelativeDocumentMoniker": "Models\\Route.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Route.cs",
-              "RelativeToolTip": "Models\\Route.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAAAwBEAAAAbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:01:40.879Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 39,
-              "Title": "Vehicle.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Vehicle.cs",
-              "RelativeDocumentMoniker": "Models\\Vehicle.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Vehicle.cs",
-              "RelativeToolTip": "Models\\Vehicle.cs",
-              "ViewState": "AQIAAAoAAAAAAAAAAAAzwAYAAAATAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:01:17.564Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 38,
-              "Title": "Order.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Order.cs",
-              "RelativeDocumentMoniker": "Models\\Order.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Order.cs",
-              "RelativeToolTip": "Models\\Order.cs",
-              "ViewState": "AQIAAAcAAAAAAAAAAAAQwA0AAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:00:59.547Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "Administrator.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Administrator.cs",
-              "RelativeDocumentMoniker": "Models\\Administrator.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Administrator.cs",
-              "RelativeToolTip": "Models\\Administrator.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:00:37.301Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 34,
-              "Title": "Manager.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Manager.cs",
-              "RelativeDocumentMoniker": "Models\\Manager.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Manager.cs",
-              "RelativeToolTip": "Models\\Manager.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T11:00:15.518Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 29,
-              "Title": "Customer.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\Customer.cs",
-              "RelativeDocumentMoniker": "Models\\Customer.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\Customer.cs",
-              "RelativeToolTip": "Models\\Customer.cs",
-              "ViewState": "AQIAAAIAAAAAAAAAAAAUwAYAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T10:59:26.201Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 33,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\Logistics service\\Logistics_service\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Models\\User.cs",
-              "ToolTip": "D:\\Logistics service\\Logistics_service\\Models\\User.cs",
-              "RelativeToolTip": "Models\\User.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA0AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-27T10:44:43.623Z"
             }
           ]
         }

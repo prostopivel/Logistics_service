@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Logistics_service.JWT;
+﻿using Logistics_service.Data;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace Logistics_service.Controllers
 {
@@ -11,63 +10,53 @@ namespace Logistics_service.Controllers
     public class DashboardController : Controller
     {
         private IConfiguration _configuration;
+
         public DashboardController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         [HttpGet("admin")]
-        public IActionResult AdminDashboard(string token = null, string role = null)
+        public IActionResult AdminDashboard()
         {
-            var jwtSettings = _configuration.GetSection("Jwt").Get<JwtSettings>();
-
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(role))
-                return View("Unauthorized");
-
-            var validator = new JwtValidator(jwtSettings.SecretKey, jwtSettings.Issuer, jwtSettings.Audience);
-            if (validator.ValidateToken(token, "Administrator"))
-            {
-                return View();
-            }
-            else
-                return View("Unauthorized");
+            return AuthenticateAndAuthorize("AdminDashboard");
         }
 
         [HttpGet("manager")]
-        public IActionResult ManagerDashboard(string token = null, string role = null)
+        public IActionResult ManagerDashboard()
         {
-            var jwtSettings = _configuration.GetSection("Jwt").Get<JwtSettings>();
-
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(role))
-                return View("Unauthorized");
-
-            var validator = new JwtValidator(jwtSettings.SecretKey, jwtSettings.Issuer, jwtSettings.Audience);
-            if (validator.ValidateToken(token, "Manager")
-                || validator.ValidateToken(token, "Administrator"))
-            {
-                return View();
-            }
-            else
-                return View("Unauthorized");
+            return AuthenticateAndAuthorize("ManagerDashboard");
         }
 
         [HttpGet("customer")]
-        public IActionResult CustomerDashboard(string token = null, string role = null)
+        public IActionResult CustomerDashboard()
         {
-            var jwtSettings = _configuration.GetSection("Jwt").Get<JwtSettings>();
+            return AuthenticateAndAuthorize("CustomerDashboard");
+        }
 
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(role))
-                return View("Unauthorized");
-
-            var validator = new JwtValidator(jwtSettings.SecretKey, jwtSettings.Issuer, jwtSettings.Audience);
-            if (validator.ValidateToken(token, "Customer")
-                || validator.ValidateToken(token, "Manager")
-                || validator.ValidateToken(token, "Administrator"))
+        private IActionResult AuthenticateAndAuthorize(string viewName)
+        {
+            var digestCookie = Request.Cookies["Digest"];
+            if (digestCookie != null)
             {
-                return View();
+                var authHeader = $"Digest {digestCookie}";
+                var authParams = authHeader.Substring("Digest ".Length).Split(',');
+                var nonce = authParams.FirstOrDefault(p => p.Trim().StartsWith("nonce="))?.Split('=')[1].Trim('"');
+                var username = authParams.FirstOrDefault(p => p.Trim().StartsWith("username="))?.Split('=')[1].Trim('"');
+                var response = authParams.FirstOrDefault(p => p.Trim().StartsWith("response="))?.Split('=')[1].Trim('"');
+
+                 if (DigestAlg.ValidateNonce(nonce) && DigestAlg.ValidateDigest(response, username, nonce))
+                {
+                    // Удаляем nonce после успешной аутентификации
+                    DigestAlg.RemoveNonce(nonce);
+                    return View(viewName);
+                }
             }
-            else
-                return View("Unauthorized");
+
+            // Генерация нового nonce и отправка заголовка WWW-Authenticate
+            string newNonce = DigestAlg.GenerateNonce();
+            Response.Headers.Add("WWW-Authenticate", $"Digest realm=\"example\", nonce=\"{newNonce}\", qop=\"auth\", algorithm=MD5");
+            return Unauthorized();
         }
     }
 }

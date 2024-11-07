@@ -28,31 +28,23 @@
             }
     </style>
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        const role = urlParams.get('role');
-
         window.onload = function () {
-            var currentUrl = window.location.href;
-            var loginLink = document.querySelector('a[href*="api/auth/login"]');
-            loginLink.href += encodeURIComponent(currentUrl.split('?')[0]);
+            const role = '@ViewBag.Role';
+            const digest = '@ViewBag.Digest';
 
-            if (token && role) {
-                localStorage.setItem('token', token);
-                localStorage.setItem('role', role);
-
+            if (role && digest) {
                 let customerButton = document.querySelector('button[onclick*="api/dashboard/customer"]');
                 let managerButton = document.querySelector('button[onclick*="api/dashboard/manager"]');
                 let adminButton = document.querySelector('button[onclick*="api/dashboard/admin"]');
 
                 customerButton.onclick = function () {
-                    location.href = `/api/dashboard/customer?token=${encodeURIComponent(token)}&role=${encodeURIComponent(role)}`;
+                    location.href = `/api/dashboard/customer`;
                 };
                 managerButton.onclick = function () {
-                    location.href = `/api/dashboard/manager?token=${encodeURIComponent(token)}&role=${encodeURIComponent(role)}`;
+                    location.href = `/api/dashboard/manager`;
                 };
                 adminButton.onclick = function () {
-                    location.href = `/api/dashboard/admin?token=${encodeURIComponent(token)}&role=${encodeURIComponent(role)}`;
+                    location.href = `/api/dashboard/admin`;
                 };
 
                 switch (role) {
@@ -93,12 +85,12 @@
     <div class="text-center">
         <h2 class="text-center">Добро пожаловать в Logistic</h2>
         <p class="text-center">Сервис для заказа транспорта для различных целей в любую точку России и Беларуси</p>
-        <p>Войти <a href="/api/auth/login?returnUrl=">здесь</a></p>
+        <p>Войти <a href="/api/auth/login?returnUrl=@Url.Action("Index", "Home")">здесь</a></p>
     </div>
     <div class="button-container">
-        <button class="hidden" onclick="location.href='/api/dashboard/customer?token=&role='">Продолжить как заказчик</button>
-        <button class="hidden" onclick="location.href='/api/dashboard/manager?token=&role='">Продолжить как менеджер</button>
-        <button class="hidden" onclick="location.href='/api/dashboard/admin?token=&role='">Продолжить как администратор</button>
+        <button class="hidden" onclick="location.href='/api/dashboard/customer?digest=&role='">Продолжить как заказчик</button>
+        <button class="hidden" onclick="location.href='/api/dashboard/manager?digest=&role='">Продолжить как менеджер</button>
+        <button class="hidden" onclick="location.href='/api/dashboard/admin?digest=&role='">Продолжить как администратор</button>
     </div>
 </body>
 </html>

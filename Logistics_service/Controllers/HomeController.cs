@@ -1,27 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Logistics_service.Models;
 
 namespace Logistics_service.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
-            return View();
-        }
+            var username = HttpContext.Session.GetString("Username");
+            var digestResponse = HttpContext.Session.GetString("DigestResponse");
+            var role = HttpContext.Session.GetString("Role");
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ViewBag.Role = role;
+            ViewBag.Digest = digestResponse;
+
+            return View();
         }
     }
 }
