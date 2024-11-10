@@ -33,11 +33,4 @@ namespace Logistics_service.Models
             // Логика выхода из системы
         }
     }
-
-    public enum UserRole
-    {
-        Customer,
-        Manager,
-        Administrator
-    }
 }

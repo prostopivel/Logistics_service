@@ -2,8 +2,14 @@
 
 namespace Taxi_App.Controllers
 {
-    public class Customer : Controller
+    [Route("api/[controller]")]
+    public class CustomerController : Controller
     {
+        public IActionResult Index(string digest)
+        {
+            return View();
+        }
+
         public IActionResult ViewOrders()
         {
             return View();

@@ -6,11 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using System;
 using Microsoft.AspNetCore.Http;
+using Azure;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Logistics_service.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AuthController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,7 +23,7 @@ namespace Logistics_service.Controllers
             _context = context;
         }
 
-        //api/auth/login
+        //auth/login
         [HttpGet("login")]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
@@ -29,7 +32,7 @@ namespace Logistics_service.Controllers
             return View();
         }
 
-        //api/auth/login
+        //auth/login
         [HttpPost("login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -47,28 +50,15 @@ namespace Logistics_service.Controllers
                 return View("Unauthorized");
             }
 
-            string nonce = DigestAlg.GenerateNonce();
+            string digest = GenerateDigest.Generate(user.PasswordHash);
 
-            string digestResponse = DigestAlg.GenerateDigestResponse(user.Email, nonce);
-
-            // Сохранение информации о пользователе в сессии
-            HttpContext.Session.SetString("Username", user.Email);
-            HttpContext.Session.SetString("DigestResponse", digestResponse);
-            HttpContext.Session.SetString("Nonce", nonce);
-            HttpContext.Session.SetString("Role", user.Role.ToString());
-
-            Response.Cookies.Append("Digest", digestResponse, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict
-            });
-
+            HttpContext.Session.SetString(digest, user.Role.ToString());
 
             if (returnUrl == null)
-                return Redirect($"/home/index");
+                return RedirectToAction("ViewIndex", "Home", new { digest });
+                //return Redirect($"/home/index?digest={digest}");
             else
-                return Redirect(returnUrl);
+                return Redirect($"{returnUrl}?digest={digest}");
         }
 
         private bool VerifyPassword(User user, string password)

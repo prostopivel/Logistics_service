@@ -1,62 +1,66 @@
 ﻿using Logistics_service.Data;
+using Logistics_service.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 
 namespace Logistics_service.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class DashboardController : Controller
     {
-        private IConfiguration _configuration;
-
-        public DashboardController(IConfiguration configuration)
+        public IActionResult Admin(string digest)
         {
-            _configuration = configuration;
+            if (AuthenticateAndAuthorize("AdminDashboard", digest))
+                return View("AdminDashboard", digest);
+            else
+                return View("Unauthorized");
         }
 
-        [HttpGet("admin")]
-        public IActionResult AdminDashboard()
+        public IActionResult Manager(string digest)
         {
-            return AuthenticateAndAuthorize("AdminDashboard");
+            if (AuthenticateAndAuthorize("ManagerDashboard", digest))
+                return View("ManagerDashboard", digest);
+            else
+                return View("Unauthorized");
         }
 
-        [HttpGet("manager")]
-        public IActionResult ManagerDashboard()
+        public IActionResult Customer(string digest)
         {
-            return AuthenticateAndAuthorize("ManagerDashboard");
+            if (AuthenticateAndAuthorize("CustomerDashboard", digest))
+                return View("CustomerDashboard", digest);
+            else
+                return View("Unauthorized"); 
         }
 
-        [HttpGet("customer")]
-        public IActionResult CustomerDashboard()
+        private bool AuthenticateAndAuthorize(string viewName, string digest)
         {
-            return AuthenticateAndAuthorize("CustomerDashboard");
-        }
+            string? userRole = HttpContext.Session.GetString(digest);
 
-        private IActionResult AuthenticateAndAuthorize(string viewName)
-        {
-            var digestCookie = Request.Cookies["Digest"];
-            if (digestCookie != null)
+            if (userRole == null || !Enum.TryParse(typeof(UserRole), userRole, out var result))
+                return false;
+            switch (viewName)
             {
-                var authHeader = $"Digest {digestCookie}";
-                var authParams = authHeader.Substring("Digest ".Length).Split(',');
-                var nonce = authParams.FirstOrDefault(p => p.Trim().StartsWith("nonce="))?.Split('=')[1].Trim('"');
-                var username = authParams.FirstOrDefault(p => p.Trim().StartsWith("username="))?.Split('=')[1].Trim('"');
-                var response = authParams.FirstOrDefault(p => p.Trim().StartsWith("response="))?.Split('=')[1].Trim('"');
-
-                 if (DigestAlg.ValidateNonce(nonce) && DigestAlg.ValidateDigest(response, username, nonce))
-                {
-                    // Удаляем nonce после успешной аутентификации
-                    DigestAlg.RemoveNonce(nonce);
-                    return View(viewName);
-                }
+                case "AdminDashboard":
+                    if ((UserRole)result == UserRole.Administrator)
+                        return true;
+                    else
+                        return false;
+                case "ManagerDashboard":
+                    if ((UserRole)result == UserRole.Administrator 
+                        || (UserRole)result == UserRole.Manager)
+                        return true;
+                    else
+                        return false;
+                case "CustomerDashboard":
+                    if ((UserRole)result == UserRole.Administrator
+                        || (UserRole)result == UserRole.Manager
+                        || (UserRole)result == UserRole.Customer)
+                        return true;
+                    else
+                        return false;
+                default:
+                    return false;
             }
-
-            // Генерация нового nonce и отправка заголовка WWW-Authenticate
-            string newNonce = DigestAlg.GenerateNonce();
-            Response.Headers.Add("WWW-Authenticate", $"Digest realm=\"example\", nonce=\"{newNonce}\", qop=\"auth\", algorithm=MD5");
-            return Unauthorized();
         }
     }
 }

@@ -91,6 +91,8 @@ namespace Logistics_service
                     options.LoginPath = new PathString("/Auth/Login");
                     options.AccessDeniedPath = new PathString("/Auth/AccessDenied");
                 });
+
+            GenerateDigest.Initialize(configuration);
         }
     }
 }

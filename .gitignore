@@ -3,3 +3,6 @@ obj/
 *.suo
 *.userprefs
 *.vs/
+Logistics_service/.vs/
+Logistics_service/bin/
+Logistics_service/obj/

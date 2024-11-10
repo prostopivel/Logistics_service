@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logistic Service</title>
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+            .button-container button {
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+        window.onload = function () {
+            const digest = '@ViewBag.Digest';
+            const role = '@ViewBag.Role';
+
+            if (role && digest) {
+                let customerButton = document.querySelector('button[onclick*="dashboard/customer"]');
+                let managerButton = document.querySelector('button[onclick*="dashboard/manager"]');
+                let adminButton = document.querySelector('button[onclick*="dashboard/admin"]');
+
+                customerButton.onclick = function () {
+                    location.href = `/dashboard/customer?digest=${encodeURIComponent(digest)}`;
+                };
+                managerButton.onclick = function () {
+                    location.href = `/dashboard/manager?digest=${encodeURIComponent(digest)}`;
+                };
+                adminButton.onclick = function () {
+                    location.href = `/dashboard/admin?digest=${encodeURIComponent(digest)}`;
+                };
+
+                switch (role) {
+                    case 'Administrator':
+                        customerButton.classList.remove('hidden');
+                        managerButton.classList.remove('hidden');
+                        adminButton.classList.remove('hidden');
+                        break;
+                    case 'Manager':
+                        customerButton.classList.remove('hidden');
+                        managerButton.classList.remove('hidden');
+                        adminButton.classList.add('hidden');
+                        break;
+                    case 'Customer':
+                        customerButton.classList.remove('hidden');
+                        managerButton.classList.add('hidden');
+                        adminButton.classList.add('hidden');
+                        break;
+                    default:
+                        customerButton.classList.add('hidden');
+                        managerButton.classList.add('hidden');
+                        adminButton.classList.add('hidden');
+                        break;
+                }
+            } else {
+                let customerButton = document.querySelector('button[onclick*="dashboard/customer"]');
+                let managerButton = document.querySelector('button[onclick*="dashboard/manager"]');
+                let adminButton = document.querySelector('button[onclick*="dashboard/admin"]');
+
+                customerButton.classList.add('hidden');
+                managerButton.classList.add('hidden');
+                adminButton.classList.add('hidden');
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="text-center">
+        <h2 class="text-center">Добро пожаловать в Logistic</h2>
+        <p class="text-center">Сервис для заказа транспорта для различных целей в любую точку России и Беларуси</p>
+        <p>Войти <a href="/auth/login?returnUrl=@Url.Action("ViewIndex", "Home")">здесь</a></p>
+    </div>
+    <div class="button-container">
+        <button class="hidden" onclick="location.href='/dashboard/customer?digest='">Продолжить как заказчик</button>
+        <button class="hidden" onclick="location.href='/dashboard/manager?digest='">Продолжить как менеджер</button>
+        <button class="hidden" onclick="location.href='/dashboard/admin?digest='">Продолжить как администратор</button>
+    </div>
+</body>
+</html>

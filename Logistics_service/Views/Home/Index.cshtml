@@ -6,91 +6,14 @@
 <html>
 <head>
     <title>Logistic Service</title>
-    <style>
-        .text-center {
-            text-align: center;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-            .button-container button {
-                padding: 10px 20px;
-                font-size: 16px;
-                cursor: pointer;
-            }
-    </style>
-    <script>
-        window.onload = function () {
-            const role = '@ViewBag.Role';
-            const digest = '@ViewBag.Digest';
-
-            if (role && digest) {
-                let customerButton = document.querySelector('button[onclick*="api/dashboard/customer"]');
-                let managerButton = document.querySelector('button[onclick*="api/dashboard/manager"]');
-                let adminButton = document.querySelector('button[onclick*="api/dashboard/admin"]');
-
-                customerButton.onclick = function () {
-                    location.href = `/api/dashboard/customer`;
-                };
-                managerButton.onclick = function () {
-                    location.href = `/api/dashboard/manager`;
-                };
-                adminButton.onclick = function () {
-                    location.href = `/api/dashboard/admin`;
-                };
-
-                switch (role) {
-                    case 'Administrator':
-                        customerButton.classList.remove('hidden');
-                        managerButton.classList.remove('hidden');
-                        adminButton.classList.remove('hidden');
-                        break;
-                    case 'Manager':
-                        customerButton.classList.remove('hidden');
-                        managerButton.classList.remove('hidden');
-                        adminButton.classList.add('hidden');
-                        break;
-                    case 'Customer':
-                        customerButton.classList.remove('hidden');
-                        managerButton.classList.add('hidden');
-                        adminButton.classList.add('hidden');
-                        break;
-                    default:
-                        customerButton.classList.add('hidden');
-                        managerButton.classList.add('hidden');
-                        adminButton.classList.add('hidden');
-                        break;
-                }
-            } else {
-                let customerButton = document.querySelector('button[onclick*="api/dashboard/customer"]');
-                let managerButton = document.querySelector('button[onclick*="api/dashboard/manager"]');
-                let adminButton = document.querySelector('button[onclick*="api/dashboard/admin"]');
-
-                customerButton.classList.add('hidden');
-                managerButton.classList.add('hidden');
-                adminButton.classList.add('hidden');
-            }
-        };
-    </script>
 </head>
 <body>
     <div class="text-center">
         <h2 class="text-center">Добро пожаловать в Logistic</h2>
         <p class="text-center">Сервис для заказа транспорта для различных целей в любую точку России и Беларуси</p>
-        <p>Войти <a href="/api/auth/login?returnUrl=@Url.Action("Index", "Home")">здесь</a></p>
+        <p>Войти <a href="/auth/login?returnUrl=@Url.Action("ViewIndex", "Home")">здесь</a></p>
     </div>
     <div class="button-container">
-        <button class="hidden" onclick="location.href='/api/dashboard/customer?digest=&role='">Продолжить как заказчик</button>
-        <button class="hidden" onclick="location.href='/api/dashboard/manager?digest=&role='">Продолжить как менеджер</button>
-        <button class="hidden" onclick="location.href='/api/dashboard/admin?digest=&role='">Продолжить как администратор</button>
     </div>
 </body>
 </html>
