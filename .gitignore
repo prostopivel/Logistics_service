@@ -1,8 +1,11 @@
 bin/
 obj/
+.vs/
 *.suo
 *.userprefs
 *.vs/
 Logistics_service/.vs/
 Logistics_service/bin/
 Logistics_service/obj/
+bin/Debug/net8.0/
+obj/Debug/net8.0/
