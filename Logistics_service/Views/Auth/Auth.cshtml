@@ -1,0 +1,125 @@
+﻿@model Logistics_service.Models.LoginRequest
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <style>
+        .text-danger {
+            color: red;
+        }
+    </style>
+    <!-- Добавляем мета-тег для передачи данных из серверного кода -->
+    <meta name="www-authenticate" content="@ViewBag.WWWAuthenticateHeader" />
+</head>
+<body>
+    <h1>Вход в систему</h1>
+    <form id="loginForm" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div>
+            <h2>Введите логин:</h2>
+            <input type="text" asp-for="Email" id="email" /><br />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div>
+            <h2>Введите пароль:</h2>
+            <input type="password" asp-for="Password" id="password" /><br />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div>
+            <input type="submit" value="Войти" id="loginButton" />
+        </div>
+    </form>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#loginForm').on('submit', function (event) {
+                event.preventDefault(); // Предотвращаем стандартное поведение формы
+
+                var email = $('#email').val();
+                var password = $('#password').val();
+
+                // Получение данных из мета-тега
+                var authenticateHeader = $('meta[name="www-authenticate"]').attr('content');
+                var authenticateParams = parseAuthenticateHeader(authenticateHeader);
+
+                // Формирование дайджест-ответа
+                var response = computeDigestResponse(email, password, authenticateParams);
+
+
+                // Отправка запроса с заголовком Authorization
+                $.ajax({
+                    url: '/Auth/Login',
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Digest ' + response
+                    },
+                    data: {
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // Добавляем CSRF-токен
+                    },
+                    success: function (data) {
+                        // Обработка успешного ответа
+                        alert('Успешный вход!');
+                    },
+                    error: function (xhr, status, error) {
+                        // Обработка ошибки
+                        alert('Ошибка: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        function parseAuthenticateHeader(header) {
+            header = header.replace(/^Digest\s*/, '');
+            var params = {};
+            var parts = header.split(',');
+            parts.forEach(function (part) {
+                var kv = part.split('=');
+                params[kv[0].trim()] = kv[1].replace(/"/g, '').trim();
+            });
+            return params;
+        }
+
+        function computeDigestResponse(username, password, params) {
+            var realm = params.realm;
+            var nonce = params.nonce;
+            var uri = window.location.pathname;
+            var qop = params.qop;
+            var nc = '00000001';
+            var cnonce = generateCnonce();
+
+            var A1 = username + ':' + realm + ':' + password;
+            var A2 = 'POST:' + uri;
+
+            var HA1 = md5(A1);
+            var HA2 = md5(A2);
+
+            var response = md5(HA1 + ':' + nonce + ':' + nc + ':' + cnonce + ':' + qop + ':' + HA2);
+
+            return 'username="' + username + '", realm="' + realm + '", nonce="' + nonce + '", uri="' + uri + '", qop=' + qop + ', nc=' + nc + ', cnonce="' + cnonce + '", response="' + response + '", opaque="' + params.opaque + '"';
+        }
+
+        function generateCnonce() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (var i = 0; i < 8; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+
+        function md5(input) {
+            var hash = CryptoJS.MD5(input);
+            return hash.toString(CryptoJS.enc.Hex);
+        }
+    </script>
+</body>
+</html>

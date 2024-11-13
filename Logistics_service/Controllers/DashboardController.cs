@@ -1,8 +1,5 @@
-﻿using Logistics_service.Data;
-using Logistics_service.Models;
+﻿using Logistics_service.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 
 namespace Logistics_service.Controllers
 {
@@ -29,7 +26,7 @@ namespace Logistics_service.Controllers
             if (AuthenticateAndAuthorize("CustomerDashboard", digest))
                 return View("CustomerDashboard", digest);
             else
-                return View("Unauthorized"); 
+                return View("Unauthorized");
         }
 
         private bool AuthenticateAndAuthorize(string viewName, string digest)
@@ -46,7 +43,7 @@ namespace Logistics_service.Controllers
                     else
                         return false;
                 case "ManagerDashboard":
-                    if ((UserRole)result == UserRole.Administrator 
+                    if ((UserRole)result == UserRole.Administrator
                         || (UserRole)result == UserRole.Manager)
                         return true;
                     else
