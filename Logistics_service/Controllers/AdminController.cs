@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Taxi_App.Controllers
+namespace Logistics_service.Controllers
 {
     [Route("api/[controller]")]
     public class AdminController : Controller

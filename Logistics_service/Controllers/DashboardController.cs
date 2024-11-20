@@ -3,8 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Logistics_service.Controllers
 {
+    [Route("[controller]")]
     public class DashboardController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        public DashboardController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public IActionResult Admin(string digest)
         {
             if (AuthenticateAndAuthorize("AdminDashboard", digest))
@@ -58,6 +66,23 @@ namespace Logistics_service.Controllers
                 default:
                     return false;
             }
+        }
+
+        [HttpGet("dashboard")]
+        public IActionResult Dashboard()
+        {
+            string realm = _configuration["Realm"];
+            string qop = _configuration["Qop"];
+
+
+            var opaque = HttpContext.Session.GetString("Opaque");
+            string nonce = GenerateDigestController.GenerateRandom();
+            HttpContext.Session.SetString(opaque, nonce);
+
+            // Передача данных в представление через ViewBag
+            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\"";
+
+            return View();
         }
     }
 }

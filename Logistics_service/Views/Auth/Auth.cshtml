@@ -48,31 +48,31 @@
                 var email = $('#email').val();
                 var password = $('#password').val();
 
+                sessionStorage.setItem('UserName', email);
+                sessionStorage.setItem('Password', password);
+
                 // Получение данных из мета-тега
                 var authenticateHeader = $('meta[name="www-authenticate"]').attr('content');
                 var authenticateParams = parseAuthenticateHeader(authenticateHeader);
 
-                // Формирование дайджест-ответа
                 var response = computeDigestResponse(email, password, authenticateParams);
-
 
                 // Отправка запроса с заголовком Authorization
                 $.ajax({
-                    url: '/Auth/Login',
+                    url: '/generateDigest/auth',
                     type: 'POST',
                     headers: {
-                        'Authorization': 'Digest ' + response
+                        'Authorization': 'Digest ' + response,
+                        'Content-Type': 'application/json'
                     },
-                    data: {
-                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // Добавляем CSRF-токен
-                    },
+                    data: {},
                     success: function (data) {
-                        // Обработка успешного ответа
                         alert('Успешный вход!');
+                        window.location.href = '/dashboard/dashboard';
                     },
                     error: function (xhr, status, error) {
-                        // Обработка ошибки
-                        alert('Ошибка: ' + xhr.responseText);
+                        var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
+                        alert('Ошибка: ' + errorMessage);
                     }
                 });
             });
