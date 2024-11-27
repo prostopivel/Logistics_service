@@ -9,12 +9,10 @@ namespace Logistics_service.Controllers
     public class DashboardController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _context;
 
-        public DashboardController(IConfiguration configuration, ApplicationDbContext context)
+        public DashboardController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _context = context;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -53,7 +51,6 @@ namespace Logistics_service.Controllers
 
             ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"/dashboard/{role}\", role = \"{role}\"";
 
-            Console.WriteLine("dashboard:Unauthorized");
             return View("Unauthorized");
         }
     }

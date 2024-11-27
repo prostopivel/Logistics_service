@@ -23,12 +23,12 @@
 <body>
     <h1>Admin Dashboard</h1>
     <div class="button-container">
-        <button onclick="location.href='@Url.Action("ViewAllCustomers", "Admin")'">Просмотр всех заказчиков</button>
-        <button onclick="location.href='@Url.Action("ViewAllManagers", "Admin")'">Просмотр всех менеджеров</button>
-        <button onclick="location.href='@Url.Action("AddManager", "Admin")'">Добавление менеджера</button>
-        <button onclick="location.href='@Url.Action("ViewAllOrders", "Admin")'">Просмотр всех заказов</button>
-        <button onclick="location.href='@Url.Action("ManageTransport", "Admin")'">Управление транспортом</button>
-        <button onclick="location.href='@Url.Action("ViewMap", "Admin")'">Просмотр карты</button>
+        <button onclick="location.href='@Url.Action("Admin", "Admin", new { returnUrl = "\\Admin\\viewAllCustomers" })'">Просмотр всех заказчиков</button>
+        <button onclick="location.href='@Url.Action("Admin", "Admin", new { returnUrl = "\\Admin\\viewAllManagers" })'">Просмотр всех менеджеров</button>
+        <button onclick="location.href='@Url.Action("Admin", "Admin", new { returnUrl = "\\Admin\\addManager" })'">Добавление менеджера</button>
+        <button onclick="location.href='@Url.Action("Admin", "Admin", new { returnUrl = "\\Admin\\viewAllOrders" })'">Просмотр всех заказов</button>
+        <button onclick="location.href='@Url.Action("Admin", "Admin", new { returnUrl = "\\Admin\\manageTransport" })'">Управление транспортом</button>
+        <button onclick="location.href='@Url.Action("Admin", "Admin", new { returnUrl = "\\Admin\\viewMap" })'">Просмотр карты</button>
     </div>
 </body>
 </html>

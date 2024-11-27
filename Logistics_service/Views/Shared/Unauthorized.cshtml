@@ -38,14 +38,14 @@
 
             $('#authForm').attr('action', authenticateParams.returnUrl);
 
-            alert(authenticateParams.returnUrl);
-
             var xhr = new XMLHttpRequest();
             xhr.open('GET', authenticateParams.returnUrl, true);
             xhr.setRequestHeader('Authorization', 'Digest ' + digest);
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(xhr.responseText);
+                if (xhr.status === 200) {
+                    document.body.innerHTML = xhr.responseText;
+                } else {
+                    console.error('Ошибка: ' + xhr.statusText);
                 }
             };
             xhr.send();
@@ -57,8 +57,9 @@
             var parts = header.split(',');
             parts.forEach(function (part) {
                 var kv = part.split('=');
-                params[kv[0].Trim()] = kv[1].Replace(/"/g, '').Trim();
+                params[kv[0].trim()] = kv[1].replace(/"/g, '').trim();
             });
+
             return params;
         }
 

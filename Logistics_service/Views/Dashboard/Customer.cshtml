@@ -24,9 +24,9 @@
 <body>
     <h1>Customer Dashboard</h1>
     <div class="button-container">
-        <button onclick="location.href='@Url.Action("ViewOrders", "Customer")'">Посмотреть заказы</button>
-        <button onclick="location.href='@Url.Action("CreateRequest", "Customer")'">Создать запрос</button>
-        <button onclick="location.href='@Url.Action("ViewMap", "Customer")'">Посмотреть карту</button>
+        <button onclick="location.href='@Url.Action("Customer", "Customer", new { returnUrl = "\\Customer\\viewOrders" })'">Посмотреть заказы</button>
+        <button onclick="location.href='@Url.Action("Customer", "Customer", new { returnUrl = "\\Customer\\createRequest" })'">Создать запрос</button>
+        <button onclick="location.href='@Url.Action("Customer", "Customer", new { returnUrl = "\\Customer\\viewMap" })'">Посмотреть карту</button>
     </div>
 </body>
 </html>
