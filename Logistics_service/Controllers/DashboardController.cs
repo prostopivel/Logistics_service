@@ -1,5 +1,7 @@
-﻿using Logistics_service.Models;
+﻿using Logistics_service.Data;
+using Logistics_service.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Logistics_service.Controllers
 {
@@ -7,82 +9,52 @@ namespace Logistics_service.Controllers
     public class DashboardController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
-        public DashboardController(IConfiguration configuration)
+        public DashboardController(IConfiguration configuration, ApplicationDbContext context)
         {
             _configuration = configuration;
+            _context = context;
         }
 
-        public IActionResult Admin(string digest)
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpGet("administrator")]
+        public IActionResult Administrator()
         {
-            if (AuthenticateAndAuthorize("AdminDashboard", digest))
-                return View("AdminDashboard", digest);
-            else
-                return View("Unauthorized");
+            return View();
         }
 
-        public IActionResult Manager(string digest)
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpGet("manager")]
+        public IActionResult Manager()
         {
-            if (AuthenticateAndAuthorize("ManagerDashboard", digest))
-                return View("ManagerDashboard", digest);
-            else
-                return View("Unauthorized");
+            return View();
         }
 
-        public IActionResult Customer(string digest)
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpGet("customer")]
+        public IActionResult Customer()
         {
-            if (AuthenticateAndAuthorize("CustomerDashboard", digest))
-                return View("CustomerDashboard", digest);
-            else
-                return View("Unauthorized");
-        }
-
-        private bool AuthenticateAndAuthorize(string viewName, string digest)
-        {
-            string? userRole = HttpContext.Session.GetString(digest);
-
-            if (userRole == null || !Enum.TryParse(typeof(UserRole), userRole, out var result))
-                return false;
-            switch (viewName)
-            {
-                case "AdminDashboard":
-                    if ((UserRole)result == UserRole.Administrator)
-                        return true;
-                    else
-                        return false;
-                case "ManagerDashboard":
-                    if ((UserRole)result == UserRole.Administrator
-                        || (UserRole)result == UserRole.Manager)
-                        return true;
-                    else
-                        return false;
-                case "CustomerDashboard":
-                    if ((UserRole)result == UserRole.Administrator
-                        || (UserRole)result == UserRole.Manager
-                        || (UserRole)result == UserRole.Customer)
-                        return true;
-                    else
-                        return false;
-                default:
-                    return false;
-            }
+            return View();
         }
 
         [HttpGet("dashboard")]
-        public IActionResult Dashboard()
+        public IActionResult Dashboard(UserRole role)
         {
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
 
-
             var opaque = HttpContext.Session.GetString("Opaque");
-            string nonce = GenerateDigestController.GenerateRandom();
+            if (opaque == null)
+                return View("Unauthorized");
+
+            string nonce = GenerateDigest.GenerateRandom();
             HttpContext.Session.SetString(opaque, nonce);
 
-            // Передача данных в представление через ViewBag
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\"";
+            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"/dashboard/{role}\", role = \"{role}\"";
 
-            return View();
+            Console.WriteLine("dashboard:Unauthorized");
+            return View("Unauthorized");
         }
     }
 }

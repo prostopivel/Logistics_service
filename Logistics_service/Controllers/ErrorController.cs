@@ -2,9 +2,10 @@
 
 namespace Logistics_service.Controllers
 {
+    [Route("[controller]")]
     public class ErrorController : Controller
     {
-        [Route("Error/{statusCode}")]
+        [Route("{statusCode}")]
         public IActionResult HandleError(int statusCode)
         {
             switch (statusCode)
@@ -18,6 +19,12 @@ namespace Logistics_service.Controllers
                 default:
                     return View("Error");
             }
+        }
+
+        [Route("Unauthorized")]
+        public new IActionResult Unauthorized()
+        {
+            return View();
         }
     }
 }

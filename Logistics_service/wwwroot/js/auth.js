@@ -1,33 +1,29 @@
 ﻿function auth() {
+    var email = sessionStorage.getItem('UserName');
+    var password = sessionStorage.getItem('Password');
 
-    var userName = sessionStorage.getItem('UserName');
-    var password = sessionStorage.getItem('Password')
-
-    // Получение данных из мета-тега
     var authenticateHeader = $('meta[name="www-authenticate"]').attr('content');
     var authenticateParams = parseAuthenticateHeader(authenticateHeader);
 
-    // Формирование дайджест-ответа
     var response = computeDigestResponse(email, password, authenticateParams);
 
-
-    // Отправка запроса с заголовком Authorization
     $.ajax({
-        url: '/Auth/Login',
-        type: 'POST',
+        url: authenticateParams.returnUrl,
+        type: 'GET',
         headers: {
             'Authorization': 'Digest ' + response
         },
         data: {
-            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // Добавляем CSRF-токен
         },
         success: function (data) {
-            // Обработка успешного ответа
             alert('Успешный вход!');
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+            }
         },
         error: function (xhr, status, error) {
-            // Обработка ошибки
-            alert('Ошибка: ' + xhr.responseText);
+            var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
+            alert('Ошибка: ' + errorMessage);
         }
     });
 }
@@ -46,10 +42,11 @@ function parseAuthenticateHeader(header) {
 function computeDigestResponse(username, password, params) {
     var realm = params.realm;
     var nonce = params.nonce;
-    var uri = window.location.pathname;
+    var uri = params.returnUrl; //window.location.pathname;
     var qop = params.qop;
     var nc = '00000001';
     var cnonce = generateCnonce();
+    var role = params.role;
 
     var A1 = username + ':' + realm + ':' + password;
     var A2 = 'POST:' + uri;
@@ -59,7 +56,7 @@ function computeDigestResponse(username, password, params) {
 
     var response = md5(HA1 + ':' + nonce + ':' + nc + ':' + cnonce + ':' + qop + ':' + HA2);
 
-    return 'username="' + username + '", realm="' + realm + '", nonce="' + nonce + '", uri="' + uri + '", qop=' + qop + ', nc=' + nc + ', cnonce="' + cnonce + '", response="' + response + '", opaque="' + params.opaque + '"';
+    return 'username="' + username + '", realm="' + realm + '", nonce="' + nonce + '", uri="' + uri + '", qop=' + qop + ', nc=' + nc + ', cnonce="' + cnonce + '", response="' + response + '", opaque="' + params.opaque + '", role="' + role + '"';
 }
 
 function generateCnonce() {

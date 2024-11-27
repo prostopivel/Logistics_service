@@ -5,49 +5,45 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Logistics_service.Models;
 
-namespace Logistics_service.Controllers
+namespace Logistics_service
 {
-    [Route("[controller]")]
-    public class GenerateDigestController : ControllerBase
+    public static class GenerateDigest
     {
-        private IConfiguration _configuration;
-        private ApplicationDbContext _context;
-        private string uri;
+        public static string errorMessage = "Неизвестная ошибка!";
+        public static IConfiguration _configuration;
+        public static ApplicationDbContext _context;
 
-        public GenerateDigestController(IConfiguration configuration, ApplicationDbContext context)
+        public static async Task<bool> Auth(string authHeader,
+            string expectedNonce, IConfiguration configuration, ApplicationDbContext context)
         {
             _configuration = configuration;
             _context = context;
-        }
-
-        [HttpPost("auth")]
-        public async Task<ActionResult> Auth()
-        {
-            var authHeader = Request.Headers["Authorization"].ToString();
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Digest "))
             {
-                return StatusCode(401, "Authorization header is missing or invalid.");
+                errorMessage = "Неправильный дайджест!";
+                return false;
             }
 
             var authParams = ParseAuthorizationHeader(authHeader.Substring("Digest ".Length));
 
-            try
+            var expectedRole = await ValidateDigestToken(authParams, expectedNonce);
+
+            if (expectedRole == null)
             {
-                if (!await ValidateDigestToken(authParams))
-                {
-                    return StatusCode(401, "Invalid digest token.");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
+                return false;
             }
 
-            return Redirect($"{uri}");
+            if (!Enum.TryParse(typeof(UserRole), authParams["role"], true, out var role))
+            {
+                errorMessage = "Неправильная роль!";
+                return false;
+            }
+            return expectedRole == (UserRole)role;
         }
 
-        private async Task<bool> ValidateDigestToken(Dictionary<string, string> authParams)
+        private static async Task<UserRole?> ValidateDigestToken(Dictionary<string, string> authParams, string expectedNonce)
         {
             var username = authParams["username"];
             var nonce = authParams["nonce"];
@@ -55,44 +51,46 @@ namespace Logistics_service.Controllers
             var nc = authParams["nc"];
             var cnonce = authParams["cnonce"];
             var response = authParams["response"];
-            var opaque = authParams["opaque"];
 
-            this.uri = uri;
-
-            var expectedNonce = HttpContext.Session.GetString(opaque);
             if (nonce != expectedNonce)
             {
-                return false;
+                errorMessage = "Неправильный nonce!";
+                return null;
             }
 
             var expectedResponse = await ComputeDigestResponse(username, nonce, uri, nc, cnonce);
 
-            return response == expectedResponse;
+            if (response != expectedResponse?.Item1)
+            {
+                errorMessage = "Неправильный response!";
+                return null;
+            }
+            else
+                return expectedResponse.Item2;
         }
 
-        private async Task<string> ComputeDigestResponse(string username, string nonce, string uri, string nc, string cnonce)
+        private static async Task<Tuple<string, UserRole>?> ComputeDigestResponse(string username, string nonce, string uri, string nc, string cnonce)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == username);
-            var password = string.Empty;
             if (user == null)
-                throw new Exception("User not found!");
-            else
-                password = user.PasswordHash;
+            {
+                errorMessage = "Пользователь не найден!";
+                return null;
+            }
 
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
 
-            var A1 = $"{username}:{realm}:{password}";
             var A2 = $"POST:{uri}";
 
-            var HA1 = ComputeMD5(A1);
+            var HA1 = user.PasswordHash;
             var HA2 = ComputeMD5(A2);
 
             var response = ComputeMD5($"{HA1}:{nonce}:{nc}:{cnonce}:{qop}:{HA2}");
-            return response;
+            return new Tuple<string, UserRole>(response, user.Role);
         }
 
-        private string ComputeMD5(string input)
+        private static string ComputeMD5(string input)
         {
             using (MD5 md5 = MD5.Create())
             {
@@ -102,7 +100,7 @@ namespace Logistics_service.Controllers
             }
         }
 
-        private Dictionary<string, string> ParseAuthorizationHeader(string header)
+        private static Dictionary<string, string> ParseAuthorizationHeader(string header)
         {
             var paramsDict = new Dictionary<string, string>();
             var parts = header.Split(',');

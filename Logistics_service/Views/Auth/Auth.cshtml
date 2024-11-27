@@ -14,7 +14,6 @@
             color: red;
         }
     </style>
-    <!-- Добавляем мета-тег для передачи данных из серверного кода -->
     <meta name="www-authenticate" content="@ViewBag.WWWAuthenticateHeader" />
 </head>
 <body>
@@ -43,7 +42,7 @@
     <script>
         $(document).ready(function () {
             $('#loginForm').on('submit', function (event) {
-                event.preventDefault(); // Предотвращаем стандартное поведение формы
+                event.preventDefault(); 
 
                 var email = $('#email').val();
                 var password = $('#password').val();
@@ -51,24 +50,24 @@
                 sessionStorage.setItem('UserName', email);
                 sessionStorage.setItem('Password', password);
 
-                // Получение данных из мета-тега
                 var authenticateHeader = $('meta[name="www-authenticate"]').attr('content');
                 var authenticateParams = parseAuthenticateHeader(authenticateHeader);
 
                 var response = computeDigestResponse(email, password, authenticateParams);
 
-                // Отправка запроса с заголовком Authorization
                 $.ajax({
-                    url: '/generateDigest/auth',
+                    url: '/auth/login',
                     type: 'POST',
                     headers: {
                         'Authorization': 'Digest ' + response,
                         'Content-Type': 'application/json'
                     },
-                    data: {},
+                    data: { },
                     success: function (data) {
                         alert('Успешный вход!');
-                        window.location.href = '/dashboard/dashboard';
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        }
                     },
                     error: function (xhr, status, error) {
                         var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
@@ -80,7 +79,7 @@
 
         function parseAuthenticateHeader(header) {
             header = header.replace(/^Digest\s*/, '');
-            var params = {};
+            var params = { };
             var parts = header.split(',');
             parts.forEach(function (part) {
                 var kv = part.split('=');

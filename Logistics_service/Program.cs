@@ -1,7 +1,5 @@
 using Logistics_service.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 
 namespace Logistics_service
 {
@@ -15,13 +13,20 @@ namespace Logistics_service
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                GenerateDigest._configuration = services.GetRequiredService<IConfiguration>();
+                GenerateDigest._context = services.GetRequiredService<ApplicationDbContext>();
+            }
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseSession(); // Добавляем middleware для сессий
+            app.UseSession();
 
             using (var scope = app.Services.CreateScope())
             {
@@ -32,8 +37,11 @@ namespace Logistics_service
 
             if (!app.Environment.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 app.UseHsts();
             }
 
@@ -55,6 +63,8 @@ namespace Logistics_service
         {
             services.AddControllersWithViews();
 
+            services.AddScoped<DigestAuthFilter>();
+
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.ClearProviders();
@@ -65,17 +75,6 @@ namespace Logistics_service
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RequireAdministratorRole", policy =>
-                    policy.RequireRole("Administrator"));
-                options.AddPolicy("RequireManagerRole", policy =>
-                    policy.RequireRole("Manager"));
-                options.AddPolicy("RequireCustomerRole", policy =>
-                    policy.RequireRole("Customer"));
-            });
-
-            // Настройка сессий
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -83,14 +82,6 @@ namespace Logistics_service
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-
-            // Настройка аутентификации
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = new PathString("/Auth/Login");
-                    options.AccessDeniedPath = new PathString("/Auth/AccessDenied");
-                });
         }
     }
 }
