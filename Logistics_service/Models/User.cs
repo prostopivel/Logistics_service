@@ -32,5 +32,10 @@ namespace Logistics_service.Models
         {
             // Логика выхода из системы
         }
+
+        public override string ToString()
+        {
+            return string.Format($"{Id, -3}: {Name, -15} | {Email, -25} | {Role, -8}");
+        }
     }
 }

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Logistics_service.Data;
+using Logistics_service.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Logistics_service.Controllers
 {
@@ -6,31 +10,48 @@ namespace Logistics_service.Controllers
     public class AdminController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
-        public AdminController(IConfiguration configuration)
+        public AdminController(IConfiguration configuration, ApplicationDbContext context)
         {
             _configuration = configuration;
+            _context = context;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewAllCustomers")]
-        public IActionResult ViewAllCustomers()
+        public async Task<ActionResult> ViewAllCustomers()
         {
-            return View();
+            return View(await _context.Customers.ToListAsync());
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewAllManagers")]
-        public IActionResult ViewAllManagers()
+        public async Task<ActionResult> ViewAllManagers()
         {
-            return View();
+            return View(await _context.Managers.ToListAsync());
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("addManager")]
         public IActionResult AddManager()
         {
+            ViewBag.Realm = _configuration["Realm"];
             return View();
+        }
+
+        [HttpPost("addManager")]
+        public async Task<ActionResult> AddManager(Manager manager)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Users.Add(manager);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Dashboard", "Dashboard", new { role = UserRole.Administrator });
+            }
+
+            return View(manager);
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
