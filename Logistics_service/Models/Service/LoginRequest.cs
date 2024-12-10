@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Logistics_service.Models
+namespace Logistics_service.Models.Service
 {
     public class LoginRequest
     {

@@ -1,55 +1,54 @@
 ﻿using Logistics_service.Data;
 using Logistics_service.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace Logistics_service.Controllers
 {
     [Route("[controller]")]
-    public class DashboardController : Controller
+    public class ManagerController : Controller
     {
         private readonly IConfiguration _configuration;
 
-        public DashboardController(IConfiguration configuration)
+        public ManagerController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpGet("administrator")]
-        public IActionResult Administrator()
+        [HttpGet("assignCar")]
+        public IActionResult AssignCar()
         {
             return View();
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpGet("updateRoute")]
+        public IActionResult UpdateRoute()
+        {
+            return View();
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpGet("informClient")]
+        public IActionResult InformClient()
+        {
+            return View();
+        }
+
         [HttpGet("manager")]
-        public IActionResult Manager()
-        {
-            return View();
-        }
-
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpGet("customer")]
-        public IActionResult Customer()
-        {
-            return View();
-        }
-
-        [HttpGet("dashboard")]
-        public IActionResult Dashboard(UserRole role)
+        public IActionResult Manager(string returnUrl)
         {
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
 
             var opaque = HttpContext.Session.GetString("Opaque");
             if (opaque == null)
-                return View("Unauthorized");
+                return View("UnauthorizedComletely");
 
             string nonce = GenerateDigest.GenerateRandom();
             HttpContext.Session.SetString(opaque, nonce);
 
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"/dashboard/{role}\", role = \"{role}\"";
+            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"{returnUrl}\", role = \"Manager\"";
 
             return View("Unauthorized");
         }

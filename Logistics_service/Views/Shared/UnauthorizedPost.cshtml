@@ -36,17 +36,16 @@
             $('#authForm').attr('action', authenticateParams.returnUrl);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', authenticateParams.returnUrl, true);
+            xhr.open('POST', authenticateParams.returnUrl, true);
             xhr.setRequestHeader('Authorization', 'Digest ' + digest);
             xhr.onreadystatechange = function () {
                 if (xhr.status === 200) {
-                    document.body.innerHTML = '';
                     document.body.innerHTML = xhr.responseText;
                 } else {
                     console.error('Ошибка: ' + xhr.statusText);
                 }
             };
-            xhr.send();
+            xhr.send(authenticateParams.data);
         }
 
         function parseAuthenticateHeader(header) {
@@ -69,6 +68,7 @@
             var nc = '00000001';
             var cnonce = generateCnonce();
             var role = params.role;
+            var data = params.data;
 
             var A1 = username + ':' + realm + ':' + password;
             var A2 = 'POST:' + uri;
@@ -78,7 +78,7 @@
 
             var response = md5(HA1 + ':' + nonce + ':' + nc + ':' + cnonce + ':' + qop + ':' + HA2);
 
-            return 'username="' + username + '", realm="' + realm + '", nonce="' + nonce + '", uri="' + uri + '", qop=' + qop + ', nc=' + nc + ', cnonce="' + cnonce + '", response="' + response + '", opaque="' + params.opaque + '", role="' + role + '"';
+            return 'username="' + username + '", realm="' + realm + '", nonce="' + nonce + '", uri="' + uri + '", qop=' + qop + ', nc=' + nc + ', cnonce="' + cnonce + '", response="' + response + '", opaque="' + params.opaque + '", role="' + role + '", data="' + data'"';
         }
 
         function generateCnonce() {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Logistics_service.Controllers
+namespace Logistics_service.Controllers.Dashboard
 {
     [Route("[controller]")]
     public class CustomerController : Controller
@@ -41,7 +41,7 @@ namespace Logistics_service.Controllers
 
             var opaque = HttpContext.Session.GetString("Opaque");
             if (opaque == null)
-                return View("Unauthorized");
+                return View("UnauthorizedComletely");
 
             string nonce = GenerateDigest.GenerateRandom();
             HttpContext.Session.SetString(opaque, nonce);

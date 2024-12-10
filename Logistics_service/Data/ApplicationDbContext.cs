@@ -1,4 +1,4 @@
-﻿using Logistics_service.Models;
+﻿using Logistics_service.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Logistics_service.Data

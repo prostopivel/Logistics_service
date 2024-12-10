@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Logistics_service.Models.Users;
 
-namespace Logistics_service.Models
+namespace Logistics_service.Models.Users
 {
     public class User
     {

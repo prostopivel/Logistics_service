@@ -9,7 +9,7 @@
 
     $.ajax({
         url: authenticateParams.returnUrl,
-        type: 'GET',
+        type: 'POST',
         headers: {
             'Authorization': 'Digest ' + response
         },

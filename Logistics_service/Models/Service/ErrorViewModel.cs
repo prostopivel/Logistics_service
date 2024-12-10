@@ -1,4 +1,4 @@
-namespace Logistics_service.Models
+namespace Logistics_service.Models.Service
 {
     public class ErrorViewModel
     {

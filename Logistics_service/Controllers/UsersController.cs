@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Logistics_service.Data;
 using Logistics_service.Models;
 using Microsoft.AspNetCore.Authorization;
+using Logistics_service.Models.Users;
 
 namespace Logistics_service.Controllers
 {

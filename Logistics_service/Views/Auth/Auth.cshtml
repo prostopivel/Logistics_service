@@ -1,4 +1,5 @@
-﻿@model Logistics_service.Models.LoginRequest
+﻿@using Logistics_service.Models.Service;
+@model LoginRequest
 @{
     Layout = "_Layout";
 }
@@ -64,10 +65,7 @@
                     },
                     data: { },
                     success: function (data) {
-                        alert('Успешный вход!');
-                        if (data.redirectUrl) {
-                            window.location.href = data.redirectUrl;
-                        }
+                        window.location.href = data.redirectUrl;
                     },
                     error: function (xhr, status, error) {
                         var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;

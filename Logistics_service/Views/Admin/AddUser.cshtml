@@ -1,0 +1,140 @@
+﻿@using System;
+@using Logistics_service.Models.Users;
+@model User
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AddUserr</title>
+    <link rel="stylesheet" href="~/css/styles.css"> 
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .form-group input, .form-group select {
+                width: 100%;
+                padding: 8px;
+                box-sizing: border-box;
+            }
+
+            .form-group .error-message {
+                color: red;
+                font-size: 12px;
+            }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOMContentLoaded event fired");
+
+            function handleButtonClick() {
+                event.preventDefault();
+                console.log('handleButtonClick');
+                submitForm();
+            }
+
+            function md5(input) {
+                var hash = CryptoJS.MD5(input);
+                return hash.toString(CryptoJS.enc.Hex);
+            }
+
+            function encryptPassword() {
+                var email = document.getElementById("Email").value;
+                var password = document.getElementById("PasswordHash").value;
+                var realm = @ViewBag.Realm;
+
+                var encryptedPassword = md5(email + ":" + realm + ":" + password);
+                document.getElementById("PasswordHash").value = encryptedPassword;
+                console.log("Encrypted Password: " + encryptedPassword);
+            }
+
+            function submitForm() {
+                console.log("Submitting form");
+                encryptPassword();
+
+                var form = document.getElementById('addUserForm');
+                if (!form) {
+                    console.error("Form not found");
+                    return;
+                }
+
+                var formData = new FormData(form);
+                console.log("append");
+                formData.append('returnUrl', '\\Admin\\addUser');
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '@Html.Raw(Url.Action("AdminPost", "Admin"))', true);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            console.log("Form submitted successfully");
+                            document.body.innerHTML = xhr.responseText;
+                        } else {
+                            console.error('Ошибка: ' + xhr.statusText);
+                        }
+                    }
+                };
+                xhr.send(formData);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Добавить менеджера</h1>
+        <form id="addUserForm" asp-action="AdminPost" method="post">
+            <div class="form-group">
+                <label asp-for="Name">Имя:</label>
+                <input asp-for="Name" name="Name" />
+                <span asp-validation-for="Name" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Role">Роль:</label>
+                <select asp-for="Role" name="Role" asp-items="Html.GetEnumSelectList<UserRole>()">
+                    <option value="">Выберите роль</option>
+                </select>
+                <span asp-validation-for="Role" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email">Email:</label>
+                <input asp-for="Email" name="Email" />
+                <span asp-validation-for="Email" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PasswordHash">Пароль:</label>
+                <input asp-for="PasswordHash" type="password" id="PasswordHash" name="PasswordHash" />
+                <span asp-validation-for="PasswordHash" class="error-message"></span>
+            </div>
+            <input type="hidden" name="returnUrl" value="\\Admin\\addUser" />
+
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+</body>
+</html>

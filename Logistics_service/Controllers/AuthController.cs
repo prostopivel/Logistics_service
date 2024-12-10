@@ -1,5 +1,6 @@
 ﻿using Logistics_service.Data;
 using Logistics_service.Models;
+using Logistics_service.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -53,12 +54,11 @@ namespace Logistics_service.Controllers
             if (role != null)
             {
                 ViewBag.role = role;
-                return Json(new { redirectUrl = Url.Action("dashboard", "Dashboard", new { role = role }) });
-                //return RedirectToAction("dashboard", "dashboard", role);
+                return Json(new { redirectUrl = Url.Action("dashboard", "Dashboard", new { role }) });
             }
             else
             {
-                return Unauthorized(new { message = errorMessage });
+                return Json(new { redirectUrl = Url.Action("UnauthorizedCompletely", "Error", new { errorMessage }) });
             }
         }
 

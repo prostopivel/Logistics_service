@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Logistics_service.Models
+namespace Logistics_service.Models.Users
 {
     public class Customer : User
     {

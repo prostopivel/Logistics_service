@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Logistics_service.Models;
+using Logistics_service.Models.Users;
 
 namespace Logistics_service
 {
@@ -100,7 +100,7 @@ namespace Logistics_service
             }
         }
 
-        private static Dictionary<string, string> ParseAuthorizationHeader(string header)
+        public static Dictionary<string, string> ParseAuthorizationHeader(string header)
         {
             var paramsDict = new Dictionary<string, string>();
             var parts = header.Split(',');
