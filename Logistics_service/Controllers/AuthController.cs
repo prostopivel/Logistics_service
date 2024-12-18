@@ -45,6 +45,17 @@ namespace Logistics_service.Controllers
             return View();
         }
 
+        //auth/autor
+        [HttpGet("autor")]
+        [AllowAnonymous]
+        public IActionResult Autor(string returnUrl = null)
+        {
+            ViewBag.returnUrl = returnUrl ?? Url.Content("~/");
+            ViewBag.RealmHeader = _configuration["Realm"];
+
+            return View();
+        }
+
         //auth/login
         [HttpPost("login")]
         [AllowAnonymous]
@@ -59,6 +70,30 @@ namespace Logistics_service.Controllers
             else
             {
                 return Json(new { redirectUrl = Url.Action("UnauthorizedCompletely", "Error", new { errorMessage }) });
+            }
+        }
+
+        //auth/autLog
+        [HttpPost("autLog")]
+        [AllowAnonymous]
+        public IActionResult AutLog(Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                customer.Role = UserRole.Customer;
+                if (_context.Users.FirstOrDefault(c => c.Email == customer.Email) == null)
+                {
+                    _context.Users.Add(customer);
+                    _context.SaveChangesAsync();
+                }
+                else
+                    return Json(new { redirectUrl = Url.Action("UnauthorizedCompletely", "Error", new { errorMessage = "Данный пользователь уже существует!" }) });
+                ViewBag.role = UserRole.Customer;
+                return Json(new { redirectUrl = Url.Action("Index", "Home") });
+            }
+            else
+            {
+                return Json(new { redirectUrl = Url.Action("autor", "auth") });
             }
         }
 

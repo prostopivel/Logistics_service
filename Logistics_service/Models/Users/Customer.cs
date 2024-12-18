@@ -26,5 +26,10 @@ namespace Logistics_service.Models.Users
         {
             // Логика просмотра назначенных машин
         }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

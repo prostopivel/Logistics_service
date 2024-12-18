@@ -23,21 +23,21 @@ namespace Logistics_service
             var opaque = context.HttpContext.Session.GetString("Opaque");
             if (opaque == null)
             {
-                context.Result = new RedirectToActionResult("UnauthorizedComletely", "Error", new { errorMessage = "Неправильный Opaque!" } );
+                context.Result = new RedirectToActionResult("UnauthorizedCompletely", "Error", new { errorMessage = "Неправильный Opaque!" } );
                 return;
             }
 
             var expectedNonce = context.HttpContext.Session.GetString(opaque);
             if (expectedNonce == null)
             {
-                context.Result = new RedirectToActionResult("UnauthorizedComletely", "Error", new { errorMessage = "Неправильный Nonce!" });
+                context.Result = new RedirectToActionResult("UnauthorizedCompletely", "Error", new { errorMessage = "Неправильный Nonce!" });
                 return;
             }
 
             if (!await GenerateDigest.Auth(authHeader, expectedNonce, 
                 _configuration, _context))
             {
-                context.Result = new RedirectToActionResult("UnauthorizedComletely", "Error", new { errorMessage = "Авторизация не пройдена!" });
+                context.Result = new RedirectToActionResult("UnauthorizedCompletely", "Error", new { errorMessage = "Авторизация не пройдена!" });
             }
         }
     }

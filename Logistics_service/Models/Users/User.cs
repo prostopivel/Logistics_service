@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Logistics_service.Models.Users;
 
 namespace Logistics_service.Models.Users
 {
@@ -37,6 +36,43 @@ namespace Logistics_service.Models.Users
         public override string ToString()
         {
             return string.Format($"{Id, -3}: {Name, -15} | {Email, -25} | {Role, -8}");
+        }
+
+        public string AuthParams()
+        {
+            return $"Name:{Name}/Role:{Role}/Email:{Email}/PasswordHash:{PasswordHash}";
+        }
+
+        public static User? ParseAuthParams(string userString)
+        {
+            var dictionary = new Dictionary<string, string>();
+
+            string[] parts = userString.Split('/');
+
+            foreach (string part in parts)
+            {
+                string[] keyValue = part.Split(':');
+
+                if (keyValue.Length == 2)
+                {
+                    dictionary[keyValue[0]] = keyValue[1];
+                }
+            }
+
+            try
+            {
+                return new User
+                {
+                    Name = dictionary["Name"],
+                    Role = (UserRole)Enum.Parse(typeof(UserRole), dictionary["Role"]),
+                    Email = dictionary["Email"],
+                    PasswordHash = dictionary["PasswordHash"]
+                };
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Logistics_service.Data;
+using Logistics_service.Models.Service;
 using Logistics_service.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,49 +37,27 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("addUser")]
         public IActionResult AddUser()
         {
-            ViewBag.Realm = _configuration["Realm"];
+            ViewBag.RealmHeader = _configuration["Realm"];
             return View();
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("addUser")]
-        public async Task<ActionResult> AddUser(IFormCollection formData)
+        public async Task<ActionResult> AddUser(string userString)
         {
-            var name = formData["Name"];
-            var role = formData["Role"];
-            var email = formData["Email"];
-            var passwordHash = formData["PasswordHash"];
-
-            User user;
-            switch (role)
-            {
-                default:
-                    user = new User();
-                    break;
-                case nameof(UserRole.Customer):
-                    user = new Customer();
-                    break;
-                case nameof(UserRole.Manager):
-                    user = new Manager();
-                    break;
-                case nameof(UserRole.Administrator):
-                    user = new Administrator();
-                    break;
-            }
-            user.Name = name;
-            user.Role = Enum.Parse<UserRole>(role);
-            user.Email = email;
-            user.PasswordHash = passwordHash;
-
             if (ModelState.IsValid)
             {
+                User? user = Logistics_service.Models.Users.User.ParseAuthParams(userString);
+                if (user == null)
+                    return View("addUser");
+
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("Dashboard", "Dashboard", new { role = UserRole.Administrator });
             }
 
-            return View(user);
+            return View("addUser");
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -110,7 +89,7 @@ namespace Logistics_service.Controllers.Dashboard
 
             var opaque = HttpContext.Session.GetString("Opaque");
             if (opaque == null)
-                return View("UnauthorizedComletely");
+                return View("UnauthorizedCompletely");
 
             string nonce = GenerateDigest.GenerateRandom();
             HttpContext.Session.SetString(opaque, nonce);
@@ -120,7 +99,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [HttpPost("adminPost")]
-        public ViewResult AdminPost(IFormCollection formData)
+        public ViewResult AdminPost(AddUser formData)
         {
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
@@ -132,8 +111,9 @@ namespace Logistics_service.Controllers.Dashboard
             string nonce = GenerateDigest.GenerateRandom();
             HttpContext.Session.SetString(opaque, nonce);
 
-            string returnUrl = formData["returnUrl"];
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"{returnUrl}\" formData=\"{formData}\", role = \"Administrator\"";
+            formData.User.PasswordHash = GenerateDigest.ComputeMD5($"{formData.User.Email}:{realm}:{formData.User.PasswordHash}");
+
+            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"{formData.ReturnUrl}\" formData=\"{formData.User.AuthParams()}\", role = \"Administrator\"";
             return View("UnauthorizedPost");
         }
     }

@@ -41,7 +41,7 @@ namespace Logistics_service.Controllers.Dashboard
 
             var opaque = HttpContext.Session.GetString("Opaque");
             if (opaque == null)
-                return View("UnauthorizedComletely");
+                return View("UnauthorizedCompletely");
 
             string nonce = GenerateDigest.GenerateRandom();
             HttpContext.Session.SetString(opaque, nonce);

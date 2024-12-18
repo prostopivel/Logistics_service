@@ -18,5 +18,10 @@ namespace Logistics_service.Models.Users
         {
             // Логика отправки уведомлений заказчикам и администратору
         }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

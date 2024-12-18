@@ -90,7 +90,7 @@ namespace Logistics_service
             return new Tuple<string, UserRole>(response, user.Role);
         }
 
-        private static string ComputeMD5(string input)
+        public static string ComputeMD5(string input)
         {
             using (MD5 md5 = MD5.Create())
             {
