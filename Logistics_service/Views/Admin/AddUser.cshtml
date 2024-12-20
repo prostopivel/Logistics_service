@@ -1,68 +1,41 @@
 ﻿@using System;
 @using Logistics_service.Models.Service;
 @using Logistics_service.Models.Users;
-@model AddUser;
+@model User;
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>AddUser</title>
-    <link rel="stylesheet" href="~/wwwroot/css/styles.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-</head>
-<body>
-    <meta name='realm' content="@ViewBag.RealmHeader">
+<meta name='realm' content="@ViewBag.RealmHeader">
+<meta name='error' content="@ViewBag.Error">
 
-    <div class="container">
-        <h1>Добавить менеджера</h1>
-        <form id="addUserForm" asp-action="AdminPost" method="post" onsubmit="encryptPassword(event)">
-            <div class="form-group">
-                <label asp-for="User.Email">Email:</label>
-                <input id="Email" type="email" asp-for="User.Email" name="User.Email" />
-                <span asp-validation-for="User.Email" class="error-message"></span>
-            </div>
+<div class="container">
+    <h1>Добавить пользователя</h1>
+    <form id="addUserForm" asp-action="AdminPost" method="post" onsubmit="encryptPassword(event, 'POST', '/Admin/addUser')">
+        <div class="form-group">
+            <label asp-for="Email">Email:</label>
+            <input id="Email" type="email" asp-for="Email" name="Email" />
+            <span asp-validation-for="Email" class="error-message"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="User.PasswordHash">Пароль:</label>
-                <input id="PasswordHash" type="password" asp-for=" User.PasswordHash" name="User.PasswordHash" />
-                <span asp-validation-for="User.PasswordHash" class="error-message"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="User.Name">Имя:</label>
-                <input type="text" asp-for="User.Name" name="User.Name" />
-                <span asp-validation-for="User.Name" class="error-message"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="PasswordHash">Пароль:</label>
+            <input id="PasswordHash" type="password" asp-for=" PasswordHash" name="PasswordHash" />
+            <span asp-validation-for="PasswordHash" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name">Имя:</label>
+            <input type="text" asp-for="Name" name="Name" />
+            <span asp-validation-for="Name" class="error-message"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="User.Role">Роль:</label>
-                <select asp-for="User.Role" name="User.Role" asp-items="Html.GetEnumSelectList<UserRole>()">
-                    <option value="">Выберите роль</option>
-                </select>
-                <span asp-validation-for="User.Role" class="error-message"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="Role">Роль:</label>
+            <select asp-for="Role" name="Role" asp-items="Html.GetEnumSelectList<UserRole>()">
+                <option value="">Выберите роль</option>
+            </select>
+            <span asp-validation-for="Role" class="error-message"></span>
+        </div>
 
-            <input type="hidden" name="ReturnUrl" value="\\Admin\\addUser" />
-
-            <button type="submit">Добавить</button>
-        </form>
-    </div>
-
-    <script>
-        function encryptPassword(event) {
-            event.preventDefault();
-            alert('encryptPassword');
-
-            var email = document.getElementById('Email').value;
-            var password = document.getElementById('PasswordHash').value;
-            var realm = $('meta[name="realm"]').attr('content');
-
-            var encryptedPassword = CryptoJS.MD5(email + ':' + realm + ':' + password).toString();
-
-            document.getElementById('PasswordHash').value = encryptedPassword;
-
-            document.getElementById('addUserForm').submit();
-        }
-    </script>
-</body>
-</html>
+        <h2>@Html.Raw(ViewBag.Error)</h2>
+        <button type="submit" onclick="encryptPassword(event, `POST`, `/Admin/addUser`)">Добавить</button>
+    </form>
+    <button onclick="auth(`GET`, `/dashboard/administrator`)">Назад</button>
+</div>

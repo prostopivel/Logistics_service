@@ -1,7 +1,7 @@
 ﻿using Logistics_service.Data;
-using Logistics_service.Models;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.Data;
 
 namespace Logistics_service
 {
@@ -21,24 +21,58 @@ namespace Logistics_service
             var authHeader = context.HttpContext.Request.Headers["Authorization"].ToString();
 
             var opaque = context.HttpContext.Session.GetString("Opaque");
+
             if (opaque == null)
             {
-                context.Result = new RedirectToActionResult("UnauthorizedCompletely", "Error", new { errorMessage = "Неправильный Opaque!" } );
+                ReturnResult();
                 return;
             }
 
             var expectedNonce = context.HttpContext.Session.GetString(opaque);
+
             if (expectedNonce == null)
             {
-                context.Result = new RedirectToActionResult("UnauthorizedCompletely", "Error", new { errorMessage = "Неправильный Nonce!" });
+                ReturnResult();
                 return;
             }
 
-            if (!await GenerateDigest.Auth(authHeader, expectedNonce, 
-                _configuration, _context))
+            if (!await GenerateDigest.Auth(authHeader, expectedNonce, _configuration, _context))
             {
-                context.Result = new RedirectToActionResult("UnauthorizedCompletely", "Error", new { errorMessage = "Авторизация не пройдена!" });
+                ReturnResult();
+                return;
             }
+
+            void ReturnResult()
+            {
+                var cont = GenerateJson(context);
+                if (cont == null)
+                    context.Result = new RedirectToActionResult("Unauthorized", "Error", new { errorMessage = "Авторизация не пройдена!" });
+                context.Result = cont;
+            }
+        }
+
+        private IActionResult? GenerateJson(AuthorizationFilterContext context)
+        {
+            string realm = _configuration["Realm"];
+            string qop = _configuration["Qop"];
+
+            var opaque = context.HttpContext.Session.GetString("Opaque");
+            if (opaque == null)
+                return null;
+
+            string nonce = GenerateDigest.GenerateRandom();
+            context.HttpContext.Session.SetString(opaque, nonce);
+            return new JsonResult(new
+            {
+                realm,
+                qop,
+                nonce,
+                opaque
+            })
+            {
+                StatusCode = StatusCodes.Status401Unauthorized
+            };
+
         }
     }
 }

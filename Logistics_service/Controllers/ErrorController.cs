@@ -21,22 +21,9 @@ namespace Logistics_service.Controllers
             }
         }
 
-        [Route("Unauthorized")]
-        public new IActionResult Unauthorized()
+        public IActionResult Unauthorized(string errorMessage)
         {
             return View();
-        }
-
-        [Route("UnauthorizedPost")]
-        public IActionResult UnauthorizedPost()
-        {
-            return View();
-        }
-
-        [Route("UnauthorizedCompletely")]
-        public IActionResult UnauthorizedCompletely(string errorMessage)
-        {
-            return View(model: errorMessage);
         }
     }
 }

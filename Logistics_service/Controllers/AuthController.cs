@@ -4,10 +4,8 @@ using Logistics_service.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Security.Cryptography;
 using System.Text;
-using Taxi_App;
 
 namespace Logistics_service.Controllers
 {
@@ -69,7 +67,7 @@ namespace Logistics_service.Controllers
             }
             else
             {
-                return Json(new { redirectUrl = Url.Action("UnauthorizedCompletely", "Error", new { errorMessage }) });
+                return Json(new { redirectUrl = Url.Action("Unauthorized", "Error", new { errorMessage }) });
             }
         }
 
@@ -87,7 +85,7 @@ namespace Logistics_service.Controllers
                     _context.SaveChangesAsync();
                 }
                 else
-                    return Json(new { redirectUrl = Url.Action("UnauthorizedCompletely", "Error", new { errorMessage = "Данный пользователь уже существует!" }) });
+                    return Json(new { redirectUrl = Url.Action("Unauthorized", "Error", new { errorMessage = "Данный пользователь уже существует!" }) });
                 ViewBag.role = UserRole.Customer;
                 return Json(new { redirectUrl = Url.Action("Index", "Home") });
             }

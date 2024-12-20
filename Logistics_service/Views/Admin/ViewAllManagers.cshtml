@@ -2,52 +2,31 @@
 @using Logistics_service.Models.Users;
 @model List<Manager>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>ViewAllManagers</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+<title>ViewAllManagers</title>
+<link rel="stylesheet" href="styles.css">
 
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Список менеджеров</h1>
-        <table>
-            <thead>
+<div class="container">
+    <h1>Список менеджеров</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
+                    <td>@item.Role</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Name</td>
-                        <td>@item.Email</td>
-                        <td>@item.Role</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+            }
+        </tbody>
+    </table>
+    <button onclick="auth(`GET`, `/dashboard/administrator`)">Назад</button>
+</div>

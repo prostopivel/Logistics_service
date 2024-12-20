@@ -3,6 +3,7 @@ using Logistics_service.Models.Service;
 using Logistics_service.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 
 namespace Logistics_service.Controllers.Dashboard
@@ -43,20 +44,71 @@ namespace Logistics_service.Controllers.Dashboard
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("addUser")]
-        public async Task<ActionResult> AddUser(string userString)
+        public async Task<ActionResult> AddUser([FromBody] JsonElement data)
         {
-            if (ModelState.IsValid)
+            if (data.ValueKind == JsonValueKind.Null)
             {
-                User? user = Logistics_service.Models.Users.User.ParseAuthParams(userString);
-                if (user == null)
-                    return View("addUser");
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Dashboard", "Dashboard", new { role = UserRole.Administrator });
+                ViewBag.Error = "Отсутствуют данные!";
+                return View("addUser");
             }
 
+            string? name, email, passwordHash;
+            int role;
+
+            if (data.TryGetProperty("Name", out var nameProperty)
+                && data.TryGetProperty("Role", out var roleProperty)
+                && data.TryGetProperty("Email", out var emailProperty)
+                && data.TryGetProperty("PasswordHash", out var passwordHashProperty))
+            {
+                name = nameProperty.GetString();
+                string? roleNull = roleProperty.GetString();
+                email = emailProperty.GetString();
+                passwordHash = passwordHashProperty.GetString();
+
+                if (!int.TryParse(roleNull, out role) || role < 0 || role > 2
+                    || name == null || email == null || passwordHash == null)
+                {
+                    ViewBag.Error = "Неверно переданные данные!";
+                    return View("addUser");
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Неверно переданные данные!";
+                return View("addUser");
+            }
+
+            if (ModelState.IsValid)
+            {
+                User user = new User
+                {
+                    Name = name,
+                    Role = (UserRole)role,
+                    Email = email,
+                    PasswordHash = passwordHash
+                };
+
+                if (_context.Users.FirstOrDefault(c => c.Email == user.Email) == null)
+                {
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    ViewBag.Error = "Пользователь с данной почтой уже существует!";
+                    return View("addUser");
+                }
+
+                await Console.Out.WriteLineAsync("Add: " + user.Email);
+
+                return RedirectToAction("administrator", "Dashboard");
+            }
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                  .Select(e => e.ErrorMessage)
+                                  .ToList();
+
+            ViewBag.Error = string.Join("<br>", errors); 
             return View("addUser");
         }
 

@@ -64,7 +64,7 @@ namespace Logistics_service.Models.Users
                 return new User
                 {
                     Name = dictionary["Name"],
-                    Role = (UserRole)Enum.Parse(typeof(UserRole), dictionary["Role"]),
+                    Role = (UserRole)int.Parse(dictionary["Role"]),
                     Email = dictionary["Email"],
                     PasswordHash = dictionary["PasswordHash"]
                 };

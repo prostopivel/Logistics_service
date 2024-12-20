@@ -1,96 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@using System;
+@model string
+@{
+    ViewData["Title"] = "Unauthorized";
+}
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <title>@ViewData["Title"]</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-    <meta name="www-authenticate" content="@ViewBag.WWWAuthenticateHeader">
-
-    <form id="authForm" method="get" onsubmit="return false;">
-        <input type="hidden" id="email" name="email" />
-        <input type="hidden" id="digest" name="digest" />
-        <input type="hidden" id="authenticateHeader" name="authenticateHeader" />
-    </form>
-
-    <script>
-        $(document).ready(function () {
-            auth();
-        });
-
-        function auth() {
-            var email = sessionStorage.getItem('UserName');
-            var password = sessionStorage.getItem('Password');
-
-            var authenticateHeader = $('meta[name="www-authenticate"]').attr('content');
-            var authenticateParams = parseAuthenticateHeader(authenticateHeader);
-
-            var digest = computeDigestResponse(email, password, authenticateParams);
-
-            $('#email').val(email);
-            $('#digest').val(digest);
-            $('#authenticateHeader').val(authenticateHeader);
-
-            $('#authForm').attr('action', authenticateParams.returnUrl);
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', authenticateParams.returnUrl, true);
-            xhr.setRequestHeader('Authorization', 'Digest ' + digest);
-            xhr.onreadystatechange = function () {
-                if (xhr.status === 200) {
-                    document.body.innerHTML = xhr.responseText;
-                } else {
-                    console.error('Ошибка: ' + xhr.statusText);
-                }
-            };
-            xhr.send();
-        }
-
-        function parseAuthenticateHeader(header) {
-            header = header.replace(/^Digest\s*/, '');
-            var params = {};
-            var parts = header.split(',');
-            parts.forEach(function (part) {
-                var kv = part.split('=');
-                params[kv[0].trim()] = kv[1].replace(/"/g, '').trim();
-            });
-
-            return params;
-        }
-
-        function computeDigestResponse(username, password, params) {
-            var realm = params.realm;
-            var nonce = params.nonce;
-            var uri = params.returnUrl; //window.location.pathname;
-            var qop = params.qop;
-            var nc = '00000001';
-            var cnonce = generateCnonce();
-            var role = params.role;
-
-            var A1 = username + ':' + realm + ':' + password;
-            var A2 = 'POST:' + uri;
-
-            var HA1 = md5(A1);
-            var HA2 = md5(A2);
-
-            var response = md5(HA1 + ':' + nonce + ':' + nc + ':' + cnonce + ':' + qop + ':' + HA2);
-
-            return 'username="' + username + '", realm="' + realm + '", nonce="' + nonce + '", uri="' + uri + '", qop=' + qop + ', nc=' + nc + ', cnonce="' + cnonce + '", response="' + response + '", opaque="' + params.opaque + '", role="' + role + '"';
-        }
-
-        function generateCnonce() {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            for (var i = 0; i < 8; i++)
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-            return text;
-        }
-
-        function md5(input) {
-            var hash = CryptoJS.MD5(input);
-            return hash.toString(CryptoJS.enc.Hex);
-        }
-    </script>
+    <h1>401 - Unauthorized</h1>
+    <p>You are not authorized to access this resource.</p>
+        <p>@Model</p>
 </body>
 </html>

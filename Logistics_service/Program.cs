@@ -1,5 +1,6 @@
 using Logistics_service.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace Logistics_service
 {
@@ -62,6 +63,12 @@ namespace Logistics_service
         private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllersWithViews();
+
+            services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
             services.AddScoped<DigestAuthFilter>();
 
