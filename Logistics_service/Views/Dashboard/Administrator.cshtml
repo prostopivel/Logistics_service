@@ -1,5 +1,8 @@
 ﻿@using Logistics_service.Controllers.Dashboard;
-@model string;
+
+@{
+    Layout = null;
+}
 
 <title>Admin Dashboard</title>
 
@@ -10,5 +13,5 @@
     <button onclick="auth(`GET`, `/Admin/addUser`)">Добавление пользователя</button>
     <button onclick="auth(`GET`, `/Admin/viewAllOrders`)">Просмотр всех заказов</button>
     <button onclick="auth(`GET`, `/Admin/manageTransport`)">Управление транспортом</button>
-    <button onclick="auth(`GET`, `/Admin/viewMap`)">Просмотр карты</button>
+    <button onclick="auth('GET', '/Admin/viewMap'); ChangeWidth('1400px');">Просмотр карты</button>
 </div>

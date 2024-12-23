@@ -1,7 +1,11 @@
 ﻿@using System;
 @using Logistics_service.Models.Service;
 @using Logistics_service.Models.Users;
-@model User;
+@model User
+
+@{
+    Layout = null;
+}
 
 <meta name='realm' content="@ViewBag.RealmHeader">
 <meta name='error' content="@ViewBag.Error">
@@ -9,6 +13,7 @@
 <div class="container">
     <h1>Добавить пользователя</h1>
     <form id="addUserForm" asp-action="AdminPost" method="post" onsubmit="encryptPassword(event, 'POST', '/Admin/addUser')">
+        <div asp-validation-summary="All" class="error-message"></div>
         <div class="form-group">
             <label asp-for="Email">Email:</label>
             <input id="Email" type="email" asp-for="Email" name="Email" />
@@ -28,14 +33,12 @@
 
         <div class="form-group">
             <label asp-for="Role">Роль:</label>
-            <select asp-for="Role" name="Role" asp-items="Html.GetEnumSelectList<UserRole>()">
+            <select asp-for="Role" name="Role"
+                    asp-items="@(Html.GetEnumSelectList<UserRole>().Where(x => x.Value != UserRole.Customer.ToString()))">
                 <option value="">Выберите роль</option>
             </select>
             <span asp-validation-for="Role" class="error-message"></span>
         </div>
-
-        <h2>@Html.Raw(ViewBag.Error)</h2>
         <button type="submit" onclick="encryptPassword(event, `POST`, `/Admin/addUser`)">Добавить</button>
     </form>
-    <button onclick="auth(`GET`, `/dashboard/administrator`)">Назад</button>
 </div>

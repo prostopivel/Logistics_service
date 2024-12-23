@@ -7,7 +7,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Logistics_service.Models.Users;
 
-namespace Logistics_service
+namespace Logistics_service.Services
 {
     public static class GenerateDigest
     {

@@ -23,7 +23,7 @@ namespace Logistics_service.Controllers
 
         public IActionResult Unauthorized(string errorMessage)
         {
-            return View();
+            return View(model: errorMessage);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Logistics_service.Data;
 using Logistics_service.Models;
 using Logistics_service.Models.Users;
+using Logistics_service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -63,36 +64,59 @@ namespace Logistics_service.Controllers
             if (role != null)
             {
                 ViewBag.role = role;
-                return Json(new { redirectUrl = Url.Action("dashboard", "Dashboard", new { role }) });
+                return JsonReturn("dashboard", "Dashboard", new
+                {
+                    role
+                });
             }
             else
             {
-                return Json(new { redirectUrl = Url.Action("Unauthorized", "Error", new { errorMessage }) });
+                return JsonReturn("Unauthorized", "Error", new
+                {
+                    errorMessage
+                });
             }
         }
 
         //auth/autLog
         [HttpPost("autLog")]
         [AllowAnonymous]
-        public IActionResult AutLog(Customer customer)
+        public async Task<IActionResult> AutLog(Customer customer)
         {
             if (ModelState.IsValid)
             {
                 customer.Role = UserRole.Customer;
-                if (_context.Users.FirstOrDefault(c => c.Email == customer.Email) == null)
+
+                if (!await AddCustomerAsync(customer))
                 {
-                    _context.Users.Add(customer);
-                    _context.SaveChangesAsync();
+                    return JsonReturn("Unauthorized", "Error", new
+                    {
+                        errorMessage = "Данный пользователь уже существует!"
+                    });
                 }
-                else
-                    return Json(new { redirectUrl = Url.Action("Unauthorized", "Error", new { errorMessage = "Данный пользователь уже существует!" }) });
+
                 ViewBag.role = UserRole.Customer;
-                return Json(new { redirectUrl = Url.Action("Index", "Home") });
+                return JsonReturn("Index", "Home");
             }
             else
             {
-                return Json(new { redirectUrl = Url.Action("autor", "auth") });
+                return JsonReturn("autor", "auth");
             }
+        }
+
+        private async Task<bool> AddCustomerAsync(Customer customer)
+        {
+            var existingCustomer = await _context.Users.FirstOrDefaultAsync(c => c.Email == customer.Email);
+
+            if (existingCustomer == null)
+            {
+                _context.Customers.Add(customer);
+                var affectedRows = await _context.SaveChangesAsync();
+                await Console.Out.WriteLineAsync($"Изменено строк: {affectedRows}");
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<UserRole?> Auth()
@@ -187,5 +211,10 @@ namespace Logistics_service.Controllers
             RandomNumberGenerator.Fill(randomBytes);
             return BitConverter.ToString(randomBytes).Replace("-", "").ToLower();
         }
+
+        private IActionResult JsonReturn(string action, string controller, object? data = null) => Json(new
+        {
+            redirectUrl = Url.Action(action, controller, data)
+        });
     }
 }

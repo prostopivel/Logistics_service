@@ -1,5 +1,4 @@
-﻿using Logistics_service.Data;
-using Logistics_service.Models;
+﻿using Logistics_service.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Logistics_service.Controllers
@@ -33,24 +32,6 @@ namespace Logistics_service.Controllers
         public IActionResult InformClient()
         {
             return View();
-        }
-
-        [HttpGet("manager")]
-        public IActionResult Manager(string returnUrl)
-        {
-            string realm = _configuration["Realm"];
-            string qop = _configuration["Qop"];
-
-            var opaque = HttpContext.Session.GetString("Opaque");
-            if (opaque == null)
-                return View("UnauthorizedCompletely");
-
-            string nonce = GenerateDigest.GenerateRandom();
-            HttpContext.Session.SetString(opaque, nonce);
-
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"{returnUrl}\", role = \"Manager\"";
-
-            return View("Unauthorized");
         }
     }
 }

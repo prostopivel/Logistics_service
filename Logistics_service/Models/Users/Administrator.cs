@@ -2,24 +2,19 @@
 {
     public class Administrator : User
     {
-        public void ViewAllOrders()
-        {
-            // Логика просмотра всех заказов
-        }
+        public Administrator() { }
 
-        public void ProcessOrder(Order order)
+        public Administrator(User user)
         {
-            // Логика обработки заказа
-        }
+            if (user.Role != UserRole.Administrator)
+            {
+                throw new Exception("Пользователь не администратор!");
+            }
 
-        public void AddVehicle(Vehicle vehicle)
-        {
-            // Логика добавления новой машины в систему
-        }
-
-        public void ViewMap(DateTime date)
-        {
-            // Логика просмотра карты с маршрутами машин
+            Name = user.Name;
+            Role = user.Role;
+            Email = user.Email;
+            PasswordHash = user.PasswordHash;
         }
     }
 }

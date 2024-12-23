@@ -7,29 +7,19 @@ namespace Logistics_service.Models.Users
     {
         public List<int>? OrdersId { get; set; }
 
-        [Required(ErrorMessage = "Address is required")]
-        [StringLength(200, ErrorMessage = "Address cannot be longer than 200 characters")]
-        [NotMapped]
-        public string Address { get; set; }
+        public Customer() { }
 
-        public void ViewOrders()
+        public Customer(User user)
         {
-            // Логика просмотра заказов
-        }
+            if (user.Role != UserRole.Customer)
+            {
+                throw new Exception("Пользователь не заказчик!");
+            }
 
-        public void CreateRequest()
-        {
-            // Логика создания запроса на доставку
-        }
-
-        public void ViewAssignedVehicles()
-        {
-            // Логика просмотра назначенных машин
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
+            Name = user.Name;
+            Role = user.Role;
+            Email = user.Email;
+            PasswordHash = user.PasswordHash;
         }
     }
 }

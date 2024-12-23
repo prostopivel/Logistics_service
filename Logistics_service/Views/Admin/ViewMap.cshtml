@@ -1,1 +1,17 @@
-﻿<button onclick="auth(`GET`, `/dashboard/administrator`)">Назад</button>
+﻿@using Logistics_service.Models;
+@model Point[]
+
+@{
+    Layout = null;
+}
+
+<div class="image-container">
+    <img src="/img/map.png" alt="map" class="responsive-image" />
+
+    @foreach (var point in Model)
+    {
+        <button class="point-button" style="left: @point.PosX%; top: @point.PosY%;">
+            @point.Name
+        </button>
+    }
+</div>

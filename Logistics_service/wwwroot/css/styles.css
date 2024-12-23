@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
     background-color: #fff;
@@ -99,4 +99,34 @@ th {
         padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
+    }
+
+.image-container {
+    position: relative; 
+    width: 100%; 
+    height: auto; 
+    overflow: hidden; 
+}
+
+.responsive-image {
+    width: 100%; 
+    height: auto; 
+    display: block; 
+}
+
+.point-button {
+    position: absolute;
+    transform: translate(-50%, -50%); 
+    background-color: rgba(255, 0, 0, 0.7); 
+    color: white; 
+    border: none; 
+    border-radius: 50%; 
+    width: 22px; 
+    height: 22px; 
+    font-size: 14px; 
+    cursor: pointer;
+}
+
+    .point-button:hover {
+        background-color: rgba(255, 0, 0, 0.8); 
     }

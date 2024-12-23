@@ -1,4 +1,5 @@
 using Logistics_service.Data;
+using Logistics_service.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 

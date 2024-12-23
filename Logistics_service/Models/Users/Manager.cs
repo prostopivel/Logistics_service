@@ -4,24 +4,19 @@ namespace Logistics_service.Models.Users
 {
     public class Manager : User
     {
-        public void AssignVehicle(Customer customer, Vehicle vehicle)
-        {
-            // Логика назначения машины заказчику
-        }
+        public Manager() { }
 
-        public void UpdateRoute(Vehicle vehicle, List<Point> points)
+        public Manager(User user)
         {
-            // Логика обновления маршрута машины
-        }
+            if (user.Role != UserRole.Manager)
+            {
+                throw new Exception("Пользователь не менеджер!");
+            }
 
-        public void NotifyUsers(string message)
-        {
-            // Логика отправки уведомлений заказчикам и администратору
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
+            Name = user.Name;
+            Role = user.Role;
+            Email = user.Email;
+            PasswordHash = user.PasswordHash;
         }
     }
 }

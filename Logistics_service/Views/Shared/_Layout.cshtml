@@ -18,11 +18,25 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1 d-flex justify-content-between">
+                        <div class="d-flex">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ViewIndex">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" onclick="ChangeWidth('1000px')" asp-action="Index">Home</a>
                         </li>
-                    </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#" id="dashdoardReturn">Menu</a>
+                        </li>
+                </div>
+
+                <div class="d-flex">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" onclick="ChangeWidth('1000px')" href="/auth/auth">LogIn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" onclick="ChangeWidth('1000px')" href="/auth/autor">Autorize</a>
+                    </li>
+                </div>
+                </ul>
                 </div>
             </div>
         </nav>

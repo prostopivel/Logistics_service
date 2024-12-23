@@ -1,8 +1,12 @@
-﻿<title>Manager Dashboard</title>
+﻿@{
+    Layout = null;
+}
+
+<title>Manager Dashboard</title>
 
 <h1>Manager Dashboard</h1>
 <div class="button-container">
-    <button onclick="location.href='@Url.Action("Manager", "Manager", new { returnUrl = "\\Manager\\assignCar" })'">Назначить машину</button>
-    <button onclick="location.href='@Url.Action("Manager", "Manager", new { returnUrl = "\\Manager\\updateRoute" })'">Обновить маршрут</button>
-    <button onclick="location.href='@Url.Action("Manager", "Manager", new { returnUrl = "\\Manager\\informClient" })'">Информировать клиента</button>
+    <button onclick="auth(`GET`, `/Manager/assignCar`)">Назначить машину</button>
+    <button onclick="auth(`GET`, `/Manager/updateRoute`); ChangeWidth('1400px');">Обновить маршрут</button>
+    <button onclick="auth(`GET`, `/Manager/informClient`)">Информировать клиента</button>
 </div>

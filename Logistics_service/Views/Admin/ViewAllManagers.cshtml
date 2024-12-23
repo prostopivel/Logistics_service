@@ -2,6 +2,10 @@
 @using Logistics_service.Models.Users;
 @model List<Manager>
 
+@{
+    Layout = null;
+}
+
 <title>ViewAllManagers</title>
 <link rel="stylesheet" href="styles.css">
 
@@ -14,6 +18,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -24,9 +29,11 @@
                     <td>@item.Name</td>
                     <td>@item.Email</td>
                     <td>@item.Role</td>
+                    <td>
+                        <input type="image" src="/img/delete.jpg" alt="Удалить" onclick="auth('DELETE', '/Admin/deleteUser/@item.Id')" name="deleteButton" width="45" height="45">
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
-    <button onclick="auth(`GET`, `/dashboard/administrator`)">Назад</button>
 </div>

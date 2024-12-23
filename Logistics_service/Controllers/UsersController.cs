@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Logistics_service.Data;
+﻿using Logistics_service.Data;
 using Logistics_service.Models;
-using Microsoft.AspNetCore.Authorization;
 using Logistics_service.Models.Users;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Logistics_service.Controllers
 {

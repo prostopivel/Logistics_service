@@ -1,9 +1,8 @@
 ﻿using Logistics_service.Data;
-using Logistics_service.Models.Service;
 using Logistics_service.Models.Users;
+using Logistics_service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 
 namespace Logistics_service.Controllers.Dashboard
@@ -20,6 +19,7 @@ namespace Logistics_service.Controllers.Dashboard
             _context = context;
         }
 
+        [ResponseCache(NoStore = true, Duration = 0)]
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewAllCustomers")]
         public async Task<ActionResult> ViewAllCustomers()
@@ -27,11 +27,34 @@ namespace Logistics_service.Controllers.Dashboard
             return View(await _context.Customers.ToListAsync());
         }
 
+        [ResponseCache(NoStore = true, Duration = 0)]
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewAllManagers")]
         public async Task<ActionResult> ViewAllManagers()
         {
             return View(await _context.Managers.ToListAsync());
+        }
+
+        [ResponseCache(NoStore = true, Duration = 0)]
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpDelete("deleteUser/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            await DeleteUserAsync(id);
+
+            return View("viewAllCustomers", await _context.Customers.ToListAsync());
+        }
+
+        private async Task DeleteUserAsync(int id)
+        {
+            var user = _context.Users.FirstOrDefault(c => c.Id == id);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+
+                await Console.Out.WriteLineAsync("Delete: " + user.Email);
+            }
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -44,72 +67,53 @@ namespace Logistics_service.Controllers.Dashboard
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("addUser")]
-        public async Task<ActionResult> AddUser([FromBody] JsonElement data)
+        public async Task<ActionResult> AddUser([FromBody] User user)
         {
-            if (data.ValueKind == JsonValueKind.Null)
-            {
-                ViewBag.Error = "Отсутствуют данные!";
-                return View("addUser");
-            }
-
-            string? name, email, passwordHash;
-            int role;
-
-            if (data.TryGetProperty("Name", out var nameProperty)
-                && data.TryGetProperty("Role", out var roleProperty)
-                && data.TryGetProperty("Email", out var emailProperty)
-                && data.TryGetProperty("PasswordHash", out var passwordHashProperty))
-            {
-                name = nameProperty.GetString();
-                string? roleNull = roleProperty.GetString();
-                email = emailProperty.GetString();
-                passwordHash = passwordHashProperty.GetString();
-
-                if (!int.TryParse(roleNull, out role) || role < 0 || role > 2
-                    || name == null || email == null || passwordHash == null)
-                {
-                    ViewBag.Error = "Неверно переданные данные!";
-                    return View("addUser");
-                }
-            }
-            else
-            {
-                ViewBag.Error = "Неверно переданные данные!";
-                return View("addUser");
-            }
-
             if (ModelState.IsValid)
             {
-                User user = new User
-                {
-                    Name = name,
-                    Role = (UserRole)role,
-                    Email = email,
-                    PasswordHash = passwordHash
-                };
-
-                if (_context.Users.FirstOrDefault(c => c.Email == user.Email) == null)
-                {
-                    _context.Users.Add(user);
-                    await _context.SaveChangesAsync();
-                }
-                else
+                if (!await AddUserAsync(user))
                 {
                     ViewBag.Error = "Пользователь с данной почтой уже существует!";
                     return View("addUser");
                 }
 
-                await Console.Out.WriteLineAsync("Add: " + user.Email);
-
                 return RedirectToAction("administrator", "Dashboard");
             }
-
-            var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                  .Select(e => e.ErrorMessage)
-                                  .ToList();
-
-            ViewBag.Error = string.Join("<br>", errors); 
             return View("addUser");
+        }
+
+        private async Task<bool> AddUserAsync(User user)
+        {
+            if (_context.Users.FirstOrDefault(c => c.Email == user.Email) == null)
+            {
+                try
+                {
+                    switch (user.Role)
+                    {
+                        case UserRole.Customer:
+                            _context.Customers.Add(new Customer(user));
+                            break;
+                        case UserRole.Manager:
+                            _context.Managers.Add(new Manager(user));
+                            break;
+                        case UserRole.Administrator:
+                            _context.Administrators.Add(new Administrator(user));
+                            break;
+                        default:
+                            return false;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+
+                await _context.SaveChangesAsync();
+
+                await Console.Out.WriteLineAsync("Add: " + user.Email);
+                return true;
+            }
+            return false;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -130,43 +134,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("viewMap")]
         public IActionResult ViewMap()
         {
-            return View();
-        }
-
-        [HttpGet("adminGet")]
-        public ViewResult AdminGet(string returnUrl)
-        {
-            string realm = _configuration["Realm"];
-            string qop = _configuration["Qop"];
-
-            var opaque = HttpContext.Session.GetString("Opaque");
-            if (opaque == null)
-                return View("UnauthorizedCompletely");
-
-            string nonce = GenerateDigest.GenerateRandom();
-            HttpContext.Session.SetString(opaque, nonce);
-
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"{returnUrl}\", role = \"Administrator\"";
-            return View("Unauthorized");
-        }
-
-        [HttpPost("adminPost")]
-        public ViewResult AdminPost(AddUser formData)
-        {
-            string realm = _configuration["Realm"];
-            string qop = _configuration["Qop"];
-
-            var opaque = HttpContext.Session.GetString("Opaque");
-            if (opaque == null)
-                return View("UnauthorizedComletely");
-
-            string nonce = GenerateDigest.GenerateRandom();
-            HttpContext.Session.SetString(opaque, nonce);
-
-            formData.User.PasswordHash = GenerateDigest.ComputeMD5($"{formData.User.Email}:{realm}:{formData.User.PasswordHash}");
-
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"{formData.ReturnUrl}\" formData=\"{formData.User.AuthParams()}\", role = \"Administrator\"";
-            return View("UnauthorizedPost");
+            return View(GenerateMap.Points);
         }
     }
 }

@@ -4,26 +4,29 @@ namespace Logistics_service.Models
 {
     public class Point
     {
-        public int? Id { get; set; }
+        public int Index { get; set; }
 
+        public string? Name { get; set; }
 
-        [Required(ErrorMessage = "Route is required")]
-        public int RouteId { get; set; }
+        public int PosX { get; set; }
 
-        public Route? Route { get; set; }
+        public int PosY { get; set; }
 
-        [Required(ErrorMessage = "Order is required")]
-        public int OrderId { get; set; }
+        public int[]? ConnectedPointsInsexes { get; set; }
 
-        public Order? Order { get; set; }
+        public Point() { }
 
-        [Required(ErrorMessage = "Location is required")]
-        [StringLength(100, ErrorMessage = "Location cannot be longer than 100 characters")]
-        public string Location { get; set; }
+        public Point(string? name, int posX, int posY)
+        {
+            Name = name;
+            PosX = posX;
+            PosY = posY;
+        }
 
-        [Required(ErrorMessage = "Sequence number is required")]
-        public int SequenceNumber { get; set; }
-
+        public void AddPoint(params int[] indexes)
+        {
+            ConnectedPointsInsexes = indexes;
+        }
 
         public void UpdateLocation(string newLocation)
         {
