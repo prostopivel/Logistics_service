@@ -6,7 +6,8 @@
 
 <h1>Manager Dashboard</h1>
 <div class="button-container">
-    <button onclick="auth(`GET`, `/Manager/assignCar`)">Назначить машину</button>
-    <button onclick="auth(`GET`, `/Manager/updateRoute`); ChangeWidth('1400px');">Обновить маршрут</button>
-    <button onclick="auth(`GET`, `/Manager/informClient`)">Информировать клиента</button>
+    <button onclick="auth(`GET`, `/Manager/getOrder`)">Получить заказ</button>
+    <button onclick="viewMap(`GET`, `/Manager/viewMap`)">Посмотреть карту</button>
+    <button onclick="auth(`GET`, `/Manager/assignOrder`)">Одобрить заказ</button>
+    <button onclick="auth(`GET`, `/Manager/viewCars`)">Посмотреть машины</button>
 </div>

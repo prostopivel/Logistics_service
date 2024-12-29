@@ -1,7 +1,7 @@
 ﻿using Logistics_service.Data;
 using Logistics_service.Models;
 using Logistics_service.Models.Users;
-using Logistics_service.Services;
+using Logistics_service.Static;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +26,10 @@ namespace Logistics_service.Controllers
         }
 
         //auth/auth
-        [HttpGet("auth")]
+        [HttpGet("logIn")]
         [AllowAnonymous]
-        public IActionResult Auth(string returnUrl = null)
+        public IActionResult LogIn()
         {
-            ViewBag.returnUrl = returnUrl ?? Url.Content("~/");
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
             string nonce = GenerateDigest.GenerateRandom();
@@ -45,20 +44,19 @@ namespace Logistics_service.Controllers
         }
 
         //auth/autor
-        [HttpGet("autor")]
+        [HttpGet("registration")]
         [AllowAnonymous]
-        public IActionResult Autor(string returnUrl = null)
+        public IActionResult Registration()
         {
-            ViewBag.returnUrl = returnUrl ?? Url.Content("~/");
             ViewBag.RealmHeader = _configuration["Realm"];
 
             return View();
         }
 
         //auth/login
-        [HttpPost("login")]
+        [HttpPost("logIn")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> LogInPost()
         {
             var role = await Auth();
             if (role != null)
@@ -79,9 +77,9 @@ namespace Logistics_service.Controllers
         }
 
         //auth/autLog
-        [HttpPost("autLog")]
+        [HttpPost("registration")]
         [AllowAnonymous]
-        public async Task<IActionResult> AutLog(Customer customer)
+        public async Task<IActionResult> Registration(Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -112,7 +110,6 @@ namespace Logistics_service.Controllers
             {
                 _context.Customers.Add(customer);
                 var affectedRows = await _context.SaveChangesAsync();
-                await Console.Out.WriteLineAsync($"Изменено строк: {affectedRows}");
                 return true;
             }
 
@@ -152,8 +149,11 @@ namespace Logistics_service.Controllers
 
             var expectedResponse = await ComputeDigestResponse(username, nonce, uri, nc, cnonce);
 
-
-            if (response != expectedResponse?.Item1)
+            if (expectedResponse == null)
+            {
+                return null;
+            }
+            else if (response != expectedResponse?.Item1)
             {
                 errorMessage = "Неправильный response!";
                 return null;

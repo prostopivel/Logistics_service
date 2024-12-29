@@ -1,0 +1,41 @@
+﻿@model Logistics_service.Models.Orders.CustomerOrder[]
+
+@{
+    Layout = null;
+}
+
+<h2 class="error-message">@ViewBag.Error</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Время заказа</th>
+            <th>Email</th>
+            <th>Адрес получения</th>
+            <th>Адрес доставки</th>
+            <th>Время доставки</th>
+            <th>Масса груза</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.Email</td>
+                    <td>@item.BeginningAddress</td>
+                    <td>@item.DestinationAddress</td>
+                    <td>@item.ArrivalTime</td>
+                    <td>@item.WeightCargo</td>
+                    <td>
+                        <input type="button" onclick='sendOrder("DELETE", "/manager/getOrder", @Html.Raw(Json.Serialize(item)))' value="Принять" />
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div id="orders"></div>

@@ -37,12 +37,22 @@ namespace Logistics_service.Controllers.Dashboard
 
         [ResponseCache(NoStore = true, Duration = 0)]
         [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpDelete("deleteUser/{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [HttpDelete("deleteCustomer/{id}")]
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
             await DeleteUserAsync(id);
 
             return View("viewAllCustomers", await _context.Customers.ToListAsync());
+        }
+
+        [ResponseCache(NoStore = true, Duration = 0)]
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpDelete("deleteManager/{id}")]
+        public async Task<IActionResult> DeleteManager(int id)
+        {
+            await DeleteUserAsync(id);
+
+            return View("viewAllManagers", await _context.Managers.ToListAsync());
         }
 
         private async Task DeleteUserAsync(int id)
@@ -132,9 +142,11 @@ namespace Logistics_service.Controllers.Dashboard
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewMap")]
-        public IActionResult ViewMap()
+        public async Task<IActionResult> ViewMap()
         {
-            return View(GenerateMap.Points);
+            //GenerateMap.SaveMap(_context);
+
+            return View(await _context.Points.ToArrayAsync());
         }
     }
 }

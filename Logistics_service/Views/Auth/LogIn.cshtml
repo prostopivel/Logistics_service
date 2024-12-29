@@ -51,7 +51,7 @@
             var response = computeDigestResponse(email, password, authenticateParams);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/auth/login', true);
+            xhr.open('POST', '/auth/logIn', true);
 
             xhr.setRequestHeader('Authorization', 'Digest ' + response);
             xhr.setRequestHeader('Content-Type', 'application/json');

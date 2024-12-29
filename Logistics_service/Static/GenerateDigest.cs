@@ -1,13 +1,10 @@
-﻿using Azure.Core;
-using Logistics_service.Data;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Logistics_service.Data;
 using Logistics_service.Models.Users;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Text;
 
-namespace Logistics_service.Services
+namespace Logistics_service.Static
 {
     public static class GenerateDigest
     {
@@ -60,13 +57,19 @@ namespace Logistics_service.Services
 
             var expectedResponse = await ComputeDigestResponse(username, nonce, uri, nc, cnonce);
 
-            if (response != expectedResponse?.Item1)
+            if (expectedResponse == null)
+            {
+                return null;
+            }
+            else if (response != expectedResponse.Item1)
             {
                 errorMessage = "Неправильный response!";
                 return null;
             }
             else
+            {
                 return expectedResponse.Item2;
+            }
         }
 
         private static async Task<Tuple<string, UserRole>?> ComputeDigestResponse(string username, string nonce, string uri, string nc, string cnonce)

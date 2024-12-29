@@ -1,10 +1,10 @@
 ﻿using Logistics_service.Data;
-using Logistics_service.Services;
+using Logistics_service.Static;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Data;
 
-namespace Logistics_service
+namespace Logistics_service.Services
 {
     public class DigestAuthFilter : IAsyncAuthorizationFilter
     {

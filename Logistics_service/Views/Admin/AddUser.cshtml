@@ -12,7 +12,7 @@
 
 <div class="container">
     <h1>Добавить пользователя</h1>
-    <form id="addUserForm" asp-action="AdminPost" method="post" onsubmit="encryptPassword(event, 'POST', '/Admin/addUser')">
+    <form id="addUserForm" asp-action="addUser" method="post" onsubmit="encryptPassword(event, 'POST', '/Admin/addUser')">
         <div asp-validation-summary="All" class="error-message"></div>
         <div class="form-group">
             <label asp-for="Email">Email:</label>
@@ -39,6 +39,6 @@
             </select>
             <span asp-validation-for="Role" class="error-message"></span>
         </div>
-        <button type="submit" onclick="encryptPassword(event, `POST`, `/Admin/addUser`)">Добавить</button>
+        <button type="submit">Добавить</button>
     </form>
 </div>

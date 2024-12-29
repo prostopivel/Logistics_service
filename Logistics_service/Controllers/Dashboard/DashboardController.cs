@@ -1,6 +1,7 @@
 ﻿using Logistics_service.Models;
 using Logistics_service.Models.Users;
 using Logistics_service.Services;
+using Logistics_service.Static;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 

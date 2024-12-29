@@ -1,5 +1,8 @@
 ﻿using Logistics_service.Services;
 using Microsoft.AspNetCore.Mvc;
+using Logistics_service.Models;
+using Logistics_service.Models.Orders;
+using Logistics_service.Static;
 
 namespace Logistics_service.Controllers.Dashboard
 {
@@ -7,10 +10,12 @@ namespace Logistics_service.Controllers.Dashboard
     public class CustomerController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly OrderQueueService<CustomerOrder> _queueService;
 
-        public CustomerController(IConfiguration configuration)
+        public CustomerController(IConfiguration configuration, OrderQueueService<CustomerOrder> queueService)
         {
             _configuration = configuration;
+            _queueService = queueService;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -28,28 +33,29 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpPost("createRequest")]
+        public ActionResult CreateRequest([FromBody] CustomerOrder order)
+        {
+            if (ModelState.IsValid)
+            {
+                var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+                var email = GenerateDigest.ParseAuthorizationHeader(authHeader.Substring("Digest ".Length))["username"]; ;
+
+                order.Email = email;
+                order.CreatedAt = DateTime.Now;
+
+                _queueService.EnqueueOrder(order);
+
+                return RedirectToAction("customer", "Dashboard");
+            }
+            return View("createRequest");
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewMap")]
         public IActionResult ViewMap()
         {
             return View();
-        }
-
-        [HttpGet("customer")]
-        public IActionResult Customer(string returnUrl)
-        {
-            string realm = _configuration["Realm"];
-            string qop = _configuration["Qop"];
-
-            var opaque = HttpContext.Session.GetString("Opaque");
-            if (opaque == null)
-                return View("UnauthorizedCompletely");
-
-            string nonce = GenerateDigest.GenerateRandom();
-            HttpContext.Session.SetString(opaque, nonce);
-
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"{returnUrl}\", role = \"Customer\"";
-
-            return View("Unauthorized");
         }
     }
 }

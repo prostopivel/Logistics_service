@@ -1,1090 +1,1669 @@
 [
   {
+    "Id": 1102,
     "Index": 0,
     "Name": "0",
     "PosX": 68,
     "PosY": 33,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       30,
       36
+    ],
+    "Distances": [
+      308.40364605497126,
+      89.3467512336067
     ]
   },
   {
+    "Id": 1103,
     "Index": 1,
     "Name": "1",
     "PosX": 12,
     "PosY": 5,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       14,
       2
+    ],
+    "Distances": [
+      232.1461126187557,
+      288.84428335177415
     ]
   },
   {
+    "Id": 1104,
     "Index": 2,
     "Name": "2",
     "PosX": 11,
     "PosY": 20,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       3,
       1,
       4
+    ],
+    "Distances": [
+      288.52693877868666,
+      288.84428335177415,
+      418.34818709897615
     ]
   },
   {
+    "Id": 1105,
     "Index": 3,
     "Name": "3",
     "PosX": 4,
     "PosY": 17,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       2
+    ],
+    "Distances": [
+      288.52693877868666
     ]
   },
   {
+    "Id": 1106,
     "Index": 4,
     "Name": "4",
     "PosX": 8,
     "PosY": 41,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       2,
       5,
       6
+    ],
+    "Distances": [
+      418.34818709897615,
+      254.11526483861607,
+      189.6740087861276
     ]
   },
   {
+    "Id": 1107,
     "Index": 5,
     "Name": "5",
     "PosX": 2,
     "PosY": 37,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       4
+    ],
+    "Distances": [
+      254.11526483861607
     ]
   },
   {
+    "Id": 1108,
     "Index": 6,
     "Name": "6",
     "PosX": 6,
     "PosY": 50,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       4,
       8,
       7,
       100
+    ],
+    "Distances": [
+      189.6740087861276,
+      224.76265074295594,
+      438.9346074405617,
+      247.871
     ]
   },
   {
+    "Id": 1109,
     "Index": 7,
     "Name": "7",
     "PosX": 16,
     "PosY": 41,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       6
+    ],
+    "Distances": [
+      438.9346074405617
     ]
   },
   {
+    "Id": 1110,
     "Index": 8,
     "Name": "8",
     "PosX": 4,
     "PosY": 61,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       6,
       100,
       9
+    ],
+    "Distances": [
+      224.76265074295594,
+      89.3467512336067,
+      516.3917761554691
     ]
   },
   {
+    "Id": 1111,
     "Index": 9,
     "Name": "9",
     "PosX": 3,
     "PosY": 88,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       11,
       8
+    ],
+    "Distances": [
+      224.76265074295594,
+      516.3917761554691
     ]
   },
   {
+    "Id": 1112,
     "Index": 10,
     "Name": "10",
     "PosX": 5,
     "PosY": 72,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       100,
       11,
       13
+    ],
+    "Distances": [
+      176.29449681995183,
+      95.33500000000001,
+      209.94274076757216
     ]
   },
   {
+    "Id": 1113,
     "Index": 11,
     "Name": "11",
     "PosX": 5,
     "PosY": 77,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       9,
       10,
       12
+    ],
+    "Distances": [
+      224.76265074295594,
+      95.33500000000001,
+      171.42495267900762
     ]
   },
   {
+    "Id": 1114,
     "Index": 12,
     "Name": "12",
     "PosX": 9,
     "PosY": 80,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       11,
       13
+    ],
+    "Distances": [
+      171.42495267900762,
+      103.54188633108826
     ]
   },
   {
+    "Id": 1115,
     "Index": 13,
     "Name": "13",
     "PosX": 10,
     "PosY": 75,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       10,
       12
+    ],
+    "Distances": [
+      209.94274076757216,
+      103.54188633108826
     ]
   },
   {
+    "Id": 1116,
     "Index": 14,
     "Name": "14",
     "PosX": 17,
     "PosY": 11,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       1,
       15,
       20
+    ],
+    "Distances": [
+      232.1461126187557,
+      336.96736077103964,
+      308.40364605497126
     ]
   },
   {
+    "Id": 1117,
     "Index": 15,
     "Name": "15",
     "PosX": 25,
     "PosY": 16,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       17,
       14,
       94
+    ],
+    "Distances": [
+      133.46900000000002,
+      336.96736077103964,
+      292.9038200911692
     ]
   },
   {
+    "Id": 1118,
     "Index": 16,
     "Name": "16",
     "PosX": 38,
     "PosY": 22,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       18,
       19,
       94
+    ],
+    "Distances": [
+      194.90307565556787,
+      176.29449681995183,
+      245.38125836338844
     ]
   },
   {
+    "Id": 1119,
     "Index": 17,
     "Name": "17",
     "PosX": 25,
     "PosY": 9,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       15,
       18
+    ],
+    "Distances": [
+      133.46900000000002,
+      568.485104818939
     ]
   },
   {
+    "Id": 1120,
     "Index": 18,
     "Name": "18",
     "PosX": 39,
     "PosY": 12,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       16,
       17,
       23
+    ],
+    "Distances": [
+      194.90307565556787,
+      568.485104818939,
+      86.30740306601746
     ]
   },
   {
+    "Id": 1121,
     "Index": 19,
     "Name": "19",
     "PosX": 37,
     "PosY": 31,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       16,
       50,
       92,
       93
+    ],
+    "Distances": [
+      176.29449681995183,
+      419.7553682432185,
+      753.4253339044288,
+      249.05765276537878
     ]
   },
   {
+    "Id": 1122,
     "Index": 20,
     "Name": "20",
     "PosX": 23,
     "PosY": 21,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       14,
       93,
       21
+    ],
+    "Distances": [
+      308.40364605497126,
+      349.67443995951436,
+      242.65182961601587
     ]
   },
   {
+    "Id": 1123,
     "Index": 21,
     "Name": "21",
     "PosX": 21,
     "PosY": 33,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       20,
       22
+    ],
+    "Distances": [
+      242.65182961601587,
+      315.5908192327527
     ]
   },
   {
+    "Id": 1124,
     "Index": 22,
     "Name": "22",
     "PosX": 19,
     "PosY": 49,
-    "ConnectedPointsInsexes": [
-      21,
-      36
+    "ConnectedPointsIndexes": [
+      21
+    ],
+    "Distances": [
+      315.5908192327527
     ]
   },
   {
+    "Id": 1125,
     "Index": 23,
     "Name": "23",
     "PosX": 40,
     "PosY": 8,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       18,
       53
+    ],
+    "Distances": [
+      86.30740306601746,
+      323.7619348981594
     ]
   },
   {
+    "Id": 1126,
     "Index": 24,
     "Name": "24",
     "PosX": 57,
     "PosY": 12,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       25,
       53
+    ],
+    "Distances": [
+      224.76265074295594,
+      368.07188754508263
     ]
   },
   {
+    "Id": 1127,
     "Index": 25,
     "Name": "25",
     "PosX": 59,
     "PosY": 1,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       24,
       26
+    ],
+    "Distances": [
+      224.76265074295594,
+      276.71598067513196
     ]
   },
   {
+    "Id": 1128,
     "Index": 26,
     "Name": "26",
     "PosX": 65,
     "PosY": 8,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       25,
       27
+    ],
+    "Distances": [
+      276.71598067513196,
+      76.268
     ]
   },
   {
+    "Id": 1129,
     "Index": 27,
     "Name": "27",
     "PosX": 65,
     "PosY": 12,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       26,
       28,
       97
+    ],
+    "Distances": [
+      76.268,
+      225.93027442111426,
+      312.7136293176235
     ]
   },
   {
+    "Id": 1130,
     "Index": 28,
     "Name": "28",
     "PosX": 62,
     "PosY": 22,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       27
+    ],
+    "Distances": [
+      225.93027442111426
     ]
   },
   {
+    "Id": 1131,
     "Index": 29,
     "Name": "29",
     "PosX": 61,
     "PosY": 27,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       35
+    ],
+    "Distances": [
+      260.7080218194293
     ]
   },
   {
+    "Id": 1132,
     "Index": 30,
     "Name": "30",
     "PosX": 74,
     "PosY": 23,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       0,
       31,
       32,
       97
+    ],
+    "Distances": [
+      308.40364605497126,
+      561.4995266569688,
+      588.684942264536,
+      111.11007075868505
     ]
   },
   {
+    "Id": 1133,
     "Index": 31,
     "Name": "31",
     "PosX": 85,
     "PosY": 5,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       30,
       40,
       98
+    ],
+    "Distances": [
+      561.4995266569688,
+      140.05876482391238,
+      111.11007075868505
     ]
   },
   {
+    "Id": 1134,
     "Index": 32,
     "Name": "32",
     "PosX": 79,
     "PosY": 52,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       30,
       37,
       95
+    ],
+    "Distances": [
+      588.684942264536,
+      525.2,
+      127.05763241930804
     ]
   },
   {
+    "Id": 1135,
     "Index": 33,
     "Name": "33",
     "PosX": 71,
     "PosY": 55,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       34,
       95
+    ],
+    "Distances": [
+      124.96960520462567,
+      202.89788192339515
     ]
   },
   {
+    "Id": 1136,
     "Index": 34,
     "Name": "34",
     "PosX": 69,
     "PosY": 50,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       33,
       35,
       46
+    ],
+    "Distances": [
+      124.96960520462567,
+      446.7337561680335,
+      194.90307565556787
     ]
   },
   {
+    "Id": 1137,
     "Index": 35,
     "Name": "35",
     "PosX": 59,
     "PosY": 40,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       34,
       29
+    ],
+    "Distances": [
+      446.7337561680335,
+      260.7080218194293
     ]
   },
   {
+    "Id": 1138,
     "Index": 36,
     "Name": "36",
     "PosX": 70,
     "PosY": 35,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       0,
-      46,
-      96
+      46
+    ],
+    "Distances": [
+      89.3467512336067,
+      95.33500000000001
     ]
   },
   {
+    "Id": 1139,
     "Index": 37,
     "Name": "37",
     "PosX": 92,
     "PosY": 52,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       32,
       39,
       99
+    ],
+    "Distances": [
+      525.2,
+      660.8407391505158,
+      103.54188633108826
     ]
   },
   {
+    "Id": 1140,
     "Index": 38,
     "Name": "38",
     "PosX": 91,
     "PosY": 63,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       41,
       99
+    ],
+    "Distances": [
+      265.050164325548,
+      140.05876482391238
     ]
   },
   {
+    "Id": 1141,
     "Index": 39,
     "Name": "39",
     "PosX": 97,
     "PosY": 19,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       37,
       52
+    ],
+    "Distances": [
+      660.8407391505158,
+      305.06336653882255
     ]
   },
   {
+    "Id": 1142,
     "Index": 40,
     "Name": "40",
     "PosX": 87,
     "PosY": 11,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       31,
       52
+    ],
+    "Distances": [
+      140.05876482391238,
+      127.05763241930804
     ]
   },
   {
+    "Id": 1143,
     "Index": 41,
     "Name": "41",
     "PosX": 96,
     "PosY": 72,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       38,
       42
+    ],
+    "Distances": [
+      265.050164325548,
+      379.3480175722552
     ]
   },
   {
+    "Id": 1144,
     "Index": 42,
     "Name": "42",
     "PosX": 92,
     "PosY": 90,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       41,
       43
+    ],
+    "Distances": [
+      379.3480175722552,
+      243.148741491705
     ]
   },
   {
+    "Id": 1145,
     "Index": 43,
     "Name": "43",
     "PosX": 86,
     "PosY": 89,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       42,
       44,
       45
+    ],
+    "Distances": [
+      243.148741491705,
+      283.44204079317524,
+      469.84954112566714
     ]
   },
   {
+    "Id": 1146,
     "Index": 44,
     "Name": "44",
     "PosX": 79,
     "PosY": 88,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       43,
       47,
       54
+    ],
+    "Distances": [
+      283.44204079317524,
+      628.7740497579396,
+      528.3057773685615
     ]
   },
   {
+    "Id": 1147,
     "Index": 45,
     "Name": "45",
     "PosX": 75,
     "PosY": 97,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       43,
-      56
+      55
+    ],
+    "Distances": [
+      469.84954112566714,
+      408.0293548275663
     ]
   },
   {
+    "Id": 1148,
     "Index": 46,
     "Name": "46",
     "PosX": 70,
     "PosY": 40,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       34,
       36,
       96
+    ],
+    "Distances": [
+      194.90307565556787,
+      95.33500000000001,
+      162.720958972715
     ]
   },
   {
+    "Id": 1149,
     "Index": 47,
     "Name": "47",
     "PosX": 67,
     "PosY": 67,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       44,
       48,
       56
+    ],
+    "Distances": [
+      628.7740497579396,
+      253.12295687274198,
+      139.44939569965877
     ]
   },
   {
+    "Id": 1150,
     "Index": 48,
     "Name": "48",
     "PosX": 62,
     "PosY": 59,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       47,
       49,
       57
+    ],
+    "Distances": [
+      253.12295687274198,
+      312.7136293176235,
+      251.14177796814292
     ]
   },
   {
+    "Id": 1151,
     "Index": 49,
     "Name": "49",
     "PosX": 55,
     "PosY": 52,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       48,
       50,
       58
+    ],
+    "Distances": [
+      312.7136293176235,
+      410.56060320006344,
+      352.58899363990366
     ]
   },
   {
+    "Id": 1152,
     "Index": 50,
     "Name": "50",
     "PosX": 46,
     "PosY": 42,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       19,
       49,
       51
+    ],
+    "Distances": [
+      419.7553682432185,
+      410.56060320006344,
+      242.2375882661483
     ]
   },
   {
+    "Id": 1153,
     "Index": 51,
     "Name": "51",
     "PosX": 49,
     "PosY": 31,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       50
+    ],
+    "Distances": [
+      242.2375882661483
     ]
   },
   {
+    "Id": 1154,
     "Index": 52,
     "Name": "52",
     "PosX": 90,
     "PosY": 13,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       39,
       40
+    ],
+    "Distances": [
+      305.06336653882255,
+      127.05763241930804
     ]
   },
   {
+    "Id": 1155,
     "Index": 53,
     "Name": "53",
     "PosX": 48,
     "PosY": 9,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       23,
       24
+    ],
+    "Distances": [
+      323.7619348981594,
+      368.07188754508263
     ]
   },
   {
+    "Id": 1156,
     "Index": 54,
     "Name": "54",
     "PosX": 66,
     "PosY": 85,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       44,
       55,
       56,
       70
+    ],
+    "Distances": [
+      528.3057773685615,
+      176.29449681995183,
+      209.737,
+      249.05765276537878
     ]
   },
   {
+    "Id": 1157,
     "Index": 55,
     "Name": "55",
     "PosX": 65,
     "PosY": 94,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       45,
       54,
       74,
       77
+    ],
+    "Distances": [
+      408.0293548275663,
+      176.29449681995183,
+      254.11526483861607,
+      243.148741491705
     ]
   },
   {
+    "Id": 1158,
     "Index": 56,
     "Name": "56",
     "PosX": 66,
     "PosY": 74,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       47,
       54,
       57
+    ],
+    "Distances": [
+      139.44939569965877,
+      209.737,
+      205.5679983752335
     ]
   },
   {
+    "Id": 1159,
     "Index": 57,
     "Name": "57",
     "PosX": 61,
     "PosY": 72,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       48,
       56,
       58,
       70
+    ],
+    "Distances": [
+      251.14177796814292,
+      205.5679983752335,
+      325.44191794543,
+      194.90307565556787
     ]
   },
   {
+    "Id": 1160,
     "Index": 58,
     "Name": "58",
     "PosX": 53,
     "PosY": 70,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       49,
       57,
       59,
       69
+    ],
+    "Distances": [
+      352.58899363990366,
+      325.44191794543,
+      245.38125836338844,
+      194.90307565556787
     ]
   },
   {
+    "Id": 1161,
     "Index": 59,
     "Name": "59",
     "PosX": 47,
     "PosY": 68,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       58,
       60,
       62,
       65
+    ],
+    "Distances": [
+      245.38125836338844,
+      245.38125836338844,
+      213.59253069571508,
+      114.402
     ]
   },
   {
+    "Id": 1162,
     "Index": 60,
     "Name": "60",
     "PosX": 41,
     "PosY": 66,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       59,
       61,
       64
+    ],
+    "Distances": [
+      245.38125836338844,
+      205.5679983752335,
+      114.402
     ]
   },
   {
+    "Id": 1163,
     "Index": 61,
     "Name": "61",
     "PosX": 36,
     "PosY": 64,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       60,
       63
+    ],
+    "Distances": [
+      205.5679983752335,
+      114.402
     ]
   },
   {
+    "Id": 1164,
     "Index": 62,
     "Name": "62",
     "PosX": 48,
     "PosY": 57,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       59
+    ],
+    "Distances": [
+      213.59253069571508
     ]
   },
   {
+    "Id": 1165,
     "Index": 63,
     "Name": "63",
     "PosX": 36,
     "PosY": 70,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       61,
       64,
       66,
       92
+    ],
+    "Distances": [
+      114.402,
+      205.5679983752335,
+      95.33500000000001,
+      80.8
     ]
   },
   {
+    "Id": 1166,
     "Index": 64,
     "Name": "64",
     "PosX": 41,
     "PosY": 72,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       60,
       63,
       65,
       67
+    ],
+    "Distances": [
+      114.402,
+      205.5679983752335,
+      245.38125836338844,
+      103.54188633108826
     ]
   },
   {
+    "Id": 1167,
     "Index": 65,
     "Name": "65",
     "PosX": 47,
     "PosY": 74,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       59,
       64,
       68
+    ],
+    "Distances": [
+      114.402,
+      245.38125836338844,
+      103.54188633108826
     ]
   },
   {
+    "Id": 1168,
     "Index": 66,
     "Name": "66",
     "PosX": 36,
     "PosY": 75,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       63,
       67,
       91
+    ],
+    "Distances": [
+      95.33500000000001,
+      166.0384351769192,
+      80.8
     ]
   },
   {
+    "Id": 1169,
     "Index": 67,
     "Name": "67",
     "PosX": 40,
     "PosY": 77,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       64,
       66,
       68,
       71
+    ],
+    "Distances": [
+      103.54188633108826,
+      166.0384351769192,
+      245.38125836338844,
+      133.46900000000002
     ]
   },
   {
+    "Id": 1170,
     "Index": 68,
     "Name": "68",
     "PosX": 46,
     "PosY": 79,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       65,
       67,
       69,
       72
+    ],
+    "Distances": [
+      103.54188633108826,
+      245.38125836338844,
+      243.148741491705,
+      152.536
     ]
   },
   {
+    "Id": 1171,
     "Index": 69,
     "Name": "69",
     "PosX": 52,
     "PosY": 80,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       58,
       68,
       70,
       73
+    ],
+    "Distances": [
+      194.90307565556787,
+      243.148741491705,
+      325.44191794543,
+      152.536
     ]
   },
   {
+    "Id": 1172,
     "Index": 70,
     "Name": "70",
     "PosX": 60,
     "PosY": 82,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       54,
       57,
       69,
       74
+    ],
+    "Distances": [
+      249.05765276537878,
+      194.90307565556787,
+      325.44191794543,
+      157.79540961637636
     ]
   },
   {
+    "Id": 1173,
     "Index": 71,
     "Name": "71",
     "PosX": 40,
     "PosY": 84,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       67,
       75,
       88
+    ],
+    "Distances": [
+      133.46900000000002,
+      89.3467512336067,
+      292.9038200911692
     ]
   },
   {
+    "Id": 1174,
     "Index": 72,
     "Name": "72",
     "PosX": 46,
     "PosY": 87,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       68,
       73,
       75,
       76
+    ],
+    "Distances": [
+      152.536,
+      243.148741491705,
+      162.720958972715,
+      76.268
     ]
   },
   {
+    "Id": 1175,
     "Index": 73,
     "Name": "73",
     "PosX": 52,
     "PosY": 88,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       69,
       72,
       74
+    ],
+    "Distances": [
+      152.536,
+      243.148741491705,
+      285.3594959975925
     ]
   },
   {
+    "Id": 1176,
     "Index": 74,
     "Name": "74",
     "PosX": 59,
     "PosY": 90,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       55,
       70,
       73,
       77
+    ],
+    "Distances": [
+      254.11526483861607,
+      157.79540961637636,
+      285.3594959975925,
+      95.33500000000001
     ]
   },
   {
+    "Id": 1177,
     "Index": 75,
     "Name": "75",
     "PosX": 42,
     "PosY": 86,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       71,
       72,
       78
+    ],
+    "Distances": [
+      89.3467512336067,
+      162.720958972715,
+      76.268
     ]
   },
   {
+    "Id": 1178,
     "Index": 76,
     "Name": "76",
     "PosX": 46,
     "PosY": 91,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       72,
       78,
       79,
       80
+    ],
+    "Distances": [
+      76.268,
+      162.720958972715,
+      202.89788192339515,
+      86.30740306601746
     ]
   },
   {
+    "Id": 1179,
     "Index": 77,
     "Name": "77",
     "PosX": 59,
     "PosY": 95,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       55,
       74,
       79,
       81
+    ],
+    "Distances": [
+      243.148741491705,
+      95.33500000000001,
+      328.2227816605666,
+      86.30740306601746
     ]
   },
   {
+    "Id": 1180,
     "Index": 78,
     "Name": "78",
     "PosX": 42,
     "PosY": 90,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       75,
       76,
       82,
       84
+    ],
+    "Distances": [
+      76.268,
+      162.720958972715,
+      76.268,
+      209.94274076757216
     ]
   },
   {
+    "Id": 1181,
     "Index": 79,
     "Name": "79",
     "PosX": 51,
     "PosY": 92,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       76,
       77,
       83
+    ],
+    "Distances": [
+      202.89788192339515,
+      328.2227816605666,
+      95.33500000000001
     ]
   },
   {
+    "Id": 1182,
     "Index": 80,
     "Name": "80",
     "PosX": 45,
     "PosY": 95,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       76,
       82,
       83
+    ],
+    "Distances": [
+      86.30740306601746,
+      122.69062918169422,
+      245.38125836338844
     ]
   },
   {
+    "Id": 1183,
     "Index": 81,
     "Name": "81",
     "PosX": 58,
     "PosY": 99,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       77,
       83
+    ],
+    "Distances": [
+      86.30740306601746,
+      285.3594959975925
     ]
   },
   {
+    "Id": 1184,
     "Index": 82,
     "Name": "82",
     "PosX": 42,
     "PosY": 94,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       78,
       80,
       85
+    ],
+    "Distances": [
+      76.268,
+      122.69062918169422,
+      245.38125836338844
     ]
   },
   {
+    "Id": 1185,
     "Index": 83,
     "Name": "83",
     "PosX": 51,
     "PosY": 97,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       79,
       80,
       81
+    ],
+    "Distances": [
+      95.33500000000001,
+      245.38125836338844,
+      285.3594959975925
     ]
   },
   {
+    "Id": 1186,
     "Index": 84,
     "Name": "84",
     "PosX": 37,
     "PosY": 87,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       78,
       85,
       86
+    ],
+    "Distances": [
+      209.94274076757216,
+      103.54188633108826,
+      202.89788192339515
     ]
   },
   {
+    "Id": 1187,
     "Index": 85,
     "Name": "85",
     "PosX": 36,
     "PosY": 92,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       82,
       84,
       87
+    ],
+    "Distances": [
+      245.38125836338844,
+      103.54188633108826,
+      122.69062918169422
     ]
   },
   {
+    "Id": 1188,
     "Index": 86,
     "Name": "86",
     "PosX": 32,
     "PosY": 86,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       84,
       87,
       88
+    ],
+    "Distances": [
+      202.89788192339515,
+      103.54188633108826,
+      121.32591480800794
     ]
   },
   {
+    "Id": 1189,
     "Index": 87,
     "Name": "87",
     "PosX": 33,
     "PosY": 91,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       85,
       86,
       90
+    ],
+    "Distances": [
+      122.69062918169422,
+      103.54188633108826,
+      328.2227816605666
     ]
   },
   {
+    "Id": 1190,
     "Index": 88,
     "Name": "88",
     "PosX": 33,
     "PosY": 80,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       71,
       86,
       89,
       91
+    ],
+    "Distances": [
+      292.9038200911692,
+      121.32591480800794,
+      254.11526483861607,
+      103.54188633108826
     ]
   },
   {
+    "Id": 1191,
     "Index": 89,
     "Name": "89",
     "PosX": 27,
     "PosY": 76,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       88,
       90
+    ],
+    "Distances": [
+      254.11526483861607,
+      242.65182961601587
     ]
   },
   {
+    "Id": 1192,
     "Index": 90,
     "Name": "90",
     "PosX": 25,
     "PosY": 88,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       87,
       89
+    ],
+    "Distances": [
+      328.2227816605666,
+      242.65182961601587
     ]
   },
   {
+    "Id": 1193,
     "Index": 91,
     "Name": "91",
     "PosX": 34,
     "PosY": 75,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       66,
       88,
       92
+    ],
+    "Distances": [
+      80.8,
+      103.54188633108826,
+      95.33500000000001
     ]
   },
   {
+    "Id": 1194,
     "Index": 92,
     "Name": "92",
     "PosX": 34,
     "PosY": 70,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       19,
       63,
       91
+    ],
+    "Distances": [
+      753.4253339044288,
+      80.8,
+      95.33500000000001
     ]
   },
   {
+    "Id": 1195,
     "Index": 93,
     "Name": "93",
     "PosX": 31,
     "PosY": 28,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       19,
       20,
       94
+    ],
+    "Distances": [
+      249.05765276537878,
+      349.67443995951436,
+      157.79540961637636
     ]
   },
   {
+    "Id": 1196,
     "Index": 94,
     "Name": "94",
     "PosX": 32,
     "PosY": 20,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       15,
-      19,
+      16,
       93
+    ],
+    "Distances": [
+      292.9038200911692,
+      245.38125836338844,
+      157.79540961637636
     ]
   },
   {
+    "Id": 1197,
     "Index": 95,
     "Name": "95",
     "PosX": 76,
     "PosY": 54,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       32,
       33,
       96
+    ],
+    "Distances": [
+      127.05763241930804,
+      202.89788192339515,
+      260.7080218194293
     ]
   },
   {
+    "Id": 1198,
     "Index": 96,
     "Name": "96",
     "PosX": 74,
     "PosY": 41,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       46,
       95
+    ],
+    "Distances": [
+      162.720958972715,
+      260.7080218194293
     ]
   },
   {
+    "Id": 1199,
     "Index": 97,
     "Name": "97",
     "PosX": 72,
     "PosY": 19,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       27,
       30,
       98
+    ],
+    "Distances": [
+      312.7136293176235,
+      111.11007075868505,
+      561.4995266569688
     ]
   },
   {
+    "Id": 1200,
     "Index": 98,
     "Name": "98",
     "PosX": 83,
     "PosY": 1,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       31,
       97
+    ],
+    "Distances": [
+      111.11007075868505,
+      561.4995266569688
     ]
   },
   {
+    "Id": 1201,
     "Index": 99,
     "Name": "99",
     "PosX": 93,
     "PosY": 57,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       37,
       38
+    ],
+    "Distances": [
+      103.54188633108826,
+      140.05876482391238
     ]
   },
   {
+    "Id": 1202,
     "Index": 100,
     "Name": "100",
     "PosX": 6,
     "PosY": 63,
-    "ConnectedPointsInsexes": [
+    "ConnectedPointsIndexes": [
       6,
       8,
       10
+    ],
+    "Distances": [
+      247.871,
+      89.3467512336067,
+      176.29449681995183
     ]
   }
 ]

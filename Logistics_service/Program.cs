@@ -1,5 +1,7 @@
 using Logistics_service.Data;
+using Logistics_service.Models.Orders;
 using Logistics_service.Services;
+using Logistics_service.Static;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -90,6 +92,10 @@ namespace Logistics_service
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            services.AddSingleton<OrderQueueService<CustomerOrder>>();
+            //services.AddSingleton<OrderQueueService<ManagerOrder>>();
+            services.AddMemoryCache();
         }
     }
 }

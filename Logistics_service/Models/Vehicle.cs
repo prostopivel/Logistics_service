@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Logistics_service.Models.Orders;
 
 namespace Logistics_service.Models
 {
