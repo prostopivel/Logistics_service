@@ -60,7 +60,7 @@ function auth(request, uri, data = '') {
                                     event.preventDefault();
                                     auth('GET', '/dashboard/' + role);
 
-                                    ChangeWidth('1000px');
+                                    ChangeWidth('1200px');
                                 };
                             }
                         }

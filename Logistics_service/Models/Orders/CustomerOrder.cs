@@ -12,8 +12,5 @@ namespace Logistics_service.Models.Orders
 
         [Required(ErrorMessage = "ArrivalTime is required")]
         public DateTime ArrivalTime { get; set; }
-
-        [Required(ErrorMessage = "WeightCargo is required")]
-        public int WeightCargo { get; set; }
     }
 }

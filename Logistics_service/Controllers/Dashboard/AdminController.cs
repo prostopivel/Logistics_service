@@ -1,8 +1,11 @@
 ﻿using Logistics_service.Data;
+using Logistics_service.Models;
+using Logistics_service.Models.Orders;
 using Logistics_service.Models.Users;
 using Logistics_service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 
 namespace Logistics_service.Controllers.Dashboard
@@ -12,11 +15,19 @@ namespace Logistics_service.Controllers.Dashboard
     {
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
+        private readonly WaitingOrderService _waitingOrder;
+        private readonly VehicleService _vehicleService;
+        private readonly OrderQueueService<ReadyOrder> _readyQueueService;
 
-        public AdminController(IConfiguration configuration, ApplicationDbContext context)
+        public AdminController(IConfiguration configuration, ApplicationDbContext context, 
+            WaitingOrderService waitingOrder, VehicleService vehicleService, 
+            OrderQueueService<ReadyOrder> readyQueueService)
         {
             _configuration = configuration;
             _context = context;
+            _waitingOrder = waitingOrder;
+            _vehicleService = vehicleService;
+            _readyQueueService = readyQueueService;
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]
@@ -58,7 +69,7 @@ namespace Logistics_service.Controllers.Dashboard
         private async Task DeleteUserAsync(int id)
         {
             var user = _context.Users.FirstOrDefault(c => c.Id == id);
-            if (user != null)
+            if (user is not null)
             {
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
@@ -89,12 +100,13 @@ namespace Logistics_service.Controllers.Dashboard
 
                 return RedirectToAction("administrator", "Dashboard");
             }
+
             return View("addUser");
         }
 
         private async Task<bool> AddUserAsync(User user)
         {
-            if (_context.Users.FirstOrDefault(c => c.Email == user.Email) == null)
+            if (_context.Users.FirstOrDefault(c => c.Email == user.Email) is null)
             {
                 try
                 {
@@ -130,13 +142,70 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("viewAllOrders")]
         public IActionResult ViewAllOrders()
         {
-            return View();
+            return View(_readyQueueService.PeekAll());
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpPost("addOrder")]
+        public async Task<ActionResult> AddOrder([FromBody] ReadyOrder order)
+        {
+            if (ModelState.IsValid && order.Route.DepartureTime is not null)
+            {
+                await _waitingOrder.AddOrder((DateTime)order.Route.DepartureTime, order, _context);
+                return View("viewAllOrders");
+            }
+
+            return View("addOrder");
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("manageTransport")]
-        public IActionResult ManageTransport()
+        public async Task<IActionResult> ManageTransport()
         {
+            var vehicles = _vehicleService.GetAllVehicles(await _context.GetVehiclesAsync());
+
+            return View(vehicles);
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpGet("addTransport")]
+        public IActionResult AddTransport()
+        {
+            return View();
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpPost("addTransport")]
+        public async Task<IActionResult> AddTransport([FromBody] dynamic vehicle)
+        {
+            using JsonDocument doc = JsonDocument.Parse(vehicle.ToString());
+            JsonElement root = doc.RootElement;
+
+            string? speedString = root.GetProperty("Speed").GetString();
+            string? garageIdString = root.GetProperty("GarageId").GetString();
+
+            if (!int.TryParse(garageIdString, out int garageId)
+                || !int.TryParse(speedString, out int speed))
+            {
+                @ViewBag.Error = "Не число!";
+            }
+            else
+            {
+                var point = await _context.Points.FirstOrDefaultAsync(p => p.Index == garageId);
+
+                if (point is null)
+                {
+                    @ViewBag.Error = "Точка не найдена!";
+                }
+                else
+                {
+                    _context.Vehicles.Add(new Vehicle(point, speed));
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("administrator", "Dashboard");
+                }
+            }
+
             return View();
         }
 

@@ -1,0 +1,27 @@
+﻿@model Logistics_service.Models.Vehicle
+
+@{
+    Layout = null;
+}
+
+<meta name='realm' content="@ViewBag.RealmHeader">
+<h2 class="error-message">@ViewBag.Error</h2>
+
+<div class="container">
+    <h1>Добавить транспорт</h1>
+    <form id="addTransportForm" asp-action="addTransport" method="post" onsubmit="addTransport(event, 'POST', '/Admin/addTransport')">
+        <div asp-validation-summary="All" class="error-message"></div>
+        <div class="form-group">
+            <label asp-for="GarageId">Гараж:</label>
+            <input id="GarageId" type="number" asp-for="GarageId" name="GarageId" />
+            <span asp-validation-for="GarageId" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Speed">Скорость:</label>
+            <input id="Speed" type="number" asp-for="Speed" name="Speed" />
+            <span asp-validation-for="Speed" class="error-message"></span>
+        </div>
+
+        <button type="submit">Добавить</button>
+    </form>
+</div>

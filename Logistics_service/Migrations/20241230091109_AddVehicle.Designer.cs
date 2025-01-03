@@ -4,6 +4,7 @@ using Logistics_service.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Taxi_App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241230091109_AddVehicle")]
+    partial class AddVehicle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,7 +97,7 @@ namespace Taxi_App.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Logistics_service.Models.Vehicle", b =>
+            modelBuilder.Entity("Vehicle", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,20 +105,20 @@ namespace Taxi_App.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<int>("GarageId")
-                        .HasColumnType("int");
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
-                    b.Property<int>("Speed")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Status")
+                    b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.HasKey("Id");
+                    b.Property<int>("WeightCargo")
+                        .HasColumnType("int");
 
-                    b.HasIndex("GarageId");
+                    b.HasKey("Id");
 
                     b.ToTable("Vehicles");
                 });
@@ -142,17 +145,6 @@ namespace Taxi_App.Migrations
                     b.HasBaseType("Logistics_service.Models.Users.User");
 
                     b.HasDiscriminator().HasValue("Manager");
-                });
-
-            modelBuilder.Entity("Logistics_service.Models.Vehicle", b =>
-                {
-                    b.HasOne("Logistics_service.Models.Point", "Garage")
-                        .WithMany()
-                        .HasForeignKey("GarageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Garage");
                 });
 #pragma warning restore 612, 618
         }

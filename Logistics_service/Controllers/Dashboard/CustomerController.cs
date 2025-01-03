@@ -38,11 +38,17 @@ namespace Logistics_service.Controllers.Dashboard
         {
             if (ModelState.IsValid)
             {
-                var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
-                var email = GenerateDigest.ParseAuthorizationHeader(authHeader.Substring("Digest ".Length))["username"]; ;
+                var authHeader = HttpContext.Request.Headers.Authorization.ToString();
+                var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
 
                 order.Email = email;
                 order.CreatedAt = DateTime.Now;
+
+                if (order.ArrivalTime.Hour < 8 || order.ArrivalTime.Hour > 17)
+                {
+                    ViewBag.Error = "Указано неверное время! Время работы сервиса с 8 до 17.";
+                    return View("createRequest");
+                }
 
                 _queueService.EnqueueOrder(order);
 

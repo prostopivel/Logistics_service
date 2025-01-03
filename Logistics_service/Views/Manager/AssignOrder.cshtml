@@ -1,3 +1,120 @@
-﻿@{
+﻿@using System;
+@using Logistics_service.Models;
+@using Logistics_service.Models.Orders;
+@model Tuple<Vehicle[], CustomerOrder?>
+
+@{
     Layout = null;
 }
+
+<title>AssignOrder</title>
+<link rel="stylesheet" href="styles.css">
+
+<h2 class="error-message">@ViewBag.Error</h2>
+
+<div class="container">
+    <div>
+        <h2>Текущий заказ:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Время заказа</th>
+                    <th>Email</th>
+                    <th>Адрес получения</th>
+                    <th>Адрес доставки</th>
+                    <th>Время доставки</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Item2 != null)
+                {
+                    <tr>
+                        <td>@Model.Item2.CreatedAt</td>
+                        <td id="CustomerEmail">@Model.Item2.Email</td>
+                        <td>@Model.Item2.BeginningAddress</td>
+                        <td>@Model.Item2.DestinationAddress</td>
+                        <td>@Model.Item2.ArrivalTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table><br />
+    </div>
+
+    <div>
+        <h2>Отправить заказ:</h2>
+        <form id="createOrderForm" asp-action="assignOrder" method="post" onsubmit="assignOrder(event, 'POST', '/manager/assignOrder')">
+            <div asp-validation-summary="All" class="error-message"></div>
+
+            <div class="form-group">
+                <label for="StartPointId">Начальная точка маршрута:</label>
+                <input id="StartPointId" type="number" name="StartPointId" />
+                <span class="error-message" data-valmsg-for="StartPointId"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="EndPointId">Конечная точка маршрута:</label>
+                <input id="EndPointId" type="number" name="EndPointId" />
+                <span class="error-message" data-valmsg-for="EndPointId"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="VehicleId">Выберите транспорт:</label>
+                <select id="VehicleId" name="VehicleId">
+                    @foreach (var vehicle in Model.Item1)
+                    {
+                        <option value="@vehicle.Id">@vehicle.Id - @vehicle.Status</option>
+                    }
+                </select>
+                <span class="error-message" data-valmsg-for="VehicleId"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="ArrivalTime">Время доставки:</label>
+                <input type="datetime-local" id="ArrivalTime" name="ArrivalTime" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                <span class="error-message" data-valmsg-for="ArrivalTime"></span>
+            </div>
+
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+
+    <h1>Список автомобилей</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Гараж</th>
+                <th>Скорость</th>
+                <th>Статус</th>
+                <th>Маршруты</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Item1)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>
+                        @if (item.Garage != null)
+                        {
+                            @item.Garage.Index
+                        }
+                    </td>
+                    <td>@item.Speed</td>
+                    <td>@item.Status</td>
+                    @if (item.Routes != null)
+                    {
+                        <td>
+                            @foreach (var route in item.Routes)
+                            {
+                                <p>
+                                    @route.Value.DepartureTime - @route.Key: @((int)route.Value.Distance) м
+                                </p>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

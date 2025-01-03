@@ -1,4 +1,7 @@
 ﻿using Logistics_service.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Logistics_service.Static
 {
@@ -8,7 +11,7 @@ namespace Logistics_service.Static
         {
             var distances = new Dictionary<Point, double>();
             var previous = new Dictionary<Point, Point>();
-            var priorityQueue = new SortedSet<(double Distance, Point Point)>();
+            var priorityQueue = new SortedSet<(double Distance, Point Point)>(new DistancePointComparer());
 
             foreach (var point in points)
             {
@@ -51,6 +54,14 @@ namespace Logistics_service.Static
             path.Reverse();
 
             return new Tuple<Point[], double>(path.ToArray(), distances[endPoint]);
+        }
+    }
+
+    public class DistancePointComparer : IComparer<(double Distance, Point Point)>
+    {
+        public int Compare((double Distance, Point Point) x, (double Distance, Point Point) y)
+        {
+            return x.Distance.CompareTo(y.Distance);
         }
     }
 }

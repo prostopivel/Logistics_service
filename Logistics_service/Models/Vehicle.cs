@@ -1,36 +1,114 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Logistics_service.Models.Orders;
+﻿using Logistics_service.Models.Orders;
+using Logistics_service.Static;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Logistics_service.Models
 {
     public class Vehicle
     {
+        [Key]
         public int? Id { get; set; }
 
-        [Required(ErrorMessage = "Current location is required")]
-        [StringLength(100, ErrorMessage = "Current location cannot be longer than 100 characters")]
-        public string CurrentLocation { get; set; }
+        [Required(ErrorMessage = "Garage is required")]
+        public int GarageId { get; set; }
 
-        [Required(ErrorMessage = "Status is required")]
-        [StringLength(50, ErrorMessage = "Status cannot be longer than 50 characters")]
-        public string Status { get; set; }
+        public Point? Garage { get; set; }
 
-        [Required(ErrorMessage = "License plate is required")]
-        [StringLength(20, ErrorMessage = "License plate cannot be longer than 20 characters")]
-        public string LicensePlate { get; set; }
+        public VehicleStatus? Status { get; set; }
 
-        public Route? Route { get; set; }
+        [Required(ErrorMessage = "Speed is required")]
+        public int Speed { get; init; } = 15; // м/с
 
-        public List<Order>? Orders { get; set; }
+        [NotMapped]
+        public int? PosX { get; set; }
 
-        public void UpdateLocation(string newLocation)
+        [NotMapped]
+        public int? PosY { get; set; }
+
+        [NotMapped]
+        public double CurrentDistance { get; private set; }
+
+        [NotMapped]
+        public Point CurrentPoint { get; private set; }
+
+        [NotMapped]
+        public Route? CurrentRoute { get; private set; }
+
+        [NotMapped]
+        private SortedDictionary<DateTime, Route> _routes { get; init; }
+
+        [NotMapped]
+        public SortedDictionary<DateTime, Route> Routes { get => new SortedDictionary<DateTime, Route>(_routes); }
+
+        public Vehicle()
         {
-            // Логика обновления текущего местоположения
+            GarageId = 0;
+            Status = VehicleStatus.Free;
+            _routes = new SortedDictionary<DateTime, Route>();
+            CurrentPoint = new Point() { Index = 0 };
+            CurrentDistance = 0;
         }
 
-        public void AssignToOrder(Order order)
+        public Vehicle(Point garage, int speed) : this()
         {
-            // Логика назначения машины на заказ
+            Garage = garage;
+            GarageId = garage.Id;
+            Speed = speed;
+            CurrentPoint = Garage;
+        }
+
+        public bool SetOrder(ReadyOrder order)
+        {
+            if (_routes.Count(o => o.Key.Date.Date == order.ArrivalTime.Date) > 5)
+            {
+                Console.WriteLine("Превышен лимит заказов машины на день!");
+                return false;
+            }
+
+            order.SetTime(Speed);
+
+            foreach (var item in _routes)
+            {
+                if (order.Route.DepartureTime >= item.Value.DepartureTime
+                    && order.ArrivalTime <= item.Key)
+                {
+                    Console.WriteLine("Данное время занято!");
+                    return false;
+                }
+            }
+
+            _routes.Add(order.ArrivalTime, order.Route);
+
+            /*var firstElement = Routes.First();
+            CurrentRoute = firstElement.Value;
+            Routes.Remove(firstElement.Key);*/
+
+            return true;
+        }
+
+        public void SetRoute(Point[] points)
+        {
+            if (CurrentRoute is null)
+            {
+                CurrentRoute = _routes.First().Value;
+                _routes.Remove(_routes.First().Key);
+
+                var tuple = DijkstraAlgorithm.FindShortestPath(points, CurrentPoint, CurrentRoute.DequeuePoint());
+
+                CurrentRoute.AddPoints(tuple.Item1);
+                CurrentRoute.Distance += tuple.Item2;
+            }
+        }
+
+        private void SetDestination()
+        {
+
+        }
+
+        public void UpdateLocation(int seconds)
+        {
+
         }
     }
 }

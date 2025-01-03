@@ -5,6 +5,7 @@
 }
 
 <meta name='realm' content="@ViewBag.RealmHeader">
+<h2 class="error-message">@ViewBag.Error</h2>
 
 <div class="container">
     <h1>Оставить заявку</h1>
@@ -23,14 +24,8 @@
         </div>
         <div class="form-group">
             <label asp-for="ArrivalTime">Время доставки:</label>
-            <input type="date" asp-for="ArrivalTime" name="ArrivalTime" />
+            <input type="datetime-local" asp-for="ArrivalTime" name="ArrivalTime" asp-format="{0:yyyy-MM-ddTHH:mm}" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
             <span asp-validation-for="ArrivalTime" class="error-message"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="WeightCargo">Масса груза:</label>
-            <input type="number" asp-for="WeightCargo" name="WeightCargo" />
-            <span asp-validation-for="WeightCargo" class="error-message"></span>
         </div>
         <button type="submit">Отправить</button>
     </form>

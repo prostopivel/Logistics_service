@@ -1,30 +1,46 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-
-namespace Logistics_service.Models
+﻿namespace Logistics_service.Models
 {
     public class Route
     {
-        public int? Id { get; set; }
+        private Queue<Point> _points { get; set; }
 
-        [Required(ErrorMessage = "Vehicle is required")]
-        public int VehicleId { get; set; }
+        public double Distance { get; set; }
 
-        public Vehicle? Vehicle { get; set; }
+        public DateTime? DepartureTime { get; set; }
 
-        [Required(ErrorMessage = "Date is required")]
-        public DateTime Date { get; set; }
+        public List<Point> Points { get => new List<Point>(_points); }
 
-        public List<Point>? Points { get; set; }
-
-        public void AddPoint(Point point)
+        public Route(Point[] points, double distance)
         {
-            // Логика добавления точки на маршрут
+            _points = new Queue<Point>(points);
+            Distance = distance;
         }
 
-        public void RemovePoint(Point point)
+
+        public void EnqueuePoint(Point point)
         {
-            // Логика удаления точки с маршрута
+            _points.Enqueue(point);
+        }
+
+        public Point DequeuePoint()
+        {
+            return _points.Dequeue();
+        }
+
+        public void AddPoints(Point[] points)
+        {
+            if (points is null || points.Length == 0)
+            {
+                return;
+            }
+
+            var newQueue = new Queue<Point>(points);
+            foreach (var point in _points)
+            {
+                newQueue.Enqueue(point);
+            }
+
+            _points = newQueue;
         }
     }
 }

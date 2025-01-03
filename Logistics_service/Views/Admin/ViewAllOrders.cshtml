@@ -1,4 +1,62 @@
-﻿@{
+﻿@model Logistics_service.Models.Orders.ReadyOrder[]
+
+@{
     Layout = null;
 }
 
+<h2 class="error-message">@ViewBag.Error</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Время поступления</th>
+            <th>Email менеджера</th>
+            <th>Email заказчика</th>
+            <th>Время выезда/ доставки</th>
+            <th>Id транспорта</th>
+            <th>Точки маршрута</th>
+            <th>Расстояние</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.Email</td>
+                    <td>@item.CustomerEmail</td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@item.Route.DepartureTime</span>
+                        }
+                        <span>/ @item.ArrivalTime</span>
+                    </td>
+                    <td>@item.Vehicle.Id</td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            @foreach (var point in item.Route.Points)
+                            {
+                                <span>@point.Index</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@((int)item.Route.Distance)</span>
+                        }
+                    </td>
+                    <td>
+                        <input type="button" onclick='sendOrder("DELETE", "/manager/getOrder", @Html.Raw(Json.Serialize(item)))' value="Принять" />
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div id="orders"></div>

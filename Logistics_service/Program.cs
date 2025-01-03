@@ -93,9 +93,14 @@ namespace Logistics_service
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddSingleton<VehicleService>();
             services.AddSingleton<OrderQueueService<CustomerOrder>>();
-            //services.AddSingleton<OrderQueueService<ManagerOrder>>();
+            services.AddSingleton<OrderQueueService<ReadyOrder>>();
+
             services.AddMemoryCache();
+
+            services.AddScoped<WaitingOrderService>();
+            services.AddHostedService<WaitingOrderService>();
         }
     }
 }

@@ -26,10 +26,34 @@ function createOrder(event, request, uri) {
         BeginningAddress: document.querySelector('input[name="BeginningAddress"]').value,
         DestinationAddress: document.querySelector('input[name="DestinationAddress"]').value,
         ArrivalTime: document.querySelector('input[name="ArrivalTime"]').value,
-        WeightCargo: document.querySelector('input[name="WeightCargo"]').value
     };
 
     auth(request, uri, JSON.stringify(order));
+}
+
+function assignOrder(event, request, uri) {
+    event.preventDefault();
+
+    var order = {
+        StartPointId: parseInt(document.querySelector('input[name="StartPointId"]').value, 10),
+        EndPointId: parseInt(document.querySelector('input[name="EndPointId"]').value, 10),
+        VehicleId: document.querySelector('select[name="VehicleId"]').value,
+        ArrivalTime: document.querySelector('input[name="ArrivalTime"]').value,
+        CustomerEmail: document.getElementById('CustomerEmail').textContent
+    };
+
+    auth(request, uri, JSON.stringify(order));
+}
+
+function addTransport(event, request, uri) {
+    event.preventDefault();
+
+    var vehicle = {
+        Speed: document.querySelector('input[name="Speed"]').value,
+        GarageId: document.querySelector('input[name="GarageId"]').value
+    };
+
+    auth(request, uri, JSON.stringify(vehicle));
 }
 
 function ChangeWidth(newWidth) {
