@@ -1,4 +1,5 @@
 ﻿using Logistics_service.Models;
+using Logistics_service.Models.Orders;
 using Logistics_service.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ namespace Logistics_service.Data
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Point> Points { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<ReadyOrder> ReadyOrders { get; set; }
+        public DbSet<CustomerOrder> CustomerOrders { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -22,6 +25,7 @@ namespace Logistics_service.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Конфигурация для Vehicle
             modelBuilder.Entity<Vehicle>()
                 .Property(v => v.Status)
                 .HasDefaultValue(VehicleStatus.Free);
@@ -32,6 +36,7 @@ namespace Logistics_service.Data
                 .HasForeignKey(v => v.GarageId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Конфигурация для Point
             modelBuilder.Entity<Point>()
                 .HasKey(p => p.Id);
 
@@ -48,6 +53,38 @@ namespace Logistics_service.Data
                     v => string.Join(';', v),
                     v => v.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToArray()
                 );
+
+            // Конфигурация для ReadyOrder
+            modelBuilder.Entity<ReadyOrder>(entity =>
+            {
+                entity.HasKey(r => r.DbId);
+
+                entity.HasOne(r => r.Vehicle)
+                      .WithMany()
+                      .HasForeignKey(r => r.VehicleId) 
+                      .OnDelete(DeleteBehavior.Restrict); 
+
+                entity.HasOne(r => r.Route)
+                      .WithMany()
+                      .HasForeignKey(r => r.RouteId) 
+                      .OnDelete(DeleteBehavior.Restrict); 
+
+                entity.Property(r => r.ArrivalTime)
+                      .IsRequired(); 
+
+                entity.Property(r => r.CustomerEmail)
+                      .IsRequired() 
+                      .HasMaxLength(255); 
+            });
+
+            // Конфигурация для CustomerOrder
+            modelBuilder.Entity<CustomerOrder>(entity =>
+            {
+                entity.HasKey(r => r.DbId);
+
+                entity.Property(r => r.ArrivalTime)
+                      .IsRequired();
+            });
         }
 
         public async Task<Vehicle[]> GetVehiclesAsync()
@@ -57,9 +94,24 @@ namespace Logistics_service.Data
             for (int i = 0; i < vehicles.Length; i++)
             {
                 vehicles[i].Garage = Points.FirstOrDefault(p => p.Id == vehicles[i].GarageId);
+                vehicles[i] = new Vehicle(vehicles[i]);
             }
 
             return vehicles;
+        }
+
+        public async Task<Vehicle?> GetVehicleAsync(int id)
+        {
+            var vehicle = await Vehicles.FirstOrDefaultAsync(v => v.Id == id);
+            if (vehicle is null)
+            {
+                return null;
+            }
+
+            vehicle.Garage = Points.FirstOrDefault(p => p.Id == vehicle.GarageId);
+            var resVehicle = new Vehicle(vehicle);
+
+            return resVehicle;
         }
     }
 }

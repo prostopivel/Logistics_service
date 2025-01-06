@@ -47,7 +47,7 @@ namespace Logistics_service.Static
             }
 
             var path = new List<Point>();
-            for (var point = endPoint; point != null; point = previous[point])
+            for (var point = endPoint; point is not null; point = previous[point])
             {
                 path.Add(point);
             }

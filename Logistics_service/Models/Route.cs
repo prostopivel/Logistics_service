@@ -1,7 +1,14 @@
-﻿namespace Logistics_service.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Logistics_service.Models
 {
     public class Route
     {
+        [Key]
+        public int? Id { get; set; }
+
+        [NotMapped]
         private Queue<Point> _points { get; set; }
 
         public double Distance { get; set; }
@@ -9,6 +16,8 @@
         public DateTime? DepartureTime { get; set; }
 
         public List<Point> Points { get => new List<Point>(_points); }
+
+        public Route() { }
 
         public Route(Point[] points, double distance)
         {

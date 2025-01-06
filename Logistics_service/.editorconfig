@@ -77,6 +77,9 @@ dotnet_diagnostic.IDE0090.severity = none
 # IDE0290: Использовать основной конструктор
 dotnet_diagnostic.IDE0290.severity = none
 
+# CS8981: Имя типа содержит только строчные символы ASCII. Такие имена могут резервироваться для языка.
+dotnet_diagnostic.CS8981.severity = none
+
 [*.vb]
 #### Стили именования ####
 

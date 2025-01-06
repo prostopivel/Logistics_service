@@ -26,17 +26,50 @@ function FillButtons(model, color = 'green') {
             }
         });
     } else {
-        model.forEach(point => {
+        model.forEach((point, index) => {
             if (point.ConnectedPointsIndexes) {
                 point.ConnectedPointsIndexes.forEach(connectedIndex => {
                     const connectedPoint = model.find(p => p.index === connectedIndex);
-                    if (connectedPoint) {
+                    if (index + 1 < model.length && model[index + 1].index === connectedIndex) {
                         drawLine(point.index, connectedIndex, imageContainer, color);
                     }
                 });
             }
         });
     }
+}
+
+function FillColorButtons(model1, model2, model3, color1, color2, color3) {
+    model1.forEach((point, index) => {
+        if (point.ConnectedPointsIndexes) {
+            point.ConnectedPointsIndexes.forEach(connectedIndex => {
+                const connectedPoint = model1.find(p => p.index === connectedIndex);
+                if (index + 1 < model1.length && model1[index + 1].index === connectedIndex) {
+                    drawLine(point.index, connectedIndex, imageContainer, color1);
+                }
+            });
+        }
+    });
+    model2.forEach((point, index) => {
+        if (point.ConnectedPointsIndexes) {
+            point.ConnectedPointsIndexes.forEach(connectedIndex => {
+                const connectedPoint = model2.find(p => p.index === connectedIndex);
+                if (index + 1 < model2.length && model2[index + 1].index === connectedIndex) {
+                    drawLine(point.index, connectedIndex, imageContainer, color2);
+                }
+            });
+        }
+    });
+    model3.forEach((point, index) => {
+        if (point.ConnectedPointsIndexes) {
+            point.ConnectedPointsIndexes.forEach(connectedIndex => {
+                const connectedPoint = model3.find(p => p.index === connectedIndex);
+                if (index + 1 < model3.length && model3[index + 1].index === connectedIndex) {
+                    drawLine(point.index, connectedIndex, imageContainer, color3);
+                }
+            });
+        }
+    });
 }
 
 function drawLine(p1, p2, imageContainer, color) {

@@ -5,25 +5,45 @@ namespace Logistics_service.Services
 {
     public class OrderQueueService<T> where T : Order
     {
-        private readonly ConcurrentQueue<T> _queue = new ConcurrentQueue<T>();
+        private readonly List<T> _orders = new List<T>();
+        private readonly object _lock = new object();
         private int id = 0;
 
-        public void EnqueueOrder(T order)
+        public T[] Orders => _orders.ToArray();
+
+        public void AddOrder(T order)
         {
-            order.Id = id++;
-            _queue.Enqueue(order);
-            Console.WriteLine($"Поступил заказ в {order.CreatedAt} от {order.Email}.");
+            lock (_lock)
+            {
+                order.Id = id++;
+                _orders.Add(order);
+                Console.WriteLine($"Поступил заказ от {order.Email} в {order.CreatedAt}.");
+            }
         }
 
-        public bool TryDequeueOrder(T order)
+        public bool TryDeleteOrder(T order)
         {
-            Console.WriteLine($"Принят заказ в {DateTime.Now} от {order.Email}.");
-            return _queue.TryDequeue(out _);
+            if (_orders.Remove(order))
+            {
+                Console.WriteLine($"Заказ от {order.Email} принят в {DateTime.Now}.");
+                return true;
+            }
+
+            Console.WriteLine($"Заказ от {order.Email} не принят в {DateTime.Now} про причине отсутствия в списке заказов!");
+            return false;
         }
 
-        public T[] PeekAll()
+        public bool TryDeleteOrderById(int orderId, out T? order)
         {
-            return _queue.ToArray();
+            order = _orders.FirstOrDefault(o => o.Id == orderId);
+            if (order is not null)
+            {
+                Console.WriteLine($"Заказ с Id {orderId} принят в {DateTime.Now}.");
+                return _orders.Remove(order);
+            }
+
+            Console.WriteLine($"Заказ с Id {orderId} не принят в {DateTime.Now} про причине отсутствия в списке заказов!.");
+            return false;
         }
     }
 }

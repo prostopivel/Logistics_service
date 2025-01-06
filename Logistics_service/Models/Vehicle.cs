@@ -2,6 +2,7 @@
 using Logistics_service.Static;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Drawing;
 
 namespace Logistics_service.Models
 {
@@ -10,15 +11,15 @@ namespace Logistics_service.Models
         [Key]
         public int? Id { get; set; }
 
+        [Required(ErrorMessage = "Speed is required")]
+        public int Speed { get; init; } = 15; // м/с
+
         [Required(ErrorMessage = "Garage is required")]
         public int GarageId { get; set; }
 
         public Point? Garage { get; set; }
 
         public VehicleStatus? Status { get; set; }
-
-        [Required(ErrorMessage = "Speed is required")]
-        public int Speed { get; init; } = 15; // м/с
 
         [NotMapped]
         public int? PosX { get; set; }
@@ -27,10 +28,10 @@ namespace Logistics_service.Models
         public int? PosY { get; set; }
 
         [NotMapped]
-        public double CurrentDistance { get; private set; }
+        public double? CurrentDistance { get; private set; }
 
         [NotMapped]
-        public Point CurrentPoint { get; private set; }
+        public Point? CurrentPoint { get; private set; }
 
         [NotMapped]
         public Route? CurrentRoute { get; private set; }
@@ -43,19 +44,26 @@ namespace Logistics_service.Models
 
         public Vehicle()
         {
-            GarageId = 0;
-            Status = VehicleStatus.Free;
-            _routes = new SortedDictionary<DateTime, Route>();
-            CurrentPoint = new Point() { Index = 0 };
-            CurrentDistance = 0;
         }
 
-        public Vehicle(Point garage, int speed) : this()
+        public Vehicle(Point point, int speed)
         {
-            Garage = garage;
-            GarageId = garage.Id;
+            Garage = point;
+            GarageId = point.Index;
+            Status = new VehicleStatus();
             Speed = speed;
-            CurrentPoint = Garage;
+            Status = VehicleStatus.Free;
+        }
+
+        public Vehicle(Vehicle vehicle)
+        {
+            Id = vehicle.Id;
+            Garage = (Point?)vehicle.Garage?.Clone() ?? new Point();
+            GarageId = vehicle.GarageId;
+            Speed = vehicle.Speed;
+            CurrentPoint = (Point?)Garage?.Clone() ?? new Point();
+            _routes = new SortedDictionary<DateTime, Route>();
+            Status = vehicle.Status;
         }
 
         public bool SetOrder(ReadyOrder order)
@@ -99,6 +107,16 @@ namespace Logistics_service.Models
                 CurrentRoute.AddPoints(tuple.Item1);
                 CurrentRoute.Distance += tuple.Item2;
             }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Vehicle vehicle && Id == vehicle.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Speed, GarageId);
         }
 
         private void SetDestination()

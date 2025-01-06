@@ -1,6 +1,6 @@
 ﻿@using Logistics_service.Models;
 @using Logistics_service.Models.Orders;
-@model Tuple<Point[], CustomerOrder, Point[]?, double?>
+@model Tuple<Point[], CustomerOrder, Route[], Route[], Point[]?, double?>
 
 @{
     Layout = null;
@@ -10,14 +10,27 @@
 
 <div class="image-container" id="imageContainer">
     <img src="/img/map.png" alt="map" class="responsive-image" />
-    
-    @if (Model.Item3 != null)
-    {
+    @{
+        var waitingOrders = Model.Item3.SelectMany(route => route.Points).ToArray();
+        var currentOrders = Model.Item4.SelectMany(route => route.Points).ToArray();
+
         foreach (var point in Model.Item1)
         {
-            if (Model.Item3.Contains(point))
+            if (Model.Item5 is not null && Model.Item5.Contains(point))
             {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101; background-color: yellow;" data-index="@point.Index">
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101; background-color: blue;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 102; background-color: yellow;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else if (currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 103; background-color: red;" data-index="@point.Index">
                     @point.Name
                 </button>
             }
@@ -28,21 +41,12 @@
                 </button>
             }
         }
-    } 
-    else
-    {
-        foreach (var point in Model.Item1)
-        {
-            <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
-                @point.Name
-            </button>
-        }
     }
 </div>
 
-@if (Model.Item4 != null)
+@if (Model.Item6 != null)
 {
-    <h2>Расстояние: @Model.Item4</h2>
+    <h2>Расстояние: @Model.Item6</h2>
 }
 
 <div>
@@ -92,6 +96,12 @@
 <script id="model" type="application/json">
     @Html.Raw(Json.Serialize(Model.Item1))
 </script>
+<script id="modelAddLine" type="application/json">
+    @Html.Raw(Json.Serialize(Model.Item5))
+</script>
 <script id="modelLine" type="application/json">
-    @Html.Raw(Json.Serialize(Model.Item3))
+    @Html.Raw(Json.Serialize(waitingOrders))
+</script>
+<script id="modelRedLine" type="application/json">
+    @Html.Raw(Json.Serialize(currentOrders))
 </script>

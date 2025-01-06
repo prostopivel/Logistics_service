@@ -24,13 +24,15 @@ namespace Logistics_service.Services
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    var existingVehicle = await context.Vehicles.FindAsync((int)vehicle.Id);
+                    var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
 
                     if (existingVehicle is not null)
                     {
                         existingVehicle.Status = VehicleStatus.InUse;
+                        vehicle.Status = VehicleStatus.InUse;
                         vehicle.SetRoute(await context.Points.ToArrayAsync());
                         Vehicles.Add(vehicle);
+                        FreeVehicles.Remove(vehicle);
                         await context.SaveChangesAsync();
                     }
                 }

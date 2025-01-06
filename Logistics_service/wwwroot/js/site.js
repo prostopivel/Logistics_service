@@ -70,8 +70,19 @@ function sendOrder(request, uri, data) {
     auth(request, uri, JSON.stringify(data));
 }
 
+function sendReasonOrder(request, uri, data) {
+    let reason = document.querySelector('#reason').value;
+
+    reason = reason.replace(/\s+/g, '_');
+
+    data.Reason = reason;
+
+    auth(request, uri, JSON.stringify(data));
+}
+
 function viewMap(request, uri) {
     ChangeWidth('1400px');
+
     auth(request, uri);
 
     setTimeout(() => {
@@ -95,6 +106,32 @@ function viewMapLine(request, uri) {
         if (document.getElementById('imageContainer')) {
             fillModelLine();
         }
+        else {
+            setTimeout(() => {
+                if (document.getElementById('imageContainer')) {
+                    fillModelLine();
+                }
+            }, 1000);
+        }
+    }, 1000);
+}
+
+function viewMapRedLine(request, uri) {
+    ChangeWidth('1400px');
+
+    auth(request, uri);
+
+    setTimeout(() => {
+        if (document.getElementById('imageContainer')) {
+            fillModelRedLine();
+        }
+        else {
+            setTimeout(() => {
+                if (document.getElementById('imageContainer')) {
+                    fillModelRedLine();
+                }
+            }, 1000);
+        }
     }, 1000);
 }
 
@@ -111,11 +148,34 @@ function fillModel() {
 function fillModelLine() {
     fillModel();
 
-    var modelElementLine = document.getElementById('modelLine');
-    if (modelElementLine) {
-        var modelLine = JSON.parse(modelElementLine.textContent);
-        FillButtons(modelLine, 'yellow');
+    var modelElementLine1 = document.getElementById('modelLine');
+    var modelElementLine2 = document.getElementById('modelRedLine');
+    var modelElementLine3 = document.getElementById('modelAddLine');
+    if (modelElementLine1 && modelElementLine2 && modelElementLine3) {
+        var modelRedLine1 = JSON.parse(modelElementLine1.textContent);
+        var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
+        var modelRedLine3 = JSON.parse(modelElementLine3.textContent);
+        FillColorButtons(modelRedLine1, modelRedLine2, modelRedLine3, 'yellow', 'red', 'blue');
+    } else if (modelElementLine1 && modelElementLine2) {
+        var modelRedLine1 = JSON.parse(modelElementLine1.textContent);
+        var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
+        FillColorButtons(modelRedLine1, modelRedLine2, null, 'yellow', 'red', 'green');
+    }
+    else {
+        console.error('Элемент с id="modelLine" или id="modelRedLine" не найден');
+    }
+}
+
+function fillModelRedLine() {
+    fillModel();
+
+    var modelElementLine1 = document.getElementById('modelLine');
+    var modelElementLine2 = document.getElementById('modelRedLine');
+    if (modelElementLine1 && modelElementLine2) {
+        var modelRedLine1 = JSON.parse(modelElementLine1.textContent);
+        var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
+        FillColorButtons(modelRedLine1, modelRedLine2, null, 'yellow', 'red', 'green');
     } else {
-        console.error('Элемент с id="modelLine" не найден');
+        console.error('Элемент с id="modelLine" или id="modelRedLine" не найден');
     }
 }

@@ -50,7 +50,7 @@ namespace Logistics_service.Controllers.Dashboard
                     return View("createRequest");
                 }
 
-                _queueService.EnqueueOrder(order);
+                _queueService.AddOrder(order);
 
                 return RedirectToAction("customer", "Dashboard");
             }

@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Logistics_service.Models.Orders
 {
     public class CustomerOrder : Order
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? DbId { get; set; }
+
         [Required(ErrorMessage = "BeginningAddress is required")]
         public string BeginningAddress { get; set; }
 
@@ -12,5 +17,7 @@ namespace Logistics_service.Models.Orders
 
         [Required(ErrorMessage = "ArrivalTime is required")]
         public DateTime ArrivalTime { get; set; }
+
+        public string? Reason { get; set; }
     }
 }

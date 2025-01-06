@@ -26,24 +26,34 @@
                 <tr>
                     <td>@item.Id</td>
                     <td>
-                        @if (item.Garage != null)
+                        @if (item.Garage is not null)
                         {
                             @item.Garage.Index
                         }
                     </td>
                     <td>@item.Speed</td>
                     <td>@item.Status</td>
-                    @if (item.Routes != null)
-                    {
-                        <td>
+                    <td>
+                        @if (item.CurrentRoute is not null)
+                        {
+                            <p>
+                                @item.CurrentRoute.DepartureTime: @((int)item.CurrentRoute.Distance) м
+                                @foreach (var point in item.CurrentRoute.Points)
+                                {
+                                    <span>@point.Name</span>
+                                }
+                            </p>
+                        }
+                        @if (item.Routes is not null)
+                        {
                             @foreach (var route in item.Routes)
                             {
                                 <p>
                                     @route.Value.DepartureTime - @route.Key: @((int)route.Value.Distance) м
                                 </p>
                             }
-                        </td>
-                    }
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

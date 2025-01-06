@@ -23,6 +23,7 @@
                     <th>Адрес получения</th>
                     <th>Адрес доставки</th>
                     <th>Время доставки</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,10 @@
                         <td>@Model.Item2.BeginningAddress</td>
                         <td>@Model.Item2.DestinationAddress</td>
                         <td>@Model.Item2.ArrivalTime</td>
+                        <td>
+                            <input type="text" id="reason" />
+                            <input type="button" onclick='sendReasonOrder("DELETE", "/manager/rejectOrder", @Html.Raw(Json.Serialize(Model.Item2)))' value="Отклонить" />
+                        </td>
                     </tr>
                 }
             </tbody>

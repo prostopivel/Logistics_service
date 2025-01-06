@@ -19,8 +19,8 @@ namespace Logistics_service.Controllers.Dashboard
         private readonly VehicleService _vehicleService;
         private readonly OrderQueueService<ReadyOrder> _readyQueueService;
 
-        public AdminController(IConfiguration configuration, ApplicationDbContext context, 
-            WaitingOrderService waitingOrder, VehicleService vehicleService, 
+        public AdminController(IConfiguration configuration, ApplicationDbContext context,
+            WaitingOrderService waitingOrder, VehicleService vehicleService,
             OrderQueueService<ReadyOrder> readyQueueService)
         {
             _configuration = configuration;
@@ -138,26 +138,34 @@ namespace Logistics_service.Controllers.Dashboard
             return false;
         }
 
+        [ResponseCache(NoStore = true, Duration = 0)]
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewAllOrders")]
         public IActionResult ViewAllOrders()
         {
-            return View(_readyQueueService.PeekAll());
+            var managerOrders = _readyQueueService.Orders;
+            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
+            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
+            return View(new Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[]>(managerOrders, waitingOrders, currentOrders));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpPost("addOrder")]
-        public async Task<ActionResult> AddOrder([FromBody] ReadyOrder order)
+        [HttpDelete("assignOrder")]
+        public async Task<IActionResult> AssignOrder([FromBody] int Id)
         {
-            if (ModelState.IsValid && order.Route.DepartureTime is not null)
+            if (_readyQueueService.TryDeleteOrderById(Id, out var order)
+                && order is not null && order.Route is not null && order.Route.DepartureTime is not null)
             {
                 await _waitingOrder.AddOrder((DateTime)order.Route.DepartureTime, order, _context);
-                return View("viewAllOrders");
             }
 
-            return View("addOrder");
+            var managerOrders = _readyQueueService.Orders;
+            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
+            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
+            return View("viewAllOrders", new Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[]>(managerOrders, waitingOrders, currentOrders));
         }
 
+        [ResponseCache(NoStore = true, Duration = 0)]
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("manageTransport")]
         public async Task<IActionResult> ManageTransport()
@@ -215,7 +223,13 @@ namespace Logistics_service.Controllers.Dashboard
         {
             //GenerateMap.SaveMap(_context);
 
-            return View(await _context.Points.ToArrayAsync());
+            var points = await _context.Points.ToArrayAsync();
+            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
+            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
+            return View(new Tuple<Point[], Models.Route[], Models.Route[]>(
+                points, 
+                waitingOrders.Select(order => order.Route).ToArray(), 
+                currentOrders.Select(order => order.Route).ToArray()));
         }
     }
 }

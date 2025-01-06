@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Text.Json.Serialization;
 
 namespace Logistics_service.Models
 {
-    public class Point
+    public class Point : ICloneable
     {
         [Key]
         public int Id { get; set; }
@@ -50,6 +51,30 @@ namespace Logistics_service.Models
         public void UpdateLocation(string newLocation)
         {
             // Логика обновления местоположения точки
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Point point && Id == point.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Index, Name);
+        }
+
+        public object Clone()
+        {
+            return new Point
+            {
+                Id = Id,
+                Index = Index,
+                Name = Name,
+                PosX = PosX,
+                PosY = PosY,
+                ConnectedPointsIndexes = (int[])ConnectedPointsIndexes.Clone(),
+                Distances = (double[])Distances.Clone()
+            };
         }
     }
 }

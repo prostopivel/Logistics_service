@@ -99,8 +99,8 @@ namespace Logistics_service
 
             services.AddMemoryCache();
 
-            services.AddScoped<WaitingOrderService>();
-            services.AddHostedService<WaitingOrderService>();
+            services.AddSingleton<WaitingOrderService>();
+            services.AddHostedService(provider => provider.GetRequiredService<WaitingOrderService>());
         }
     }
 }
