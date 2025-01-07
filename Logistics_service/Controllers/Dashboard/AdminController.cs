@@ -156,7 +156,26 @@ namespace Logistics_service.Controllers.Dashboard
             if (_readyQueueService.TryDeleteOrderById(Id, out var order)
                 && order is not null && order.Route is not null && order.Route.DepartureTime is not null)
             {
+                order.DbId = null;
+                order.Route.DbPoints = order.Route.Points;
+                foreach (var item in order.Route.DbPoints)
+                {
+                    if (_context.Entry(item).State == EntityState.Detached)
+                    {
+                        _context.Points.Attach(item);
+                    }
+                }
+                if (_context.Entry(order.Vehicle.Garage).State != EntityState.Detached)
+                {
+                    _context.Entry(order.Vehicle.Garage).State = EntityState.Detached;
+                }
+                if (_context.Entry(order.Vehicle).State == EntityState.Detached)
+                {
+                    _context.Vehicles.Attach(order.Vehicle);
+                }
                 await _waitingOrder.AddOrder((DateTime)order.Route.DepartureTime, order, _context);
+                _context.ReadyOrders.Add(order);
+                await _context.SaveChangesAsync();
             }
 
             var managerOrders = _readyQueueService.Orders;

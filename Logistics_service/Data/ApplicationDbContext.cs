@@ -15,6 +15,7 @@ namespace Logistics_service.Data
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<ReadyOrder> ReadyOrders { get; set; }
         public DbSet<CustomerOrder> CustomerOrders { get; set; }
+        public DbSet<Models.Route> Routes { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -34,6 +35,13 @@ namespace Logistics_service.Data
                 .HasOne(v => v.Garage)
                 .WithMany()
                 .HasForeignKey(v => v.GarageId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Конфигурация для Route
+            modelBuilder.Entity<Models.Route>()
+                .HasMany(r => r.DbPoints) 
+                .WithOne() 
+                .HasForeignKey("RouteId") 
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Конфигурация для Point

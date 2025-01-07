@@ -1,3 +1,78 @@
-﻿@{
+﻿@using Logistics_service.Models.Orders;
+@model Tuple<CustomerOrder[], ReadyOrder[]>
+
+@{
     Layout = null;
 }
+
+<h2>Отклонённые заказы:</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Адрес принятия</th>
+            <th>Адрес доставки</th>
+            <th>Время прибытия</th>
+            <th>Причина отказа</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is not null && Model.Item1 is not null)
+        {
+            @foreach (var item in Model.Item1)
+            {
+                <tr>
+                    <td>@item.BeginningAddress</td>
+                    <td>@item.DestinationAddress</td>
+                    <td>@item.ArrivalTime</td>
+                    <td>@item.Reason</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h2>Принятые заказы:</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Время выезда</th>
+            <th>Время доставки</th>
+            <th>Id транспорта</th>
+            <th>Точки маршрута</th>
+            <th>Расстояние</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is not null && Model.Item2 is not null)
+        {
+            @foreach (var item in Model.Item2)
+            {
+                <tr>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@item.Route.DepartureTime</span>
+                        }
+                    </td>
+                    <td>@item.ArrivalTime</td>
+                    <td>@item.Vehicle.Id</td>
+                    <td>
+                        @if (item.Route is not null && item.Route.DbPoints is not null)
+                        {
+                            @foreach (var point in item.Route.DbPoints)
+                            {
+                                <span>@point.Index</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@((int)item.Route.Distance)</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

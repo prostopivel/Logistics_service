@@ -7,7 +7,7 @@ namespace Logistics_service.Models.Orders
     {
         public int? Id { get; set; }
 
-        public string? Email { get; set; }
+        public virtual string? Email { get; set; }
 
         [NotMapped]
         public DateTime? CreatedAt { get; set; }

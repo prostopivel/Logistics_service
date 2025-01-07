@@ -140,7 +140,7 @@ namespace Logistics_service.Controllers
                 }
             }
 
-            return View();
+            return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -234,7 +234,7 @@ namespace Logistics_service.Controllers
         {
             var waitingOrders = _waitingOrder.Orders.Values.ToArray();
             var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
-            return View(new Tuple<ReadyOrder[], ReadyOrder[]>(waitingOrders, currentOrders));
+            return View(new Tuple<ReadyOrder[], ReadyOrder[]>(currentOrders, waitingOrders));
         }
     }
 }

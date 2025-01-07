@@ -15,7 +15,10 @@ namespace Logistics_service.Models
 
         public DateTime? DepartureTime { get; set; }
 
-        public List<Point> Points { get => new List<Point>(_points); }
+        [NotMapped]
+        public List<Point> Points => new List<Point>(_points);
+
+        public List<Point> DbPoints { get; set; }
 
         public Route() { }
 

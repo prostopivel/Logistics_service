@@ -52,7 +52,7 @@ namespace Logistics_service.Migrations
 
                     b.HasKey("DbId");
 
-                    b.ToTable("CustomerOrders");
+                    b.ToTable("CustomerOrders", (string)null);
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Orders.ReadyOrder", b =>
@@ -89,7 +89,7 @@ namespace Logistics_service.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("ReadyOrders");
+                    b.ToTable("ReadyOrders", (string)null);
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Point", b =>
@@ -128,7 +128,7 @@ namespace Logistics_service.Migrations
 
                     b.HasIndex("RouteId");
 
-                    b.ToTable("Points");
+                    b.ToTable("Points", (string)null);
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Route", b =>
@@ -147,7 +147,7 @@ namespace Logistics_service.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Route");
+                    b.ToTable("Routes", (string)null);
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Users.User", b =>
@@ -181,7 +181,7 @@ namespace Logistics_service.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasDiscriminator().HasValue("User");
 
@@ -211,7 +211,7 @@ namespace Logistics_service.Migrations
 
                     b.HasIndex("GarageId");
 
-                    b.ToTable("Vehicles");
+                    b.ToTable("Vehicles", (string)null);
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Users.Administrator", b =>
@@ -258,8 +258,9 @@ namespace Logistics_service.Migrations
             modelBuilder.Entity("Logistics_service.Models.Point", b =>
                 {
                     b.HasOne("Logistics_service.Models.Route", null)
-                        .WithMany("Points")
-                        .HasForeignKey("RouteId");
+                        .WithMany("DbPoints")
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Vehicle", b =>
@@ -275,7 +276,7 @@ namespace Logistics_service.Migrations
 
             modelBuilder.Entity("Logistics_service.Models.Route", b =>
                 {
-                    b.Navigation("Points");
+                    b.Navigation("DbPoints");
                 });
 #pragma warning restore 612, 618
         }
