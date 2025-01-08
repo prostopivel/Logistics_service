@@ -14,13 +14,18 @@ namespace Logistics_service.Controllers.Dashboard
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
         private readonly OrderQueueService<CustomerOrder> _queueService;
+        private readonly WaitingOrderService _waitingOrder;
+        private readonly VehicleService _vehicleService;
 
         public CustomerController(IConfiguration configuration, 
-            OrderQueueService<CustomerOrder> queueService, ApplicationDbContext context)
+            OrderQueueService<CustomerOrder> queueService, ApplicationDbContext context,
+            WaitingOrderService waitingOrder, VehicleService vehicleService)
         {
             _configuration = configuration;
             _queueService = queueService;
             _context = context;
+            _waitingOrder = waitingOrder;
+            _vehicleService = vehicleService;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -93,9 +98,30 @@ namespace Logistics_service.Controllers.Dashboard
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewMap")]
-        public IActionResult ViewMap()
+        public async Task<IActionResult> ViewMap()
         {
-            return View();
+            var authHeader = HttpContext.Request.Headers.Authorization.ToString();
+            var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
+
+            var points = await _context.Points.ToArrayAsync();
+
+            var waitingOrders = _waitingOrder.Orders.Values
+                .Where(o => o.CustomerEmail == email)
+                .ToArray();
+
+            var currentOrders = _waitingOrder.CurrentOrders.Values
+                .Where(o => o.CustomerEmail == email)
+                .ToArray();
+
+            var vehicles = _vehicleService.Vehicles
+                .Where(v => v.CurrentRoute?.CustomerEmail == email)
+                .ToArray();
+
+            return View(new Tuple<Point[], Models.Route[], Models.Route[], Vehicle[]>(
+                points,
+                waitingOrders.Select(order => order.Route).ToArray(),
+                currentOrders.Select(order => order.Route).ToArray(),
+                vehicles));
         }
     }
 }

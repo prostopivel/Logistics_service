@@ -43,7 +43,9 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("viewAllManagers")]
         public async Task<ActionResult> ViewAllManagers()
         {
-            return View(await _context.Managers.ToListAsync());
+            return View(new Tuple<List<Manager>, List<Administrator>>(
+                await _context.Managers.ToListAsync(),
+                await _context.Administrators.ToListAsync()));
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]
@@ -157,25 +159,25 @@ namespace Logistics_service.Controllers.Dashboard
                 && order is not null && order.Route is not null && order.Route.DepartureTime is not null)
             {
                 order.DbId = null;
-                order.Route.DbPoints = order.Route.Points;
-                foreach (var item in order.Route.DbPoints)
+
+                var dbOrder = (ReadyOrder)order.Clone();
+
+                dbOrder.Route.DbPoints = order.Route.Points;
+
+                foreach (var item in dbOrder.Route.DbPoints)
                 {
                     if (_context.Entry(item).State == EntityState.Detached)
                     {
                         _context.Points.Attach(item);
                     }
                 }
-                if (_context.Entry(order.Vehicle.Garage).State != EntityState.Detached)
-                {
-                    _context.Entry(order.Vehicle.Garage).State = EntityState.Detached;
-                }
-                if (_context.Entry(order.Vehicle).State == EntityState.Detached)
-                {
-                    _context.Vehicles.Attach(order.Vehicle);
-                }
-                await _waitingOrder.AddOrder((DateTime)order.Route.DepartureTime, order, _context);
-                _context.ReadyOrders.Add(order);
+
+                dbOrder.Vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == dbOrder.Vehicle.Id) ?? dbOrder.Vehicle;
+                
+                _context.ReadyOrders.Add(dbOrder);
                 await _context.SaveChangesAsync();
+                
+                await _waitingOrder.AddOrder((DateTime)order.Route.DepartureTime, order, _context);
             }
 
             var managerOrders = _readyQueueService.Orders;
@@ -245,10 +247,11 @@ namespace Logistics_service.Controllers.Dashboard
             var points = await _context.Points.ToArrayAsync();
             var waitingOrders = _waitingOrder.Orders.Values.ToArray();
             var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
-            return View(new Tuple<Point[], Models.Route[], Models.Route[]>(
+            return View(new Tuple<Point[], Models.Route[], Models.Route[], Vehicle[]>(
                 points, 
                 waitingOrders.Select(order => order.Route).ToArray(), 
-                currentOrders.Select(order => order.Route).ToArray()));
+                currentOrders.Select(order => order.Route).ToArray(),
+                _vehicleService.Vehicles.ToArray()));
         }
     }
 }

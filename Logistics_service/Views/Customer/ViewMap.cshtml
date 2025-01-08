@@ -1,7 +1,57 @@
-﻿@{
+﻿@using Logistics_service.Models;
+@using Logistics_service.Models.Orders;
+@model Tuple<Point[], Route[], Route[], Vehicle[]>
+
+@{
     Layout = null;
 }
 
-<div class="image-container">
+<div class="image-container" id="imageContainer">
     <img src="/img/map.png" alt="map" class="responsive-image" />
+
+    @{
+        var waitingOrders = Model.Item2.SelectMany(route => route.Points).ToArray();
+        var currentOrders = Model.Item3.SelectMany(route => route.Points).ToArray();
+
+        @foreach (var point in Model.Item1)
+        {
+            if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 102; background-color: yellow;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else if (currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 103; background-color: red;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+        }
+
+        @foreach (var item in Model.Item4)
+        {
+            <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
+                @item.Id
+            </button>
+        }
+    }
 </div>
+
+<button onclick="viewMapRedLine('GET', '/Customer/viewMap')">Обновить</button>
+
+<script id="model" type="application/json">
+    @Html.Raw(Json.Serialize(Model.Item1))
+</script>
+<script id="modelLine" type="application/json">
+    @Html.Raw(Json.Serialize(waitingOrders))
+</script>
+<script id="modelRedLine" type="application/json">
+    @Html.Raw(Json.Serialize(currentOrders))
+</script>

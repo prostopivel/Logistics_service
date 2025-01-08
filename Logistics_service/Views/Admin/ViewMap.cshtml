@@ -1,6 +1,6 @@
 ﻿@using Logistics_service.Models;
 @using Logistics_service.Models.Orders;
-@model Tuple<Point[], Route[], Route[]>
+@model Tuple<Point[], Route[], Route[], Vehicle[]>
 
 @{
     Layout = null;
@@ -34,8 +34,17 @@
                 </button>
             }
         }
+
+        @foreach (var item in Model.Item4)
+        {
+            <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
+                @item.Id
+            </button>
+        }
     }
 </div>
+
+<button onclick="viewMapRedLine('GET', '/Admin/viewMap')">Обновить</button>
 
 <script id="model" type="application/json">
     @Html.Raw(Json.Serialize(Model.Item1))

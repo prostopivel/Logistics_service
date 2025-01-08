@@ -1,6 +1,6 @@
 ﻿@using System;
 @using Logistics_service.Models.Users;
-@model List<Manager>
+@model Tuple<List<Manager>, List<Administrator>>
 
 @{
     Layout = null;
@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="styles.css">
 
 <div class="container">
-    <h1>Список менеджеров</h1>
+    <h1>Список менеджеров и администраторов</h1>
     <table>
         <thead>
             <tr>
@@ -22,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Item1)
             {
                 <tr>
                     <td>@item.Id</td>
@@ -32,6 +32,16 @@
                     <td>
                         <input type="image" src="/img/delete.jpg" alt="Удалить" onclick="auth('DELETE', '/Admin/deleteManager/@item.Id')" name="deleteButton" width="45" height="45" />
                     </td>
+                </tr>
+            }
+            @foreach (var item in Model.Item2)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
+                    <td>@item.Role</td>
+                    <td></td>
                 </tr>
             }
         </tbody>

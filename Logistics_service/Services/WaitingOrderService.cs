@@ -55,7 +55,7 @@ namespace Logistics_service.Services
 
                         if (firstTask.Key <= now)
                         {
-                            await Console.Out.WriteLineAsync(firstTask.Key + ": " + firstTask.Value.Id);
+                            await Console.Out.WriteLineAsync($"Заказ с Id {firstTask.Value.Id} начался в {firstTask.Key}");
                             await _vehicleService.AddVehicle(firstTask.Value.Vehicle);
                             _orders.TryRemove(firstTask.Key, out var order);
                             _sortedOrders.Remove(firstTask.Key);
@@ -75,7 +75,12 @@ namespace Logistics_service.Services
                 {
                     for (int i = 0; i < _vehicleService.Vehicles.Count; i++)
                     {
-                        _vehicleService.Vehicles[i].UpdateLocation(1);
+                        if (!_vehicleService.Vehicles[i].UpdateLocation(2))
+                        {
+                            var ord = _currentOrders.FirstOrDefault(o => o.Value.VehicleId == _vehicleService.Vehicles[i].Id);
+                            _currentOrders.TryRemove(ord);
+                            await _vehicleService.DeleteVehicle(_vehicleService.Vehicles[i]);
+                        }
                     }
                 }
 

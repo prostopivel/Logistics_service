@@ -97,6 +97,7 @@ namespace Logistics_service.Controllers
                         points[order.StartPointId], points[order.EndPointId]);
 
                     var route = new Models.Route(tuple.Item1, tuple.Item2);
+                    route.CustomerEmail = order.CustomerEmail;
 
                     var vehicle = _vehicleService.GetVehicleById(order.VehicleId);
 
@@ -173,12 +174,15 @@ namespace Logistics_service.Controllers
             var waitingOrders = _waitingOrder.Orders.Values.ToArray();
             var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
 
-            return View(new Tuple<Point[], CustomerOrder?, Models.Route[], Models.Route[], Point[]?, double?>(
+            return View(new Tuple<Point[], CustomerOrder?, Models.Route[], 
+                Models.Route[], Point[]?, double?, Vehicle[]>(
                 points,
                 currentOrder,
                 waitingOrders.Select(order => order.Route).ToArray(),
                 currentOrders.Select(order => order.Route).ToArray(),
-                null, null));
+                null,
+                null,
+                _vehicleService.Vehicles.ToArray()));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -211,21 +215,26 @@ namespace Logistics_service.Controllers
 
                 var route = DijkstraAlgorithm.FindShortestPath(points, startPoint, endPoint);
 
-                return View("viewMap", new Tuple<Point[], CustomerOrder?, Models.Route[], Models.Route[], Point[]?, double?>(
+                return View("viewMap", new Tuple<Point[], CustomerOrder?, 
+                    Models.Route[], Models.Route[], Point[]?, double?, Vehicle[]>(
                     points,
                     currentOrder,
                     waitingOrders.Select(order => order.Route).ToArray(),
                     currentOrders.Select(order => order.Route).ToArray(),
                     route.Item1,
-                    route.Item2));
+                    route.Item2,
+                    _vehicleService.Vehicles.ToArray()));
             }
 
-            return View("viewMap", new Tuple<Point[], CustomerOrder?, Models.Route[], Models.Route[], Point[]?, double?>(
+            return View("viewMap", new Tuple<Point[], CustomerOrder?, Models.Route[], 
+                Models.Route[], Point[]?, double?, Vehicle[]>(
                 points,
                 currentOrder,
                 waitingOrders.Select(order => order.Route).ToArray(),
                 currentOrders.Select(order => order.Route).ToArray(),
-                null, null));
+                null,
+                null,
+                _vehicleService.Vehicles.ToArray()));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]

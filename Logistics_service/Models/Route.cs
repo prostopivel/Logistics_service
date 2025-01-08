@@ -16,6 +16,9 @@ namespace Logistics_service.Models
         public DateTime? DepartureTime { get; set; }
 
         [NotMapped]
+        public string? CustomerEmail { get; set; }
+
+        [NotMapped]
         public List<Point> Points => new List<Point>(_points);
 
         public List<Point> DbPoints { get; set; }
@@ -34,9 +37,16 @@ namespace Logistics_service.Models
             _points.Enqueue(point);
         }
 
-        public Point DequeuePoint()
+        public Point? DequeuePoint()
         {
-            return _points.Dequeue();
+            if (_points.Count > 0)
+            {
+                return _points.Dequeue();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void AddPoints(Point[] points)

@@ -22,10 +22,10 @@ namespace Logistics_service.Models
         public VehicleStatus? Status { get; set; }
 
         [NotMapped]
-        public int? PosX { get; set; }
+        public double? PosX { get; set; }
 
         [NotMapped]
-        public int? PosY { get; set; }
+        public double? PosY { get; set; }
 
         [NotMapped]
         public double? CurrentDistance { get; private set; }
@@ -68,7 +68,7 @@ namespace Logistics_service.Models
 
         public bool SetOrder(ReadyOrder order)
         {
-            if (_routes.Count(o => o.Key.Date.Date == order.ArrivalTime.Date) > 5)
+            if (_routes.Count(o => o.Key.Date.Date == order.ArrivalTime.Date) > 10)
             {
                 Console.WriteLine("Превышен лимит заказов машины на день!");
                 return false;
@@ -106,6 +106,8 @@ namespace Logistics_service.Models
 
                 CurrentRoute.AddPoints(tuple.Item1);
                 CurrentRoute.Distance += tuple.Item2;
+
+                SetDestination();
             }
         }
 
@@ -121,12 +123,41 @@ namespace Logistics_service.Models
 
         private void SetDestination()
         {
+            PosX = CurrentPoint?.PosX;
+            PosY = CurrentPoint?.PosY;
 
+            CurrentPoint = CurrentRoute?.DequeuePoint();
         }
 
-        public void UpdateLocation(int seconds)
+        public bool UpdateLocation(int time)
         {
+            if (CurrentPoint is null)
+            {
+                return false;
+            }
+            double deltaX = (double)(CurrentPoint?.PosX - PosX) * Point.ConvertX;
+            double deltaY = (double)(CurrentPoint?.PosY - PosY) * Point.ConvertY;
 
+            double distance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            if (distance <= 1)
+            {
+                SetDestination();
+                return UpdateLocation(time);
+            }
+
+            double directionX = deltaX / distance;
+            double directionY = deltaY / distance;
+
+            double traveledDistance = Speed * time;
+
+            if (traveledDistance >= distance)
+                SetDestination();
+
+            PosX += directionX * traveledDistance / Point.ConvertX;
+            PosY += directionY * traveledDistance / Point.ConvertY;
+
+            return true;
         }
     }
 }

@@ -7,6 +7,9 @@ namespace Logistics_service.Models
 {
     public class Point : ICloneable
     {
+        public const double ConvertX = 40.40;
+        public const double ConvertY = 19.067;
+
         [Key]
         public int Id { get; set; }
 
@@ -40,8 +43,8 @@ namespace Logistics_service.Models
 
             for (int i = 0; i < indexes.Length; i++)
             {
-                var deltaX = (points[indexes[i]].PosX - PosX) * 0.01 * 4040;
-                var deltaY = (points[indexes[i]].PosY - PosY) * 0.01 * 1906.7;
+                var deltaX = (points[indexes[i]].PosX - PosX) * ConvertX;
+                var deltaY = (points[indexes[i]].PosY - PosY) * ConvertY;
 
                 var length = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
                 Distances[i] = length;

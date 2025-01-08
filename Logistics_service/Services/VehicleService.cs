@@ -29,11 +29,33 @@ namespace Logistics_service.Services
                     if (existingVehicle is not null)
                     {
                         existingVehicle.Status = VehicleStatus.InUse;
+                        await context.SaveChangesAsync();
+
                         vehicle.Status = VehicleStatus.InUse;
                         vehicle.SetRoute(await context.Points.ToArrayAsync());
+
                         Vehicles.Add(vehicle);
                         FreeVehicles.Remove(vehicle);
+                    }
+                }
+            }
+        }
+
+        public async Task DeleteVehicle(Vehicle vehicle)
+        {
+            if (vehicle.Id is not null && vehicle.Id > 0)
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
+
+                    if (existingVehicle is not null)
+                    {
+                        existingVehicle.Status = VehicleStatus.Free;
                         await context.SaveChangesAsync();
+
+                        Vehicles.Remove(vehicle);
                     }
                 }
             }

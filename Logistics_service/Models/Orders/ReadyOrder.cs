@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Logistics_service.Models.Orders
 {
-    public class ReadyOrder : Order
+    public class ReadyOrder : Order, ICloneable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -51,6 +51,20 @@ namespace Logistics_service.Models.Orders
         public async Task OnTime()
         {
 
+        }
+
+        public object Clone()
+        {
+            return new ReadyOrder()
+            {
+                DbId = DbId,
+                CustomerEmail = CustomerEmail,
+                RouteId = RouteId,
+                Route = Route,
+                VehicleId = VehicleId,
+                Vehicle = Vehicle,
+                ArrivalTime = ArrivalTime
+            };
         }
     }
 }

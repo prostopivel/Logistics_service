@@ -1,6 +1,6 @@
 ﻿@using Logistics_service.Models;
 @using Logistics_service.Models.Orders;
-@model Tuple<Point[], CustomerOrder, Route[], Route[], Point[]?, double?>
+@model Tuple<Point[], CustomerOrder, Route[], Route[], Point[]?, double?, Vehicle[]>
 
 @{
     Layout = null;
@@ -43,6 +43,8 @@
         }
     }
 </div>
+
+<button onclick="viewMapRedLine('GET', '/Manager/viewMap')">Обновить</button>
 
 @if (Model.Item6 != null)
 {
