@@ -17,18 +17,21 @@ namespace Logistics_service.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Logistics_service.Models.Orders.CustomerOrder", b =>
                 {
-                    b.Property<int?>("DbId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("DbId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("datetime2");
@@ -37,6 +40,9 @@ namespace Logistics_service.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DestinationAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -44,26 +50,29 @@ namespace Logistics_service.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("DbId");
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
-                    b.ToTable("CustomerOrders", (string)null);
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomerOrders");
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Orders.ReadyOrder", b =>
                 {
-                    b.Property<int?>("DbId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("DbId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("ArrivalTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CustomerEmail")
@@ -74,22 +83,22 @@ namespace Logistics_service.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Id")
+                    b.Property<int?>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RouteId")
+                    b.Property<int?>("Status")
                         .HasColumnType("int");
 
                     b.Property<int?>("VehicleId")
                         .HasColumnType("int");
 
-                    b.HasKey("DbId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RouteId");
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("ReadyOrders", (string)null);
+                    b.ToTable("ReadyOrders");
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Point", b =>
@@ -121,23 +130,18 @@ namespace Logistics_service.Migrations
                     b.Property<int>("PosY")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RouteId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RouteId");
-
-                    b.ToTable("Points", (string)null);
+                    b.ToTable("Points");
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Route", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DepartureTime")
                         .HasColumnType("datetime2");
@@ -147,16 +151,34 @@ namespace Logistics_service.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Routes", (string)null);
+                    b.ToTable("Routes");
+                });
+
+            modelBuilder.Entity("Logistics_service.Models.RoutePoint", b =>
+                {
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PointId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.HasKey("RouteId", "PointId");
+
+                    b.HasIndex("PointId");
+
+                    b.ToTable("RoutePoints");
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Users.User", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -181,7 +203,7 @@ namespace Logistics_service.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasDiscriminator().HasValue("User");
 
@@ -190,11 +212,11 @@ namespace Logistics_service.Migrations
 
             modelBuilder.Entity("Logistics_service.Models.Vehicle", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("GarageId")
                         .HasColumnType("int");
@@ -211,7 +233,7 @@ namespace Logistics_service.Migrations
 
                     b.HasIndex("GarageId");
 
-                    b.ToTable("Vehicles", (string)null);
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Users.Administrator", b =>
@@ -225,7 +247,7 @@ namespace Logistics_service.Migrations
                 {
                     b.HasBaseType("Logistics_service.Models.Users.User");
 
-                    b.Property<string>("OrdersId")
+                    b.PrimitiveCollection<string>("OrdersId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("Customer");
@@ -255,12 +277,23 @@ namespace Logistics_service.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("Logistics_service.Models.Point", b =>
+            modelBuilder.Entity("Logistics_service.Models.RoutePoint", b =>
                 {
-                    b.HasOne("Logistics_service.Models.Route", null)
-                        .WithMany("DbPoints")
+                    b.HasOne("Logistics_service.Models.Point", "Point")
+                        .WithMany("RoutePoints")
+                        .HasForeignKey("PointId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Logistics_service.Models.Route", "Route")
+                        .WithMany("RoutePoints")
                         .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Point");
+
+                    b.Navigation("Route");
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Vehicle", b =>
@@ -274,9 +307,14 @@ namespace Logistics_service.Migrations
                     b.Navigation("Garage");
                 });
 
+            modelBuilder.Entity("Logistics_service.Models.Point", b =>
+                {
+                    b.Navigation("RoutePoints");
+                });
+
             modelBuilder.Entity("Logistics_service.Models.Route", b =>
                 {
-                    b.Navigation("DbPoints");
+                    b.Navigation("RoutePoints");
                 });
 #pragma warning restore 612, 618
         }

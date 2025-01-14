@@ -35,7 +35,9 @@ namespace Logistics_service.Controllers
             string nonce = GenerateDigest.GenerateRandom();
             string opaque = GenerateDigest.GenerateRandom();
 
-            HttpContext.Session.SetString("Opaque", opaque);
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+
+            HttpContext.Session.SetString(ipAddress, opaque);
             HttpContext.Session.SetString(opaque, nonce);
 
             ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\"";
@@ -118,7 +120,7 @@ namespace Logistics_service.Controllers
 
         public async Task<UserRole?> Auth()
         {
-            var authHeader = Request.Headers["Authorization"].ToString();
+            var authHeader = Request.Headers.Authorization.ToString();
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Digest "))
             {
                 errorMessage = "Неправильный дайджест!";

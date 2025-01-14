@@ -5,11 +5,12 @@ namespace Logistics_service.Models.Orders
 {
     public abstract class Order
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? Id { get; set; }
 
         public virtual string? Email { get; set; }
 
-        [NotMapped]
         public DateTime? CreatedAt { get; set; }
 
         public override bool Equals(object? obj)

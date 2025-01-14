@@ -19,18 +19,40 @@ namespace Logistics_service.Models
         public string? CustomerEmail { get; set; }
 
         [NotMapped]
-        public List<Point> Points => new List<Point>(_points);
+        public List<Point> Points => new List<Point>(_points ?? Enumerable.Empty<Point>());
 
-        public List<Point> DbPoints { get; set; }
+        public ICollection<RoutePoint> RoutePoints { get; set; } = new List<RoutePoint>();
 
         public Route() { }
 
         public Route(Point[] points, double distance)
         {
-            _points = new Queue<Point>(points);
+            RoutePoints = new List<RoutePoint>();
+
+            int i = 0;
+            foreach (var item in points)
+            {
+                RoutePoints.Add(new RoutePoint(item.Id, i++));
+            }
+
             Distance = distance;
         }
 
+        public Route(Route route)
+        {
+            _points = new Queue<Point>();
+
+            foreach (var item in route.RoutePoints.OrderBy(r => r.OrderIndex))
+            {
+                _points.Enqueue(item.Point);
+            }
+
+            Distance = route.Distance;
+            DepartureTime = route.DepartureTime;
+            CustomerEmail = route.CustomerEmail;
+            Id = route.Id;
+            RoutePoints = route.RoutePoints;
+        }
 
         public void EnqueuePoint(Point point)
         {

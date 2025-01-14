@@ -1,5 +1,5 @@
 ﻿@using Logistics_service.Models.Orders;
-@model Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[]>
+@model Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[], ReadyOrder[]>
 
 @{
     Layout = null;
@@ -41,9 +41,9 @@
                     <td>
                         @if (item.Route is not null)
                         {
-                            @foreach (var point in item.Route.Points)
+                            @foreach (var point in item.Route.RoutePoints)
                             {
-                                <span>@point.Index</span>
+                                <span>@point.Point.Index</span>
                             }
                         }
                     </td>
@@ -79,7 +79,7 @@
     <tbody>
         @if (Model != null)
         {
-            @foreach (var item in Model.Item3)
+            @foreach (var item in Model.Item4)
             {
                 <tr>
                     <td>@item.CreatedAt</td>
@@ -131,6 +131,57 @@
         @if (Model != null)
         {
             @foreach (var item in Model.Item2)
+            {
+                <tr>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.Email</td>
+                    <td>@item.CustomerEmail</td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@item.Route.DepartureTime</span>
+                        }
+                        <span>/ @item.ArrivalTime</span>
+                    </td>
+                    <td>@item.Vehicle.Id</td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            @foreach (var point in item.Route.Points)
+                            {
+                                <span>@point.Index</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@((int)item.Route.Distance)</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h2>Принятые заказы (не сегодня):</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Время поступления</th>
+            <th>Email менеджера</th>
+            <th>Email заказчика</th>
+            <th>Время выезда/ доставки</th>
+            <th>Id транспорта</th>
+            <th>Точки маршрута</th>
+            <th>Расстояние</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model.Item3)
             {
                 <tr>
                     <td>@item.CreatedAt</td>

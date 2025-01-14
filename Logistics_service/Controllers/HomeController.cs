@@ -7,6 +7,9 @@ namespace Logistics_service.Controllers
     {
         public IActionResult Index()
         {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            Console.WriteLine($"Подключился {ipAddress}");
+
             return View();
         }
 

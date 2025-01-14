@@ -5,21 +5,19 @@ namespace Logistics_service.Models.Orders
 {
     public class ReadyOrder : Order, ICloneable
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? DbId { get; set; }
-
         public string CustomerEmail { get; set; }
 
         public int? RouteId { get; set; }
 
-        public Route Route { get; set; }
+        public virtual Route Route { get; set; }
 
         public int? VehicleId { get; set; }
 
-        public Vehicle Vehicle { get; set; }
+        public virtual Vehicle Vehicle { get; set; }
 
         public DateTime ArrivalTime { get; set; }
+
+        public ReadyOrderStatus? Status { get; set; }
 
         public ReadyOrder() { }
 
@@ -31,12 +29,8 @@ namespace Logistics_service.Models.Orders
             VehicleId = vehicle.Id;
             ArrivalTime = arrivalTime;
             CustomerEmail = customerEmail;
-            SetTime(15);
-
-            if (!Vehicle.SetOrder(this))
-            {
-                throw new Exception("Превышен лимит заказов машины на день!");
-            }
+            Status = ReadyOrderStatus.Created;
+            SetTime(Vehicle.Speed);
         }
 
         public void SetTime(int Speed)
@@ -48,22 +42,20 @@ namespace Logistics_service.Models.Orders
             Route.DepartureTime = time - travelTime;
         }
 
-        public async Task OnTime()
-        {
-
-        }
-
         public object Clone()
         {
             return new ReadyOrder()
             {
-                DbId = DbId,
+                Id = Id,
                 CustomerEmail = CustomerEmail,
                 RouteId = RouteId,
-                Route = Route,
+                Route = new Route(Route),
                 VehicleId = VehicleId,
                 Vehicle = Vehicle,
-                ArrivalTime = ArrivalTime
+                ArrivalTime = ArrivalTime,
+                Status = Status,
+                CreatedAt = CreatedAt,
+                Email = Email
             };
         }
     }

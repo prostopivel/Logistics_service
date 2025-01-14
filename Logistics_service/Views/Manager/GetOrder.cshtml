@@ -14,6 +14,7 @@
             <th>Адрес получения</th>
             <th>Адрес доставки</th>
             <th>Время доставки</th>
+            <th>Статус</th>
             <th></th>
         </tr>
     </thead>
@@ -28,6 +29,7 @@
                     <td>@item.BeginningAddress</td>
                     <td>@item.DestinationAddress</td>
                     <td>@item.ArrivalTime</td>
+                    <td>@item.Status</td>
                     <td>
                         <input type="button" onclick='sendOrder("DELETE", "/manager/getOrder", @Html.Raw(Json.Serialize(item)))' value="Принять" />
                     </td>

@@ -17,17 +17,14 @@ namespace Logistics_service.Controllers.Dashboard
         private readonly ApplicationDbContext _context;
         private readonly WaitingOrderService _waitingOrder;
         private readonly VehicleService _vehicleService;
-        private readonly OrderQueueService<ReadyOrder> _readyQueueService;
 
         public AdminController(IConfiguration configuration, ApplicationDbContext context,
-            WaitingOrderService waitingOrder, VehicleService vehicleService,
-            OrderQueueService<ReadyOrder> readyQueueService)
+            WaitingOrderService waitingOrder, VehicleService vehicleService)
         {
             _configuration = configuration;
             _context = context;
             _waitingOrder = waitingOrder;
             _vehicleService = vehicleService;
-            _readyQueueService = readyQueueService;
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]
@@ -55,7 +52,7 @@ namespace Logistics_service.Controllers.Dashboard
         {
             await DeleteUserAsync(id);
 
-            return View("viewAllCustomers", await _context.Customers.ToListAsync());
+            return View("viewAllCustomers", _context.Customers.ToListAsync());
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]
@@ -65,7 +62,7 @@ namespace Logistics_service.Controllers.Dashboard
         {
             await DeleteUserAsync(id);
 
-            return View("viewAllManagers", await _context.Managers.ToListAsync());
+            return View("viewAllManagers", _context.Managers.ToListAsync());
         }
 
         private async Task DeleteUserAsync(int id)
@@ -143,47 +140,67 @@ namespace Logistics_service.Controllers.Dashboard
         [ResponseCache(NoStore = true, Duration = 0)]
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewAllOrders")]
-        public IActionResult ViewAllOrders()
+        public async Task<IActionResult> ViewAllOrders()
         {
-            var managerOrders = _readyQueueService.Orders;
-            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
-            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
-            return View(new Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[]>(managerOrders, waitingOrders, currentOrders));
+            var managerOrders = await _context
+                .GetOrders()
+                .Where(o => o.Status == ReadyOrderStatus.Created)
+                .ToArrayAsync();
+            var waitingNotTodayOrders = await _context
+                .GetOrders()
+                .Where(o => o.Status == ReadyOrderStatus.Accepted && o.ArrivalTime.Date != DateTime.Today)
+                .ToArrayAsync();
+            var waitingOrders = (_waitingOrder.GetOrders())
+                .Values.ToArray();
+            var currentOrders = (_waitingOrder.GetCurrentOrders())
+                .Values.ToArray();
+            return View("viewAllOrders", new Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[], ReadyOrder[]>(
+                managerOrders, waitingOrders, waitingNotTodayOrders, currentOrders));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpDelete("assignOrder")]
         public async Task<IActionResult> AssignOrder([FromBody] int Id)
         {
-            if (_readyQueueService.TryDeleteOrderById(Id, out var order)
-                && order is not null && order.Route is not null && order.Route.DepartureTime is not null)
+            if (_context.ReadyOrders.Any(o => o.Id == Id && o.Route != null
+            && o.Route.DepartureTime != null))
             {
-                order.DbId = null;
+                var order = _context
+                    .GetOrders()
+                    .First(o => o.Id == Id);
+                order.Status = ReadyOrderStatus.Accepted;
 
-                var dbOrder = (ReadyOrder)order.Clone();
-
-                dbOrder.Route.DbPoints = order.Route.Points;
-
-                foreach (var item in dbOrder.Route.DbPoints)
-                {
-                    if (_context.Entry(item).State == EntityState.Detached)
-                    {
-                        _context.Points.Attach(item);
-                    }
-                }
-
-                dbOrder.Vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == dbOrder.Vehicle.Id) ?? dbOrder.Vehicle;
-                
-                _context.ReadyOrders.Add(dbOrder);
                 await _context.SaveChangesAsync();
-                
-                await _waitingOrder.AddOrder((DateTime)order.Route.DepartureTime, order, _context);
+
+                var temp = (ReadyOrder)order.Clone();
+
+                if (temp.ArrivalTime.Date == DateTime.Now.Date)
+                {
+                    if (temp.VehicleId is null)
+                    {
+                        ViewBag.Error = "Id транспорта не указан!";
+                        return await ViewAllOrders();
+                    }
+
+                    var vehicle = _vehicleService.GetVehicleById((int)temp.VehicleId);
+
+                    if (vehicle is null)
+                    {
+                        vehicle = await _context.GetVehicleAsync((int)temp.VehicleId);
+                        if (vehicle is null)
+                        {
+                            ViewBag.Error = "Неверный индекс транспорта!";
+                            return await ViewAllOrders();
+                        }
+                    }
+
+                    temp.Vehicle = vehicle;
+
+                    _waitingOrder.AddOrder((DateTime)temp.Route.DepartureTime!, temp);
+                }
             }
 
-            var managerOrders = _readyQueueService.Orders;
-            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
-            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
-            return View("viewAllOrders", new Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[]>(managerOrders, waitingOrders, currentOrders));
+            return await ViewAllOrders();
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]
@@ -245,13 +262,19 @@ namespace Logistics_service.Controllers.Dashboard
             //GenerateMap.SaveMap(_context);
 
             var points = await _context.Points.ToArrayAsync();
-            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
-            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
-            return View(new Tuple<Point[], Models.Route[], Models.Route[], Vehicle[]>(
-                points, 
-                waitingOrders.Select(order => order.Route).ToArray(), 
+            var waitingOrders = _waitingOrder.GetOrders()
+                .Values.ToArray();
+            var currentOrders = _waitingOrder.GetCurrentOrders()
+                .Values.ToArray();
+            var vehicles = _vehicleService.Vehicles
+                .Select(v => new VehicleDto(v))
+                .ToArray();
+            return View(new Tuple<Point[], Models.Route[], Models.Route[], VehicleDto[], Point?[]>(
+                points,
+                waitingOrders.Select(order => order.Route).ToArray(),
                 currentOrders.Select(order => order.Route).ToArray(),
-                _vehicleService.Vehicles.ToArray()));
+                vehicles,
+                currentOrders.Select(order => order.Vehicle.CurrentPoint).ToArray()));
         }
     }
 }

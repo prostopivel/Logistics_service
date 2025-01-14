@@ -1,6 +1,6 @@
 ﻿@using Logistics_service.Models;
 @using Logistics_service.Models.Orders;
-@model Tuple<Point[], Route[], Route[], Vehicle[]>
+@model Tuple<Point[], Route[], Route[], VehicleDto[], Point?[]>
 
 @{
     Layout = null;
@@ -11,9 +11,15 @@
 
     @{
         var waitingOrders = Model.Item2.SelectMany(route => route.Points).ToArray();
-        var currentOrders = Model.Item3.SelectMany(route => route.Points).ToArray();
+        var currentOrders = Model.Item3
+            .Zip(Model.Item5, (route, currentPoint) =>
+                currentPoint != null
+                    ? new[] { currentPoint }.Concat(route.Points).ToArray()
+                    : route.Points.ToArray())
+            .SelectMany(points => points)
+            .ToArray();
 
-        @foreach (var point in Model.Item1)
+        foreach (var point in Model.Item1)
         {
             if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
             {
@@ -35,7 +41,7 @@
             }
         }
 
-        @foreach (var item in Model.Item4)
+        foreach (var item in Model.Item4 ?? Enumerable.Empty<VehicleDto>())
         {
             <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
                 @item.Id

@@ -1,5 +1,5 @@
 ﻿@using Logistics_service.Models.Orders;
-@model Tuple<CustomerOrder[], ReadyOrder[]>
+@model Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[]>
 
 @{
     Layout = null;
@@ -31,6 +31,35 @@
     </tbody>
 </table>
 
+<h2>Ожидающие заказы:</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Время создания</th>
+            <th>Адрес принятия</th>
+            <th>Адрес доставки</th>
+            <th>Время прибытия</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is not null && Model.Item2 is not null)
+        {
+            @foreach (var item in Model.Item2)
+            {
+                <tr>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.BeginningAddress</td>
+                    <td>@item.DestinationAddress</td>
+                    <td>@item.ArrivalTime</td>
+                    <td>@item.Status</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
 <h2>Принятые заказы:</h2>
 <table>
     <thead>
@@ -40,12 +69,13 @@
             <th>Id транспорта</th>
             <th>Точки маршрута</th>
             <th>Расстояние</th>
+            <th>Статус</th>
         </tr>
     </thead>
     <tbody>
-        @if (Model is not null && Model.Item2 is not null)
+        @if (Model is not null && Model.Item3 is not null)
         {
-            @foreach (var item in Model.Item2)
+            @foreach (var item in Model.Item3)
             {
                 <tr>
                     <td>
@@ -57,9 +87,9 @@
                     <td>@item.ArrivalTime</td>
                     <td>@item.Vehicle.Id</td>
                     <td>
-                        @if (item.Route is not null && item.Route.DbPoints is not null)
+                        @if (item.Route is not null)
                         {
-                            @foreach (var point in item.Route.DbPoints)
+                            @foreach (var point in item.Route.Points)
                             {
                                 <span>@point.Index</span>
                             }
@@ -71,6 +101,7 @@
                             <span>@((int)item.Route.Distance)</span>
                         }
                     </td>
+                    <td>@item.Status</td>
                 </tr>
             }
         }

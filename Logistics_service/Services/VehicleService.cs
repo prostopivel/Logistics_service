@@ -19,24 +19,23 @@ namespace Logistics_service.Services
 
         public async Task AddVehicle(Vehicle vehicle)
         {
-            if (vehicle.Id is not null && vehicle.Id > 0)
+            if (vehicle is not null && vehicle.Id is not null
+                && FreeVehicles.Any(v => vehicle == v))
             {
-                using (var scope = _serviceProvider.CreateScope())
+                using var scope = _serviceProvider.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
+
+                if (existingVehicle is not null)
                 {
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
+                    existingVehicle.Status = VehicleStatus.InUse;
+                    await context.SaveChangesAsync();
 
-                    if (existingVehicle is not null)
-                    {
-                        existingVehicle.Status = VehicleStatus.InUse;
-                        await context.SaveChangesAsync();
+                    vehicle.Status = VehicleStatus.InUse;
+                    vehicle.SetRoute(await context.Points.ToArrayAsync());
 
-                        vehicle.Status = VehicleStatus.InUse;
-                        vehicle.SetRoute(await context.Points.ToArrayAsync());
-
-                        Vehicles.Add(vehicle);
-                        FreeVehicles.Remove(vehicle);
-                    }
+                    Vehicles.Add(vehicle);
+                    FreeVehicles.Remove(vehicle);
                 }
             }
         }

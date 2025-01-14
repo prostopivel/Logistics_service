@@ -94,9 +94,6 @@ namespace Logistics_service
             });
 
             services.AddSingleton<VehicleService>();
-            services.AddSingleton<OrderQueueService<CustomerOrder>>();
-            services.AddSingleton<OrderQueueService<ReadyOrder>>();
-
             services.AddMemoryCache();
 
             services.AddSingleton<WaitingOrderService>();

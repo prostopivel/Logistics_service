@@ -68,12 +68,6 @@ namespace Logistics_service.Models
 
         public bool SetOrder(ReadyOrder order)
         {
-            if (_routes.Count(o => o.Key.Date.Date == order.ArrivalTime.Date) > 10)
-            {
-                Console.WriteLine("Превышен лимит заказов машины на день!");
-                return false;
-            }
-
             order.SetTime(Speed);
 
             foreach (var item in _routes)
@@ -87,11 +81,6 @@ namespace Logistics_service.Models
             }
 
             _routes.Add(order.ArrivalTime, order.Route);
-
-            /*var firstElement = Routes.First();
-            CurrentRoute = firstElement.Value;
-            Routes.Remove(firstElement.Key);*/
-
             return true;
         }
 

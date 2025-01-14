@@ -4,6 +4,7 @@ using Logistics_service.Services;
 using Logistics_service.Static;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Net;
 
 namespace Logistics_service.Controllers.Dashboard
 {
@@ -44,7 +45,9 @@ namespace Logistics_service.Controllers.Dashboard
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
 
-            var opaque = HttpContext.Session.GetString("Opaque");
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+
+            var opaque = HttpContext.Session.GetString(ipAddress);
             if (opaque == null)
                 return View("Unauthorized");
 

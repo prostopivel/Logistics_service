@@ -16,35 +16,38 @@ namespace Logistics_service.Controllers
         private readonly VehicleService _vehicleService;
         private readonly WaitingOrderService _waitingOrder;
         private readonly ApplicationDbContext _context;
-        private readonly OrderQueueService<CustomerOrder> _queueService;
-        private readonly OrderQueueService<ReadyOrder> _readyQueueService;
         private readonly IMemoryCache _cache;
 
-        public ManagerController(ApplicationDbContext context, WaitingOrderService waitingOrder,
-            OrderQueueService<CustomerOrder> queueService, IMemoryCache cache, 
-            VehicleService vehicleService, OrderQueueService<ReadyOrder> readyQueueService)
+        public ManagerController(ApplicationDbContext context, IMemoryCache cache,
+            WaitingOrderService waitingOrder, VehicleService vehicleService)
         {
             _context = context;
-            _queueService = queueService;
             _cache = cache;
             _vehicleService = vehicleService;
-            _readyQueueService = readyQueueService;
             _waitingOrder = waitingOrder;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("getOrder")]
-        public IActionResult GetOrder()
+        public async Task<IActionResult> GetOrder()
         {
-            return View(_queueService.Orders);
+            return View(await _context.CustomerOrders
+                .Where(o => o.Status == OrderStatus.Created
+                || o.Status == OrderStatus.ManagerAccepted)
+                .ToArrayAsync());
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpDelete("getOrder")]
-        public IActionResult GetOrder([FromBody] CustomerOrder order)
+        public async Task<IActionResult> GetOrder([FromBody] CustomerOrder order)
         {
-            if (!_cache.TryGetValue("CurrentOrder", out _) && _queueService.TryDeleteOrder(order))
+            if (!_cache.TryGetValue("CurrentOrder", out _)
+                && _context.CustomerOrders.Any(o => o.Id == order.Id))
             {
+                _context.CustomerOrders.First(o => o.Id == order.Id).Status = OrderStatus.ManagerAccepted;
+                await _context.SaveChangesAsync();
+
+                order.Status = OrderStatus.ManagerAccepted;
                 _cache.Set("CurrentOrder", order, TimeSpan.FromMinutes(30));
             }
             else if (_cache.TryGetValue("CurrentOrder", out _))
@@ -56,7 +59,10 @@ namespace Logistics_service.Controllers
                 ViewBag.Error = $"Не удалось найти заказ с ID: {order.Id}!";
             }
 
-            return View(_queueService.Orders);
+            return View(await _context.CustomerOrders
+                .Where(o => o.Status == OrderStatus.Created
+                || o.Status == OrderStatus.ManagerAccepted)
+                .ToArrayAsync());
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -83,62 +89,74 @@ namespace Logistics_service.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var points = await _context.Points.ToArrayAsync();
+
+                if (order.StartPointId < 0 || order.StartPointId >= points.Length
+                    || order.EndPointId < 0 || order.EndPointId >= points.Length)
                 {
-                    var points = await _context.Points.ToArrayAsync();
-
-                    if (order.StartPointId < 0 || order.StartPointId >= points.Length
-                        || order.EndPointId < 0 || order.EndPointId >= points.Length)
-                    {
-                        ViewBag.Error = "Неверные индексы точек!";
-                        return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
-                    }
-                    var tuple = DijkstraAlgorithm.FindShortestPath(points,
-                        points[order.StartPointId], points[order.EndPointId]);
-
-                    var route = new Models.Route(tuple.Item1, tuple.Item2);
-                    route.CustomerEmail = order.CustomerEmail;
-
-                    var vehicle = _vehicleService.GetVehicleById(order.VehicleId);
-
-                    if (vehicle is null)
-                    {
-                        vehicle = await _context.GetVehicleAsync(order.VehicleId);
-                        if (vehicle is null)
-                        {
-                            ViewBag.Error = "Неверный индекс транспорта!";
-                            return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
-                        }
-                    }
-
-                    if (order.CustomerEmail is null)
-                    {
-                        ViewBag.Error = "Email заказчика не указан!";
-                        return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
-                    }
-
-                    var readyOrder = new ReadyOrder(route, vehicle, order.ArrivalTime, order.CustomerEmail);
-                    if (readyOrder.Route is null || readyOrder.Route.DepartureTime is null)
-                    {
-                        ViewBag.Error = "Время выезда не указано!";
-                        return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
-                    }
-
-                    var authHeader = HttpContext.Request.Headers.Authorization.ToString();
-                    var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
-
-                    readyOrder.Email = email;
-                    readyOrder.CreatedAt = DateTime.Now;
-
-                    _cache.Remove("CurrentOrder");
-                    _readyQueueService.AddOrder(readyOrder);
-
-                    return RedirectToAction("manager", "Dashboard");
+                    ViewBag.Error = "Неверные индексы точек!";
+                    return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
                 }
-                catch (Exception ex)
+                var tuple = DijkstraAlgorithm.FindShortestPath(points,
+                    points[order.StartPointId], points[order.EndPointId]);
+
+                var route = new Models.Route(tuple.Item1, tuple.Item2);
+                route.CustomerEmail = order.CustomerEmail;
+
+                var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == order.VehicleId);
+                if (vehicle is null)
                 {
-                    ViewBag.Error = ex.Message;
+                    ViewBag.Error = "Неверный индекс транспорта!";
+                    return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
                 }
+
+                if (order.CustomerEmail is null)
+                {
+                    ViewBag.Error = "Email заказчика не указан!";
+                    return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
+                }
+
+                var readyOrder = new ReadyOrder(route, vehicle, order.ArrivalTime, order.CustomerEmail);
+                if (readyOrder.Route is null || readyOrder.Route.DepartureTime is null)
+                {
+                    ViewBag.Error = "Время выезда не указано!";
+                    return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
+                }
+
+                if (_context.ReadyOrders.Any(r => r.Vehicle.Id == readyOrder.Vehicle.Id 
+                && (r.Status == ReadyOrderStatus.Accepted || r.Status == ReadyOrderStatus.Created || r.Status == ReadyOrderStatus.Running)
+                && (r.Route.DepartureTime >= readyOrder.Route.DepartureTime && r.Route.DepartureTime <= readyOrder.ArrivalTime
+                || r.ArrivalTime >= readyOrder.Route.DepartureTime && r.ArrivalTime <= readyOrder.ArrivalTime)))
+                {
+                    ViewBag.Error = "Данное время уже занято!";
+                    return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
+                }
+
+                var authHeader = HttpContext.Request.Headers.Authorization.ToString();
+                var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
+
+                readyOrder.Email = email;
+                readyOrder.CreatedAt = DateTime.Now;
+
+                _cache.Remove("CurrentOrder");
+
+                if (customerOrder is not null && _context.CustomerOrders.Any(
+                    o => o.Id == ((CustomerOrder)customerOrder).Id))
+                {
+                    _context.CustomerOrders.First(o => o.Id ==
+                    ((CustomerOrder)customerOrder).Id).Status = OrderStatus.AdminAccepted;
+
+                    _context.ReadyOrders.Add(readyOrder);
+
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    ViewBag.Error = "Заказ не найден!";
+                    return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
+                }
+
+                return RedirectToAction("manager", "Dashboard");
             }
 
             return View(new Tuple<Vehicle[], CustomerOrder?>(vehicles, (CustomerOrder?)customerOrder));
@@ -171,8 +189,10 @@ namespace Logistics_service.Controllers
         {
             _cache.TryGetValue("CurrentOrder", out CustomerOrder? currentOrder);
             var points = await _context.Points.ToArrayAsync();
-            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
-            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
+            var waitingOrders = (_waitingOrder.GetOrders())
+                .Values.ToArray();
+            var currentOrders = (_waitingOrder.GetCurrentOrders())
+                .Values.ToArray();
 
             return View(new Tuple<Point[], CustomerOrder?, Models.Route[], 
                 Models.Route[], Point[]?, double?, Vehicle[]>(
@@ -190,8 +210,10 @@ namespace Logistics_service.Controllers
         public async Task<IActionResult> AddLine([FromBody] dynamic dataSE)
         {
             var points = await _context.Points.ToArrayAsync();
-            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
-            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
+            var waitingOrders = (_waitingOrder.GetOrders())
+                .Values.ToArray();
+            var currentOrders = (_waitingOrder.GetCurrentOrders())
+                .Values.ToArray();
             _cache.TryGetValue("CurrentOrder", out CustomerOrder? currentOrder);
 
             using JsonDocument doc = JsonDocument.Parse(dataSE.ToString());
@@ -241,8 +263,10 @@ namespace Logistics_service.Controllers
         [HttpGet("viewAssignOrders")]
         public IActionResult ViewAssignOrders()
         {
-            var waitingOrders = _waitingOrder.Orders.Values.ToArray();
-            var currentOrders = _waitingOrder.CurrentOrders.Values.ToArray();
+            var waitingOrders = (_waitingOrder.GetOrders())
+                 .Values.ToArray();
+            var currentOrders = (_waitingOrder.GetCurrentOrders())
+                .Values.ToArray();
             return View(new Tuple<ReadyOrder[], ReadyOrder[]>(currentOrders, waitingOrders));
         }
     }

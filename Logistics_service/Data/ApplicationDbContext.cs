@@ -16,6 +16,7 @@ namespace Logistics_service.Data
         public DbSet<ReadyOrder> ReadyOrders { get; set; }
         public DbSet<CustomerOrder> CustomerOrders { get; set; }
         public DbSet<Models.Route> Routes { get; set; }
+        public DbSet<RoutePoint> RoutePoints { get; set; } // Промежуточная таблица
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -37,12 +38,25 @@ namespace Logistics_service.Data
                 .HasForeignKey(v => v.GarageId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Конфигурация для Route
-            modelBuilder.Entity<Models.Route>()
-                .HasMany(r => r.DbPoints) 
-                .WithOne() 
-                .HasForeignKey("RouteId") 
+            // Конфигурация для Route и Point (связь многие-ко-многим через RoutePoint)
+            modelBuilder.Entity<RoutePoint>()
+                .HasKey(rp => new { rp.RouteId, rp.PointId });
+
+            modelBuilder.Entity<RoutePoint>()
+                .HasOne(rp => rp.Route)
+                .WithMany(r => r.RoutePoints)
+                .HasForeignKey(rp => rp.RouteId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoutePoint>()
+                .HasOne(rp => rp.Point)
+                .WithMany(p => p.RoutePoints)
+                .HasForeignKey(rp => rp.PointId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoutePoint>()
+                .Property(rp => rp.OrderIndex)
+                .IsRequired();
 
             // Конфигурация для Point
             modelBuilder.Entity<Point>()
@@ -65,30 +79,30 @@ namespace Logistics_service.Data
             // Конфигурация для ReadyOrder
             modelBuilder.Entity<ReadyOrder>(entity =>
             {
-                entity.HasKey(r => r.DbId);
+                entity.HasKey(r => r.Id);
 
                 entity.HasOne(r => r.Vehicle)
                       .WithMany()
-                      .HasForeignKey(r => r.VehicleId) 
-                      .OnDelete(DeleteBehavior.Restrict); 
+                      .HasForeignKey(r => r.VehicleId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(r => r.Route)
                       .WithMany()
-                      .HasForeignKey(r => r.RouteId) 
-                      .OnDelete(DeleteBehavior.Restrict); 
+                      .HasForeignKey(r => r.RouteId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(r => r.ArrivalTime)
-                      .IsRequired(); 
+                      .IsRequired();
 
                 entity.Property(r => r.CustomerEmail)
-                      .IsRequired() 
-                      .HasMaxLength(255); 
+                      .IsRequired()
+                      .HasMaxLength(255);
             });
 
             // Конфигурация для CustomerOrder
             modelBuilder.Entity<CustomerOrder>(entity =>
             {
-                entity.HasKey(r => r.DbId);
+                entity.HasKey(r => r.Id);
 
                 entity.Property(r => r.ArrivalTime)
                       .IsRequired();
@@ -110,16 +124,28 @@ namespace Logistics_service.Data
 
         public async Task<Vehicle?> GetVehicleAsync(int id)
         {
-            var vehicle = await Vehicles.FirstOrDefaultAsync(v => v.Id == id);
+            var vehicle = await Vehicles
+                .Include(v => v.Garage)
+                .FirstOrDefaultAsync(v => v.Id == id);
+
             if (vehicle is null)
             {
                 return null;
             }
 
-            vehicle.Garage = Points.FirstOrDefault(p => p.Id == vehicle.GarageId);
             var resVehicle = new Vehicle(vehicle);
 
             return resVehicle;
+        }
+
+        public IQueryable<ReadyOrder> GetOrders()
+        {
+            return ReadyOrders
+                    .Include(o => o.Vehicle)
+                        .ThenInclude(v => v.Garage)
+                    .Include(o => o.Route)
+                        .ThenInclude(r => r.RoutePoints)
+                            .ThenInclude(rp => rp.Point);
         }
     }
 }

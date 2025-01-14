@@ -26,6 +26,8 @@ namespace Logistics_service.Models
 
         public double[] Distances { get; set; }
 
+        public virtual ICollection<RoutePoint> RoutePoints { get; set; } = new List<RoutePoint>();
+
         public Point() { }
 
         public Point(string? name, int posX, int posY)

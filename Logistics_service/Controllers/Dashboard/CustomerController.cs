@@ -13,16 +13,13 @@ namespace Logistics_service.Controllers.Dashboard
     {
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
-        private readonly OrderQueueService<CustomerOrder> _queueService;
         private readonly WaitingOrderService _waitingOrder;
         private readonly VehicleService _vehicleService;
 
-        public CustomerController(IConfiguration configuration, 
-            OrderQueueService<CustomerOrder> queueService, ApplicationDbContext context,
+        public CustomerController(IConfiguration configuration, ApplicationDbContext context,
             WaitingOrderService waitingOrder, VehicleService vehicleService)
         {
             _configuration = configuration;
-            _queueService = queueService;
             _context = context;
             _waitingOrder = waitingOrder;
             _vehicleService = vehicleService;
@@ -34,9 +31,9 @@ namespace Logistics_service.Controllers.Dashboard
         {
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
-            
+
             var reqect = _context.CustomerOrders
-                .Where(r => r.Email == email)
+                .Where(r => r.Email == email && r.Status == OrderStatus.Reject)
                 .Select(r => new CustomerOrder()
                 {
                     Email = r.Email,
@@ -47,10 +44,22 @@ namespace Logistics_service.Controllers.Dashboard
                 })
                 .ToArray();
 
-            var ready = _context.ReadyOrders
+            var wait = _context.CustomerOrders
+                .Where(w => w.Email == email && w.Status == OrderStatus.Created
+                || w.Status == OrderStatus.ManagerAccepted)
+                .Select(w => new CustomerOrder()
+                {
+                    Email = w.Email,
+                    ArrivalTime = w.ArrivalTime,
+                    BeginningAddress = w.BeginningAddress,
+                    DestinationAddress = w.DestinationAddress,
+                    Status = w.Status
+                })
+                .ToArray();
+
+            var ready = _context
+                .GetOrders()
                 .Where(r => r.CustomerEmail == email)
-                .Include(r => r.Route) 
-                .ThenInclude(route => route.DbPoints)
                 .Select(r => new ReadyOrder()
                 {
                     ArrivalTime = r.ArrivalTime,
@@ -58,10 +67,12 @@ namespace Logistics_service.Controllers.Dashboard
                     CustomerEmail = r.CustomerEmail,
                     Route = r.Route,
                     Vehicle = r.Vehicle,
+                    Status = r.Status
                 })
-                .ToArray(); 
+                .ToArray();
 
-            return View(new Tuple<CustomerOrder[], ReadyOrder[]>(reqect, ready));
+            return View(new Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[]>(
+                reqect, wait, ready));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -73,7 +84,7 @@ namespace Logistics_service.Controllers.Dashboard
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("createRequest")]
-        public ActionResult CreateRequest([FromBody] CustomerOrder order)
+        public async Task<IActionResult> CreateRequest([FromBody] CustomerOrder order)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +100,9 @@ namespace Logistics_service.Controllers.Dashboard
                     return View("createRequest");
                 }
 
-                _queueService.AddOrder(order);
+                order.Status = OrderStatus.Created;
+                _context.CustomerOrders.Add(order);
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction("customer", "Dashboard");
             }
@@ -105,11 +118,11 @@ namespace Logistics_service.Controllers.Dashboard
 
             var points = await _context.Points.ToArrayAsync();
 
-            var waitingOrders = _waitingOrder.Orders.Values
+            var waitingOrders = (_waitingOrder.GetOrders()).Values
                 .Where(o => o.CustomerEmail == email)
                 .ToArray();
 
-            var currentOrders = _waitingOrder.CurrentOrders.Values
+            var currentOrders = (_waitingOrder.GetCurrentOrders()).Values
                 .Where(o => o.CustomerEmail == email)
                 .ToArray();
 
