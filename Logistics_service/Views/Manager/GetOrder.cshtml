@@ -31,7 +31,7 @@
                     <td>@item.ArrivalTime</td>
                     <td>@item.Status</td>
                     <td>
-                        <input type="button" onclick='sendOrder("DELETE", "/manager/getOrder", @Html.Raw(Json.Serialize(item)))' value="Принять" />
+                        <input type="button" onclick='sendOrder("POST", "/manager/getOrder", @Html.Raw(Json.Serialize(item)))' value="Принять" />
                     </td>
                 </tr>
             }

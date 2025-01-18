@@ -1,5 +1,6 @@
 ﻿@using Logistics_service.Models.Orders;
-@model Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[]>
+@using Logistics_service.Models.MapModels;
+@model Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[], CustomerMapModel>
 
 @{
     Layout = null;
@@ -107,3 +108,69 @@
         }
     </tbody>
 </table>
+<br />
+
+<div class="image-container" id="imageContainer">
+    <img src="/img/map.png" alt="map" class="responsive-image" />
+
+    @{
+        for (int i = 0; i < Model.Item4.WaitingOrders.Length; i++)
+        {
+            Model.Item4.WaitingOrders[i] = new Route(Model.Item4.WaitingOrders[i]);
+        }
+
+        var waitingOrders = Model?.Item4.WaitingOrders.SelectMany(route => route.Points).ToArray();
+        var currentOrders = Model?.Item4.CurrentOrders
+        .Zip(Model.Item4.CurrentOrdersPoints, (route, currentPoint) =>
+        currentPoint != null
+        ? new[] { currentPoint }.Concat(route.Points).ToArray()
+        : route.Points.ToArray())
+        .SelectMany(points => points)
+        .ToArray();
+
+        foreach (var point in Model.Item4.Points)
+        {
+            if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 102; background-color: yellow;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else if (currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 103; background-color: red;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+        }
+
+        foreach (var item in Model.Item4.Vehicles)
+        {
+            <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
+                @item.Id
+            </button>
+        }
+    }
+</div>
+
+<h3>Заказы на дату:</h3>
+<input id="dateSet" type="date"></input>
+<br />
+
+<button onclick="viewMapRedLine('GET', '/Customer/ViewOrders')">Обновить</button>
+
+<script id="model" type="application/json">
+    @Html.Raw(Json.Serialize(Model.Item4.Points))
+</script>
+<script id="modelLine" type="application/json">
+    @Html.Raw(Json.Serialize(waitingOrders))
+</script>
+<script id="modelRedLine" type="application/json">
+    @Html.Raw(Json.Serialize(currentOrders))
+</script>

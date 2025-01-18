@@ -5,6 +5,7 @@ using Logistics_service.Static;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,9 +36,7 @@ namespace Logistics_service.Controllers
             string nonce = GenerateDigest.GenerateRandom();
             string opaque = GenerateDigest.GenerateRandom();
 
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
-
-            HttpContext.Session.SetString(ipAddress, opaque);
+            HttpContext.Session.SetString("Opaque", opaque);
             HttpContext.Session.SetString(opaque, nonce);
 
             ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\"";
@@ -108,10 +107,25 @@ namespace Logistics_service.Controllers
         {
             var existingCustomer = await _context.Users.FirstOrDefaultAsync(c => c.Email == customer.Email);
 
+            if (_context.Users.IsNullOrEmpty())
+            {
+                Administrator administrator = new Administrator()
+                {
+                    Id = customer.Id,
+                    Email = customer.Email,
+                    Name = customer.Name,
+                    PasswordHash = customer.PasswordHash,
+                    Role = UserRole.Administrator
+                };
+
+                _context.Administrators.Add(administrator);
+                await _context.SaveChangesAsync();
+                return true;
+            }
             if (existingCustomer == null)
             {
                 _context.Customers.Add(customer);
-                var affectedRows = await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return true;
             }
 
@@ -127,9 +141,15 @@ namespace Logistics_service.Controllers
                 return null;
             }
 
-            var authParams = ParseAuthorizationHeader(authHeader.Substring("Digest ".Length));
-
-            return await ValidateDigestToken(authParams);
+            try
+            {
+                var authParams = ParseAuthorizationHeader(authHeader["Digest ".Length..]);
+                return await ValidateDigestToken(authParams);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private async Task<UserRole?> ValidateDigestToken(Dictionary<string, string> authParams)
@@ -185,14 +205,11 @@ namespace Logistics_service.Controllers
             return new Tuple<string, UserRole>(response, user.Role);
         }
 
-        private string ComputeMD5(string input)
+        private static string ComputeMD5(string input)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashBytes = MD5.HashData(inputBytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
         private Dictionary<string, string> ParseAuthorizationHeader(string header)

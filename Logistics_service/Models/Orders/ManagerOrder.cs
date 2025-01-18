@@ -4,6 +4,7 @@ namespace Logistics_service.Models.Orders
 {
     public class ManagerOrder
     {
+        public int? Id { get; set; }
         public string? CustomerEmail { get; set; }
 
         [Required(ErrorMessage = "StartPointId is required")]

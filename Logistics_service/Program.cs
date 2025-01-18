@@ -1,9 +1,13 @@
+using System;
+using System.Linq;
+using System.Net;
 using Logistics_service.Data;
-using Logistics_service.Models.Orders;
 using Logistics_service.Services;
 using Logistics_service.Static;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Logistics_service
 {
@@ -13,9 +17,20 @@ namespace Logistics_service
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ListenAnyIP(5000);
+                serverOptions.ListenAnyIP(5001, listenOptions => 
+                {
+                    listenOptions.UseHttps(); 
+                });
+            });
+
             ConfigureServices(builder.Services, builder.Configuration);
 
             var app = builder.Build();
+
+            PrintLocalIpAddresses();
 
             using (var scope = app.Services.CreateScope())
             {
@@ -98,6 +113,36 @@ namespace Logistics_service
 
             services.AddSingleton<WaitingOrderService>();
             services.AddHostedService(provider => provider.GetRequiredService<WaitingOrderService>());
+        }
+
+        private static void PrintLocalIpAddresses()
+        {
+            try
+            {
+                var hostName = Dns.GetHostName();
+                Console.WriteLine($"Host Name: {hostName}");
+
+                var ipAddresses = Dns.GetHostAddresses(hostName)
+                    .Where(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) // Только IPv4
+                    .ToList();
+
+                if (ipAddresses.Any())
+                {
+                    Console.WriteLine("Local IP Addresses:");
+                    foreach (var ip in ipAddresses)
+                    {
+                        Console.WriteLine($"- {ip}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No IPv4 addresses found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving IP addresses: {ex.Message}");
+            }
         }
     }
 }

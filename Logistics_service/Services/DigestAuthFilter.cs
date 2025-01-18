@@ -20,9 +20,8 @@ namespace Logistics_service.Services
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var authHeader = context.HttpContext.Request.Headers.Authorization.ToString();
-            var ipAddress = context.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
 
-            var opaque = context.HttpContext.Session.GetString(ipAddress);
+            var opaque = context.HttpContext.Session.GetString("Opaque");
 
             if (opaque == null)
             {
@@ -58,9 +57,7 @@ namespace Logistics_service.Services
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
 
-            var ipAddress = context.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
-
-            var opaque = context.HttpContext.Session.GetString(ipAddress);
+            var opaque = context.HttpContext.Session.GetString("Opaque");
             if (opaque == null)
                 return null;
 

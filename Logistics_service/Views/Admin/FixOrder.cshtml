@@ -1,0 +1,145 @@
+﻿@using System;
+@using Logistics_service.Models;
+@using Logistics_service.Models.Orders;
+
+@model Tuple<Vehicle[], ReadyOrder?>
+
+@{
+    Layout = null;
+}
+
+<title>AssignOrder</title>
+<link rel="stylesheet" href="styles.css">
+
+<h2 class="error-message">@ViewBag.Error</h2>
+
+<div class="container">
+    
+    <div>
+        <h2>Выбранный заказ:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Время поступления</th>
+                    <th>Email менеджера</th>
+                    <th>Email заказчика</th>
+                    <th>Время выезда/ доставки</th>
+                    <th>Id транспорта</th>
+                    <th>Точки маршрута</th>
+                    <th>Расстояние</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Item2 is not null)
+                {
+                    <tr>
+                        <td>@Model.Item2.CreatedAt</td>
+                        <td>@Model.Item2.Email</td>
+                        <td id="CustomerEmail">@Model.Item2.CustomerEmail</td>
+                        <td>
+                            @if (Model.Item2.Route is not null)
+                            {
+                                <span>@Model.Item2.Route.DepartureTime</span>
+                            }
+                            <span>/ @Model.Item2.ArrivalTime</span>
+                        </td>
+                        <td>@Model.Item2.Vehicle.Id</td>
+                        <td>
+                            @if (Model.Item2.Route is not null)
+                            {
+                                @foreach (var point in Model.Item2.Route.Points)
+                                {
+                                    <span>@point.Index</span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (Model.Item2.Route is not null)
+                            {
+                                <span>@((int)Model.Item2.Route.Distance)</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h2>Исправить заказ:</h2>
+        <form id="createOrderForm" asp-action="assignOrder" method="post" onsubmit="assignAdminOrder(event, 'POST', '/Admin/fixOrder', @Model?.Item2?.Id)">
+            <div asp-validation-summary="All" class="error-message"></div>
+
+            <div class="form-group">
+                <label for="StartPointId">Начальная точка маршрута:</label>
+                <input id="StartPointId" type="number" name="StartPointId" />
+                <span class="error-message" data-valmsg-for="StartPointId"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="EndPointId">Конечная точка маршрута:</label>
+                <input id="EndPointId" type="number" name="EndPointId" />
+                <span class="error-message" data-valmsg-for="EndPointId"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="VehicleId">Выберите транспорт:</label>
+                <select id="VehicleId" name="VehicleId">
+                    @foreach (var vehicle in Model.Item1)
+                    {
+                        <option value="@vehicle.Id">@vehicle.Id - @vehicle.Status</option>
+                    }
+                </select>
+                <span class="error-message" data-valmsg-for="VehicleId"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="ArrivalTime">Время доставки:</label>
+                <input type="datetime-local" id="ArrivalTime" name="ArrivalTime" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                <span class="error-message" data-valmsg-for="ArrivalTime"></span>
+            </div>
+
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+
+    <h1>Список автомобилей</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Гараж</th>
+                <th>Скорость</th>
+                <th>Статус</th>
+                <th>Маршруты</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Item1)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>
+                        @if (item.Garage != null)
+                        {
+                            @item.Garage.Index
+                        }
+                    </td>
+                    <td>@item.Speed</td>
+                    <td>@item.Status</td>
+                    @if (item.Routes != null)
+                    {
+                        <td>
+                            @foreach (var route in item.Routes)
+                            {
+                                <p>
+                                    @route.Value.DepartureTime - @route.Key: @((int)route.Value.Distance) м
+                                </p>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

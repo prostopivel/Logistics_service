@@ -1,4 +1,5 @@
-﻿@model Logistics_service.Models.Orders.CustomerOrder
+﻿@using Logistics_service.Models.Orders;
+@model Tuple<CustomerOrder, Point[]>
 
 @{
     Layout = null;
@@ -12,21 +13,38 @@
     <form id="createOrderForm" asp-action="createRequest" method="post" onsubmit="createOrder(event, 'POST', '/customer/createRequest')">
         <div asp-validation-summary="All" class="error-message"></div>
         <div class="form-group">
-            <label asp-for="BeginningAddress">Адрес получения:</label>
-            <input id="BeginningAddress" type="text" asp-for="BeginningAddress" name="BeginningAddress" />
-            <span asp-validation-for="BeginningAddress" class="error-message"></span>
+            <label asp-for="Item1.BeginningAddress">Адрес получения:</label>
+            <input id="BeginningAddress" type="text" asp-for="Item1.BeginningAddress" name="BeginningAddress" />
+            <span asp-validation-for="Item1.BeginningAddress" class="error-message"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="DestinationAddress">Адрес доставки:</label>
-            <input id="DestinationAddress" type="text" asp-for=" DestinationAddress" name="DestinationAddress" />
-            <span asp-validation-for="DestinationAddress" class="error-message"></span>
+            <label asp-for="Item1.DestinationAddress">Адрес доставки:</label>
+            <input id="DestinationAddress" type="text" asp-for=" Item1.DestinationAddress" name="DestinationAddress" />
+            <span asp-validation-for="Item1.DestinationAddress" class="error-message"></span>
         </div>
         <div class="form-group">
-            <label asp-for="ArrivalTime">Время доставки:</label>
-            <input type="datetime-local" asp-for="ArrivalTime" name="ArrivalTime" asp-format="{0:yyyy-MM-ddTHH:mm}" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
-            <span asp-validation-for="ArrivalTime" class="error-message"></span>
+            <label asp-for="Item1.ArrivalTime">Время доставки:</label>
+            <input type="datetime-local" asp-for="Item1.ArrivalTime" name="ArrivalTime" asp-format="{0:yyyy-MM-ddTHH:mm}" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+            <span asp-validation-for="Item1.ArrivalTime" class="error-message"></span>
         </div>
         <button type="submit">Отправить</button>
     </form>
 </div>
+
+<br />
+
+<div class="image-container" id="imageContainer">
+    <img src="/img/map.png" alt="map" class="responsive-image" />
+
+    @foreach (var point in Model.Item2)
+    {
+        <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
+            @point.Name
+        </button>
+    }
+</div>
+
+<script id="model" type="application/json">
+    @Html.Raw(Json.Serialize(Model.Item2))
+</script>

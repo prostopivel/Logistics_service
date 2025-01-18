@@ -2,6 +2,7 @@
 using Logistics_service.Models.Orders;
 using Logistics_service.Models.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Logistics_service.Data
 {
@@ -67,14 +68,22 @@ namespace Logistics_service.Data
                 .HasConversion(
                     v => string.Join(',', v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray()
-                );
+                )
+                .Metadata.SetValueComparer(new ValueComparer<int[]>(
+                    (c1, c2) => c1.SequenceEqual(c2),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => c.ToArray()));
 
             modelBuilder.Entity<Point>()
                 .Property(p => p.Distances)
                 .HasConversion(
                     v => string.Join(';', v),
                     v => v.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToArray()
-                );
+                )
+                .Metadata.SetValueComparer(new ValueComparer<double[]>(
+                    (c1, c2) => c1.SequenceEqual(c2),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => c.ToArray()));
 
             // Конфигурация для ReadyOrder
             modelBuilder.Entity<ReadyOrder>(entity =>
@@ -146,6 +155,14 @@ namespace Logistics_service.Data
                     .Include(o => o.Route)
                         .ThenInclude(r => r.RoutePoints)
                             .ThenInclude(rp => rp.Point);
+        }
+
+        public ReadyOrder[] GetWaitingOrders(DateTime date)
+        {
+            var ord = GetOrders();
+            return ord
+                .Where(o => o.ArrivalTime.Date == date.Date)
+                .ToArray();
         }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using Logistics_service.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Logistics_service.Static
 {

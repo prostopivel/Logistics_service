@@ -35,6 +35,22 @@ function assignOrder(event, request, uri) {
     event.preventDefault();
 
     var order = {
+        Id: 0,
+        StartPointId: parseInt(document.querySelector('input[name="StartPointId"]').value, 10),
+        EndPointId: parseInt(document.querySelector('input[name="EndPointId"]').value, 10),
+        VehicleId: document.querySelector('select[name="VehicleId"]').value,
+        ArrivalTime: document.querySelector('input[name="ArrivalTime"]').value,
+        CustomerEmail: document.getElementById('CustomerEmail').textContent
+    };
+
+    auth(request, uri, JSON.stringify(order));
+}
+
+function assignAdminOrder(event, request, uri, id) {
+    event.preventDefault();
+
+    var order = {
+        Id: parseInt(id),
         StartPointId: parseInt(document.querySelector('input[name="StartPointId"]').value, 10),
         EndPointId: parseInt(document.querySelector('input[name="EndPointId"]').value, 10),
         VehicleId: document.querySelector('select[name="VehicleId"]').value,
@@ -70,6 +86,18 @@ function sendOrder(request, uri, data) {
     auth(request, uri, JSON.stringify(data));
 }
 
+function sendRouteOrder(request, uri, date) {
+    let fullUri = `${uri}/${date}`;
+
+    auth(request, fullUri);
+}
+
+function sendRouteOrderLine(request, uri, date, data) {
+    let fullUri = `${uri}/${date}`;
+
+    auth(request, fullUri, data);
+}
+
 function sendReasonOrder(request, uri, data) {
     let reason = document.querySelector('#reason').value;
 
@@ -78,6 +106,28 @@ function sendReasonOrder(request, uri, data) {
     data.Reason = reason;
 
     auth(request, uri, JSON.stringify(data));
+}
+
+function sendDate(request, uri) {
+    if (document.querySelector('#dateSet')) {
+        let date = document.querySelector('#dateSet').value;
+
+        sendRouteOrder(request, uri, date);
+    }
+    else {
+        auth(request, uri);
+    }
+}
+
+function sendDateLine(request, uri, data) {
+    if (document.querySelector('#dateSet')) {
+        let date = document.querySelector('#dateSet').value;
+
+        sendRouteOrderLine(request, uri, date, data);
+    }
+    else {
+        auth(request, uri);
+    }
 }
 
 function viewMap(request, uri) {
@@ -95,12 +145,12 @@ function viewMap(request, uri) {
 function viewMapLine(request, uri) {
     ChangeWidth('1400px');
 
-    var dataSE = {
+    var line = {
         Start: document.getElementById('startNum').value,
         End: document.getElementById('endNum').value
     };
 
-    auth(request, uri, JSON.stringify(dataSE));
+    sendDateLine(request, uri, JSON.stringify(line));
 
     setTimeout(() => {
         if (document.getElementById('imageContainer')) {
@@ -119,7 +169,7 @@ function viewMapLine(request, uri) {
 function viewMapRedLine(request, uri) {
     ChangeWidth('1400px');
 
-    auth(request, uri);
+    sendDate(request, uri);
 
     setTimeout(() => {
         if (document.getElementById('imageContainer')) {
@@ -151,18 +201,17 @@ function fillModelLine() {
     var modelElementLine1 = document.getElementById('modelLine');
     var modelElementLine2 = document.getElementById('modelRedLine');
     var modelElementLine3 = document.getElementById('modelAddLine');
-    if (modelElementLine1 && modelElementLine2 && modelElementLine3) {
+    if (modelElementLine1) {
         var modelRedLine1 = JSON.parse(modelElementLine1.textContent);
-        var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
-        var modelRedLine3 = JSON.parse(modelElementLine3.textContent);
-        FillColorButtons(modelRedLine1, modelRedLine2, modelRedLine3, 'yellow', 'red', 'blue');
-    } else if (modelElementLine1 && modelElementLine2) {
-        var modelRedLine1 = JSON.parse(modelElementLine1.textContent);
-        var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
-        FillColorButtons(modelRedLine1, modelRedLine2, null, 'yellow', 'red', 'green');
+        FillColorButtons(modelRedLine1, 'yellow');
     }
-    else {
-        console.error('Элемент с id="modelLine" или id="modelRedLine" не найден');
+    if (modelElementLine2) {
+        var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
+        FillColorButtons(modelRedLine2, 'red');
+    }
+    if (modelElementLine3) {
+        var modelRedLine3 = JSON.parse(modelElementLine3.textContent);
+        FillColorButtons(modelRedLine3, 'blue');
     }
 }
 
@@ -171,11 +220,12 @@ function fillModelRedLine() {
 
     var modelElementLine1 = document.getElementById('modelLine');
     var modelElementLine2 = document.getElementById('modelRedLine');
-    if (modelElementLine1 && modelElementLine2) {
+    if (modelElementLine1) {
         var modelRedLine1 = JSON.parse(modelElementLine1.textContent);
+        FillColorButtons(modelRedLine1, 'yellow');
+    }
+    if (modelElementLine2) {
         var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
-        FillColorButtons(modelRedLine1, modelRedLine2, null, 'yellow', 'red', 'green');
-    } else {
-        console.error('Элемент с id="modelLine" или id="modelRedLine" не найден');
+        FillColorButtons(modelRedLine2, 'red');
     }
 }

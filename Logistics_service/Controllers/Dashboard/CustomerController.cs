@@ -1,9 +1,10 @@
-﻿using Logistics_service.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Logistics_service.Data;
 using Logistics_service.Models;
+using Logistics_service.Models.MapModels;
 using Logistics_service.Models.Orders;
+using Logistics_service.Services;
 using Logistics_service.Static;
-using Logistics_service.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Logistics_service.Controllers.Dashboard
@@ -27,10 +28,17 @@ namespace Logistics_service.Controllers.Dashboard
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("viewOrders")]
-        public IActionResult ViewOrders()
+        public async Task<IActionResult> ViewOrders()
+        {
+            return await ViewOrders(DateTime.Now.Date);
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [HttpGet("viewOrders/{date}")]
+        public async Task<IActionResult> ViewOrders([FromRoute] DateTime date)
         {
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
-            var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
+            var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
 
             var reqect = _context.CustomerOrders
                 .Where(r => r.Email == email && r.Status == OrderStatus.Reject)
@@ -59,7 +67,7 @@ namespace Logistics_service.Controllers.Dashboard
 
             var ready = _context
                 .GetOrders()
-                .Where(r => r.CustomerEmail == email)
+                .Where(r => r.CustomerEmail == email && r.ArrivalTime.Date == date)
                 .Select(r => new ReadyOrder()
                 {
                     ArrivalTime = r.ArrivalTime,
@@ -71,15 +79,21 @@ namespace Logistics_service.Controllers.Dashboard
                 })
                 .ToArray();
 
-            return View(new Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[]>(
-                reqect, wait, ready));
+            return View(new Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[], CustomerMapModel>(
+                reqect,
+                wait,
+                ready,
+                await ViewMap(date)));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("createRequest")]
-        public IActionResult CreateRequest()
+        public async Task<IActionResult> CreateRequest()
         {
-            return View();
+            ViewBag.Error = TempData["Error"];
+            return View(new Tuple<CustomerOrder, Point[]>(
+                new CustomerOrder(),
+                await _context.Points.ToArrayAsync()));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -89,15 +103,15 @@ namespace Logistics_service.Controllers.Dashboard
             if (ModelState.IsValid)
             {
                 var authHeader = HttpContext.Request.Headers.Authorization.ToString();
-                var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
+                var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
 
                 order.Email = email;
                 order.CreatedAt = DateTime.Now;
 
                 if (order.ArrivalTime.Hour < 8 || order.ArrivalTime.Hour > 17)
                 {
-                    ViewBag.Error = "Указано неверное время! Время работы сервиса с 8 до 17.";
-                    return View("createRequest");
+                    TempData["Error"] = "Указано неверное время! Время работы сервиса с 8 до 17.";
+                    return RedirectToAction("createRequest");
                 }
 
                 order.Status = OrderStatus.Created;
@@ -106,35 +120,40 @@ namespace Logistics_service.Controllers.Dashboard
 
                 return RedirectToAction("customer", "Dashboard");
             }
-            return View("createRequest");
+
+            return RedirectToAction("createRequest");
         }
 
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpGet("viewMap")]
-        public async Task<IActionResult> ViewMap()
+        private async Task<CustomerMapModel> ViewMap()
+        {
+            return await ViewMap(DateTime.Now.Date);
+        }
+        private async Task<CustomerMapModel> ViewMap(DateTime date)
         {
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
-            var email = GenerateDigest.ParseAuthorizationHeader(authHeader["Digest ".Length..])["username"];
-
+            var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
             var points = await _context.Points.ToArrayAsync();
 
-            var waitingOrders = (_waitingOrder.GetOrders()).Values
-                .Where(o => o.CustomerEmail == email)
+            var waitingOrders = _context.GetWaitingOrders(date)
+                .Where(o => o.Status == ReadyOrderStatus.Accepted)
                 .ToArray();
 
-            var currentOrders = (_waitingOrder.GetCurrentOrders()).Values
-                .Where(o => o.CustomerEmail == email)
-                .ToArray();
+            var currentOrders = date == DateTime.Now.Date
+                ? _waitingOrder.GetCurrentOrders().Values
+                    .Where(o => o.CustomerEmail == email)
+                    .ToArray()
+                : Array.Empty<ReadyOrder>();
 
             var vehicles = _vehicleService.Vehicles
                 .Where(v => v.CurrentRoute?.CustomerEmail == email)
                 .ToArray();
 
-            return View(new Tuple<Point[], Models.Route[], Models.Route[], Vehicle[]>(
+            return new CustomerMapModel(
                 points,
                 waitingOrders.Select(order => order.Route).ToArray(),
                 currentOrders.Select(order => order.Route).ToArray(),
-                vehicles));
+                vehicles,
+                currentOrders.Select(order => order.Vehicle.CurrentPoint).ToArray());
         }
     }
 }

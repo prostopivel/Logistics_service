@@ -1,7 +1,8 @@
 ﻿@using System;
 @using Logistics_service.Models;
 @using Logistics_service.Models.Orders;
-@model Tuple<Vehicle[], CustomerOrder?>
+@using Logistics_service.Models.MapModels;
+@model Tuple<CustomerOrder?, Vehicle[], ReadyOrder[], ReadyOrder[], ManagerMapModel?>
 
 @{
     Layout = null;
@@ -27,14 +28,14 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.Item2 != null)
+                @if (Model.Item1 is not null)
                 {
                     <tr>
-                        <td>@Model.Item2.CreatedAt</td>
-                        <td id="CustomerEmail">@Model.Item2.Email</td>
-                        <td>@Model.Item2.BeginningAddress</td>
-                        <td>@Model.Item2.DestinationAddress</td>
-                        <td>@Model.Item2.ArrivalTime</td>
+                        <td>@Model.Item1.CreatedAt</td>
+                        <td id="CustomerEmail">@Model.Item1.Email</td>
+                        <td>@Model.Item1.BeginningAddress</td>
+                        <td>@Model.Item1.DestinationAddress</td>
+                        <td>@Model.Item1.ArrivalTime</td>
                         <td>
                             <input type="text" id="reason" />
                             <input type="button" onclick='sendReasonOrder("DELETE", "/manager/rejectOrder", @Html.Raw(Json.Serialize(Model.Item2)))' value="Отклонить" />
@@ -65,7 +66,7 @@
             <div class="form-group">
                 <label for="VehicleId">Выберите транспорт:</label>
                 <select id="VehicleId" name="VehicleId">
-                    @foreach (var vehicle in Model.Item1)
+                    @foreach (var vehicle in Model.Item2)
                     {
                         <option value="@vehicle.Id">@vehicle.Id - @vehicle.Status</option>
                     }
@@ -82,44 +83,208 @@
             <button type="submit">Отправить</button>
         </form>
     </div>
+</div>
 
-    <h1>Список автомобилей</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Гараж</th>
-                <th>Скорость</th>
-                <th>Статус</th>
-                <th>Маршруты</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Item1)
+<h2>Текущие заказы:</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Время поступления</th>
+            <th>Email менеджера</th>
+            <th>Email заказчика</th>
+            <th>Время выезда/ доставки</th>
+            <th>Id транспорта</th>
+            <th>Точки маршрута</th>
+            <th>Расстояние</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is not null && Model.Item3 is not null)
+        {
+            @foreach (var item in Model.Item3)
             {
                 <tr>
-                    <td>@item.Id</td>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.Email</td>
+                    <td>@item.CustomerEmail</td>
                     <td>
-                        @if (item.Garage != null)
+                        @if (item.Route is not null)
                         {
-                            @item.Garage.Index
+                            <span>@item.Route.DepartureTime</span>
+                        }
+                        <span>/ @item.ArrivalTime</span>
+                    </td>
+                    <td>@item.Vehicle.Id</td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            @foreach (var point in item.Route.Points)
+                            {
+                                <span>@point.Index</span>
+                            }
                         }
                     </td>
-                    <td>@item.Speed</td>
-                    <td>@item.Status</td>
-                    @if (item.Routes != null)
-                    {
-                        <td>
-                            @foreach (var route in item.Routes)
-                            {
-                                <p>
-                                    @route.Value.DepartureTime - @route.Key: @((int)route.Value.Distance) м
-                                </p>
-                            }
-                        </td>
-                    }
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@((int)item.Route.Distance)</span>
+                        }
+                    </td>
                 </tr>
             }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+
+<h2>Принятые заказы:</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Время поступления</th>
+            <th>Email менеджера</th>
+            <th>Email заказчика</th>
+            <th>Время выезда/ доставки</th>
+            <th>Id транспорта</th>
+            <th>Точки маршрута</th>
+            <th>Расстояние</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model.Item4)
+            {
+                <tr>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.Email</td>
+                    <td>@item.CustomerEmail</td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@item.Route.DepartureTime</span>
+                        }
+                        <span>/ @item.ArrivalTime</span>
+                    </td>
+                    <td>@item.Vehicle.Id</td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            @foreach (var point in item.Route.Points)
+                            {
+                                <span>@point.Index</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (item.Route is not null)
+                        {
+                            <span>@((int)item.Route.Distance)</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<br />
+
+<div class="image-container" id="imageContainer">
+    <img src="/img/map.png" alt="map" class="responsive-image" />
+    @{
+        for (int i = 0; i < Model.Item5.WaitingOrders.Length; i++)
+        {
+            Model.Item5.WaitingOrders[i] = new Route(Model.Item5.WaitingOrders[i]);
+        }
+
+        var waitingOrders = Model?.Item5?.WaitingOrders.SelectMany(route => route.Points).ToArray();
+        var currentOrders = Model?.Item5?.CurrentOrders
+        .Zip(Model.Item5.CurrentOrdersPoints, (route, currentPoint) =>
+        currentPoint != null
+        ? new[] { currentPoint }.Concat(route.Points).ToArray()
+        : route.Points.ToArray())
+        .SelectMany(points => points)
+        .ToArray();
+
+        foreach (var point in Model.Item5.Points)
+        {
+            if (Model.Item5.Route is not null && Model.Item5.Route.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 104; background-color: blue;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else if (Model.Item5.CurrentOrdersPoints is not null && Model.Item5.CurrentOrdersPoints.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101; background-color: darkred;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 102; background-color: yellow;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else if (currentOrders.Contains(point))
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 103; background-color: red;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+            else
+            {
+                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
+                    @point.Name
+                </button>
+            }
+        }
+
+        foreach (var item in Model.Item5.Vehicles)
+        {
+            <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
+                @item.Id
+            </button>
+        }
+    }
 </div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Начало</th>
+            <th>Конец</th>
+            <th>Расстояние</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="number" id="startNum" /></td>
+            <td><input type="number" id="endNum" /></td>
+            <td>
+                @if (Model.Item5.Distanse is not null)
+                {
+                    <p>@Model.Item5.Distanse</p>
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Заказы на дату:</h3>
+<input id="dateSet" type="date"></input>
+<br />
+<button onclick="viewMapLine('POST', '/Manager/viewAssignOrder')">Обновить</button>
+
+<script id="model" type="application/json">
+    @Html.Raw(Json.Serialize(Model.Item5.Points))
+</script>
+<script id="modelLine" type="application/json">
+    @Html.Raw(Json.Serialize(waitingOrders))
+</script>
+<script id="modelRedLine" type="application/json">
+    @Html.Raw(Json.Serialize(currentOrders))
+</script>
+<script id="modelAddLine" type="application/json">
+    @Html.Raw(Json.Serialize(Model.Item5.Route))
+</script>

@@ -95,16 +95,17 @@ namespace Logistics_service.Static
 
         public static string ComputeMD5(string input)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashBytes = MD5.HashData(inputBytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
         public static Dictionary<string, string> ParseAuthorizationHeader(string header)
         {
+            if (header.StartsWith("Digest "))
+            {
+                header = header.Substring("Digest ".Length);
+            }
             var paramsDict = new Dictionary<string, string>();
             var parts = header.Split(',');
             foreach (var part in parts)
