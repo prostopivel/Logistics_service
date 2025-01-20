@@ -46,12 +46,14 @@ namespace Logistics_service.Controllers.Dashboard
 
             var opaque = HttpContext.Session.GetString("Opaque");
             if (opaque == null)
+            {
                 return View("Unauthorized");
+            }
 
             string nonce = GenerateDigest.GenerateRandom();
             HttpContext.Session.SetString(opaque, nonce);
 
-            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"/dashboard/{role}\", role = \"{role}\"";
+            ViewBag.WWWAuthenticateHeader = $"Digest realm=\"{realm}\", qop=\"{qop}\", nonce=\"{nonce}\", opaque=\"{opaque}\", returnUrl=\"/dashboard/{role}\", role=\"{role}\"";
 
             return View("Authenticate");
         }

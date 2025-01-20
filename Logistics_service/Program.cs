@@ -1,13 +1,9 @@
-using System;
-using System.Linq;
-using System.Net;
 using Logistics_service.Data;
 using Logistics_service.Services;
 using Logistics_service.Static;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 
 namespace Logistics_service
 {
@@ -17,42 +13,14 @@ namespace Logistics_service
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.WebHost.ConfigureKestrel(serverOptions =>
-            {
-                serverOptions.ListenAnyIP(5000);
-                serverOptions.ListenAnyIP(5001, listenOptions => 
-                {
-                    listenOptions.UseHttps(); 
-                });
-            });
-
+            ConfigureKestrel(builder);
             ConfigureServices(builder.Services, builder.Configuration);
 
             var app = builder.Build();
 
             PrintLocalIpAddresses();
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                GenerateDigest._configuration = services.GetRequiredService<IConfiguration>();
-                GenerateDigest._context = services.GetRequiredService<ApplicationDbContext>();
-            }
-
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseSession();
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<ApplicationDbContext>();
-                context.Database.Migrate();
-            }
+            ConfigureMiddleware(app);
+            ConfigureDatabase(app);
 
             if (!app.Environment.IsDevelopment())
             {
@@ -68,7 +36,6 @@ namespace Logistics_service
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -78,15 +45,25 @@ namespace Logistics_service
             app.Run();
         }
 
+        private static void ConfigureKestrel(WebApplicationBuilder builder)
+        {
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ListenAnyIP(5000);
+                serverOptions.ListenAnyIP(5001, listenOptions =>
+                {
+                    listenOptions.UseHttps();
+                });
+            });
+        }
+
         private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllersWithViews();
-
-            services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            services.AddControllersWithViews()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             services.AddScoped<DigestAuthFilter>();
 
@@ -115,6 +92,29 @@ namespace Logistics_service
             services.AddHostedService(provider => provider.GetRequiredService<WaitingOrderService>());
         }
 
+        private static void ConfigureMiddleware(WebApplication app)
+        {
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseSession();
+        }
+
+        private static void ConfigureDatabase(WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+
+            GenerateDigest.Configuration = services.GetRequiredService<IConfiguration>();
+            GenerateDigest.Context = services.GetRequiredService<ApplicationDbContext>();
+
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            context.Database.Migrate();
+        }
+
         private static void PrintLocalIpAddresses()
         {
             try
@@ -126,7 +126,7 @@ namespace Logistics_service
                     .Where(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) // Только IPv4
                     .ToList();
 
-                if (ipAddresses.Any())
+                if (ipAddresses.Count == 0)
                 {
                     Console.WriteLine("Local IP Addresses:");
                     foreach (var ip in ipAddresses)

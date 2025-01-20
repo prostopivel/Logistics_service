@@ -16,17 +16,16 @@ namespace Logistics_service.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
-        private string errorMessage = "Неизвестная ошибка!";
+        private string _errorMessage = "Неизвестная ошибка!";
 
         public AuthController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
-            GenerateDigest._configuration = configuration;
-            GenerateDigest._context = context;
+            GenerateDigest.Configuration = configuration;
+            GenerateDigest.Context = context;
         }
 
-        //auth/auth
         [HttpGet("logIn")]
         [AllowAnonymous]
         public IActionResult LogIn()
@@ -44,17 +43,14 @@ namespace Logistics_service.Controllers
             return View();
         }
 
-        //auth/autor
         [HttpGet("registration")]
         [AllowAnonymous]
         public IActionResult Registration()
         {
             ViewBag.RealmHeader = _configuration["Realm"];
-
             return View();
         }
 
-        //auth/login
         [HttpPost("logIn")]
         [AllowAnonymous]
         public async Task<IActionResult> LogInPost()
@@ -63,21 +59,14 @@ namespace Logistics_service.Controllers
             if (role != null)
             {
                 ViewBag.role = role;
-                return JsonReturn("dashboard", "Dashboard", new
-                {
-                    role
-                });
+                return JsonReturn("dashboard", "Dashboard", new { role });
             }
             else
             {
-                return JsonReturn("Unauthorized", "Error", new
-                {
-                    errorMessage
-                });
+                return JsonReturn("Unauthorized", "Error", new { _errorMessage });
             }
         }
 
-        //auth/autLog
         [HttpPost("registration")]
         [AllowAnonymous]
         public async Task<IActionResult> Registration(Customer customer)
@@ -88,10 +77,7 @@ namespace Logistics_service.Controllers
 
                 if (!await AddCustomerAsync(customer))
                 {
-                    return JsonReturn("Unauthorized", "Error", new
-                    {
-                        errorMessage = "Данный пользователь уже существует!"
-                    });
+                    return JsonReturn("Unauthorized", "Error", new { errorMessage = "Данный пользователь уже существует!" });
                 }
 
                 ViewBag.role = UserRole.Customer;
@@ -122,6 +108,7 @@ namespace Logistics_service.Controllers
                 await _context.SaveChangesAsync();
                 return true;
             }
+
             if (existingCustomer == null)
             {
                 _context.Customers.Add(customer);
@@ -132,12 +119,12 @@ namespace Logistics_service.Controllers
             return false;
         }
 
-        public async Task<UserRole?> Auth()
+        private async Task<UserRole?> Auth()
         {
             var authHeader = Request.Headers.Authorization.ToString();
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Digest "))
             {
-                errorMessage = "Неправильный дайджест!";
+                _errorMessage = "Неправильный дайджест!";
                 return null;
             }
 
@@ -165,7 +152,7 @@ namespace Logistics_service.Controllers
             var expectedNonce = HttpContext.Session.GetString(opaque);
             if (nonce != expectedNonce)
             {
-                errorMessage = "Неправильный nonce!";
+                _errorMessage = "Неправильный nonce!";
                 return null;
             }
 
@@ -175,13 +162,15 @@ namespace Logistics_service.Controllers
             {
                 return null;
             }
-            else if (response != expectedResponse?.Item1)
+            else if (response != expectedResponse.Item1)
             {
-                errorMessage = "Неправильный response!";
+                _errorMessage = "Неправильный response!";
                 return null;
             }
             else
+            {
                 return expectedResponse.Item2;
+            }
         }
 
         private async Task<Tuple<string, UserRole>?> ComputeDigestResponse(string username, string nonce, string uri, string nc, string cnonce)
@@ -189,7 +178,7 @@ namespace Logistics_service.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == username);
             if (user == null)
             {
-                errorMessage = "Пользователь не найден!";
+                _errorMessage = "Пользователь не найден!";
                 return null;
             }
 
@@ -197,7 +186,6 @@ namespace Logistics_service.Controllers
             string qop = _configuration["Qop"];
 
             var A2 = $"POST:{uri}";
-
             var HA1 = user.PasswordHash;
             var HA2 = ComputeMD5(A2);
 
@@ -231,9 +219,12 @@ namespace Logistics_service.Controllers
             return BitConverter.ToString(randomBytes).Replace("-", "").ToLower();
         }
 
-        private IActionResult JsonReturn(string action, string controller, object? data = null) => Json(new
+        private IActionResult JsonReturn(string action, string controller, object? data = null)
         {
-            redirectUrl = Url.Action(action, controller, data)
-        });
+            return Json(new
+            {
+                redirectUrl = Url.Action(action, controller, data)
+            });
+        }
     }
 }

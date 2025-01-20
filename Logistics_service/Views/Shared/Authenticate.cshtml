@@ -1,17 +1,21 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+
     <script src="/js/site.js"></script>
     <script src="/js/draw.js"></script>
     <script src="/js/auth.js"></script>
+
+    <meta name="www-authenticate" content="@ViewBag.WWWAuthenticateHeader">
 </head>
 <body>
-    <meta name="www-authenticate" content="@ViewBag.WWWAuthenticateHeader">
-
     <form id="authForm" method="get" onsubmit="return false;">
         <input type="hidden" id="email" name="email" />
         <input type="hidden" id="digest" name="digest" />
@@ -19,14 +23,13 @@
     </form>
 
     <div id="containerBox">
-
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (!isFunctionCalled) {
-                authFirst();
-                isFunctionCalled = true;
+                authFirst(); 
+                isFunctionCalled = true; 
             }
         });
     </script>

@@ -1,43 +1,42 @@
 ﻿using Logistics_service.Data;
 using Logistics_service.Models;
 using Logistics_service.Models.Orders;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 
 namespace Logistics_service.Services
 {
     public class WaitingOrderService : BackgroundService
     {
-        private DateTime UpdateOrdersTime;
-
+        private DateTime _updateOrdersTime;
         private readonly IServiceProvider _serviceProvider;
         private readonly VehicleService _vehicleService;
-        private readonly ConcurrentDictionary<int, ReadyOrder> _currentorders;
+        private readonly ConcurrentDictionary<int, ReadyOrder> _currentOrders;
 
         public ConcurrentDictionary<DateTime, int> Orders { get; init; }
-
-        public ConcurrentDictionary<int, ReadyOrder> GetCurrentOrders() =>
-            new ConcurrentDictionary<int, ReadyOrder>(_currentorders);
 
         public WaitingOrderService(ILogger<WaitingOrderService> logger,
             VehicleService vehicleService, IServiceProvider serviceProvider)
         {
             Orders = new ConcurrentDictionary<DateTime, int>();
-            _currentorders = new ConcurrentDictionary<int, ReadyOrder>();
+            _currentOrders = new ConcurrentDictionary<int, ReadyOrder>();
             _vehicleService = vehicleService;
             _serviceProvider = serviceProvider;
             var now = DateTime.Now;
-            UpdateOrdersTime = new DateTime(now.Year, now.Month, now.Day, 7, 55, 0);
+            _updateOrdersTime = new DateTime(now.Year, now.Month, now.Day, 7, 55, 0);
         }
 
-        public async Task AddOrder(int id)
+        public ConcurrentDictionary<int, ReadyOrder> GetCurrentOrders() =>
+            new ConcurrentDictionary<int, ReadyOrder>(_currentOrders);
+
+        public async Task AddOrderAsync(int id)
         {
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            var order = context
-                .GetOrders()
-                .FirstOrDefault(o => o.Id == id);
+            var order = await context.GetOrders()
+                .FirstOrDefaultAsync(o => o.Id == id);
 
-            if (order is null)
+            if (order == null)
             {
                 return;
             }
@@ -53,8 +52,8 @@ namespace Logistics_service.Services
                 return;
             }
 
-            await _vehicleService.AddVehicle(order.Vehicle);
-            _currentorders.TryAdd(order.Id ?? 0, order);
+            await _vehicleService.AddVehicleAsync(order.Vehicle);
+            _currentOrders.TryAdd(order.Id ?? 0, order);
 
             Console.WriteLine($"Заказ с Id {order.Id} начался в {DateTime.Now}");
         }
@@ -65,60 +64,80 @@ namespace Logistics_service.Services
             {
                 var now = DateTime.Now;
 
-                if (now >= UpdateOrdersTime)
+                if (now >= _updateOrdersTime)
                 {
-                    using var scope = _serviceProvider.CreateScope();
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    var orders = context
-                        .GetOrders()
-                        .Where(o => o.ArrivalTime.Date <= UpdateOrdersTime.Date)
-                        .ToArray();
+                    await UpdateOrdersAsync(stoppingToken);
+                    _updateOrdersTime = new DateTime(now.Year, now.Month, now.Day + 1, 8, 0, 0);
+                }
 
-                    foreach (var order in orders)
+                await ProcessCurrentOrdersAsync(stoppingToken);
+                await UpdateVehicleLocationsAsync(stoppingToken);
+
+                await Task.Delay(1000, stoppingToken);
+            }
+        }
+
+        private async Task UpdateOrdersAsync(CancellationToken stoppingToken)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var orders = await context.GetOrders()
+                .Where(o => o.ArrivalTime.Date <= _updateOrdersTime.Date)
+                .ToArrayAsync(stoppingToken);
+
+            foreach (var order in orders)
+            {
+                if (order.Status == ReadyOrderStatus.Accepted || order.Status == ReadyOrderStatus.Running)
+                {
+                    order.Status = ReadyOrderStatus.Running;
+                    if (order.Route != null && order.Route.DepartureTime != null && order.Id != null)
                     {
-                        if (order.Status == ReadyOrderStatus.Accepted || order.Status == ReadyOrderStatus.Running)
-                        {
-                            order.Status = ReadyOrderStatus.Running;
-                            if (order.Route is not null && order.Route.DepartureTime is not null && order.Id is not null)
-                                Orders.TryAdd((DateTime)order.Route.DepartureTime, (int)order.Id);
-                        }
+                        Orders.TryAdd((DateTime)order.Route.DepartureTime, (int)order.Id);
                     }
-
-                    await context.SaveChangesAsync(stoppingToken);
-                    UpdateOrdersTime = new DateTime(now.Year, now.Month, now.Day + 1, 8, 0, 0);
                 }
+            }
 
-                var currentorder = Orders.FirstOrDefault(o => o.Key <= now);
+            await context.SaveChangesAsync(stoppingToken);
+        }
 
-                if (!currentorder.Equals(default(KeyValuePair<DateTime, int>)))
+        private async Task ProcessCurrentOrdersAsync(CancellationToken stoppingToken)
+        {
+            var currentOrder = Orders.FirstOrDefault(o => o.Key <= DateTime.Now);
+
+            if (!currentOrder.Equals(default(KeyValuePair<DateTime, int>)))
+            {
+                await AddOrderAsync(currentOrder.Value);
+                Orders.TryRemove(currentOrder.Key, out _);
+            }
+        }
+
+        private async Task UpdateVehicleLocationsAsync(CancellationToken stoppingToken)
+        {
+            for (int i = 0; i < _vehicleService.Vehicles.Count; i++)
+            {
+                var vehicle = _vehicleService.Vehicles[i];
+                if (!vehicle.UpdateLocation(2))
                 {
-                    await AddOrder(currentorder.Value);
+                    var order = _currentOrders.FirstOrDefault(o => o.Value.VehicleId == vehicle.Id);
 
-                    Orders.Remove(currentorder.Key, out var order);
-                }
-
-                for (int i = 0; i < _vehicleService.Vehicles.Count; i++)
-                {
-                    if (!_vehicleService.Vehicles[i].UpdateLocation(2))
+                    if (order.Value != null)
                     {
-                        var ord = _currentorders.FirstOrDefault(o => o.Value.VehicleId == _vehicleService.Vehicles[i].Id);
-
                         using var scope = _serviceProvider.CreateScope();
                         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                        if (context.ReadyOrders.Any(o => o.Id == ord.Value.Id))
+                        var dbOrder = await context.ReadyOrders.FirstOrDefaultAsync(o => o.Id == order.Value.Id, stoppingToken);
+
+                        if (dbOrder != null)
                         {
-                            context.ReadyOrders.First(o => o.Id == ord.Value.Id).Status = ReadyOrderStatus.Completed;
+                            dbOrder.Status = ReadyOrderStatus.Completed;
                             await context.SaveChangesAsync(stoppingToken);
                         }
 
-                        _currentorders.TryRemove(ord);
-                        await _vehicleService.DeleteVehicle(_vehicleService.Vehicles[i]);
+                        _currentOrders.TryRemove(order);
+                        await _vehicleService.DeleteVehicleAsync(vehicle);
 
-                        await Console.Out.WriteLineAsync($"Заказ с Id {ord.Value.Id} закончился в {DateTime.Now}");
+                        Console.WriteLine($"Заказ с Id {order.Value.Id} закончился в {DateTime.Now}");
                     }
                 }
-
-                await Task.Delay(1000, stoppingToken);
             }
         }
     }

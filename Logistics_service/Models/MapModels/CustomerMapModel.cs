@@ -12,14 +12,18 @@
 
         public Point?[] CurrentOrdersPoints { get; set; }
 
-        public CustomerMapModel(Point[] points, Route[] waitingOrders, 
+        /// <summary>
+        /// Конструктор для инициализации модели карты клиента.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CustomerMapModel(Point[] points, Route[] waitingOrders,
             Route[] currentOrders, Vehicle[] vehicles, Point?[] currentOrdersPoints)
         {
-            Points = points;
-            WaitingOrders = waitingOrders;
-            CurrentOrders = currentOrders;
-            Vehicles = vehicles;
-            CurrentOrdersPoints = currentOrdersPoints;
+            Points = points ?? throw new ArgumentNullException(nameof(points));
+            WaitingOrders = waitingOrders ?? throw new ArgumentNullException(nameof(waitingOrders));
+            CurrentOrders = currentOrders ?? throw new ArgumentNullException(nameof(currentOrders));
+            Vehicles = vehicles ?? throw new ArgumentNullException(nameof(vehicles));
+            CurrentOrdersPoints = currentOrdersPoints ?? throw new ArgumentNullException(nameof(currentOrdersPoints));
         }
     }
 }

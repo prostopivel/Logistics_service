@@ -1,4 +1,4 @@
-﻿@using Logistics_service.Models.Service;
+﻿@using Logistics_service.Models.Service
 @model LoginRequest
 @{
     Layout = "_Layout";
@@ -17,17 +17,20 @@
     <h1>Вход в систему</h1>
     <form id="loginForm" method="post" class="container">
         <div asp-validation-summary="All" class="error-message"></div>
+
         <div class="form-group">
             <h2>Введите логин:</h2>
-            <input type="text" asp-for="Email" id="email" /><br />
+            <input type="text" asp-for="Email" id="email" />
             <span asp-validation-for="Email" class="error-message"></span>
         </div>
+
         <div class="form-group">
             <h2>Введите пароль:</h2>
-            <input type="password" asp-for="Password" id="password" /><br />
+            <input type="password" asp-for="Password" id="password" />
             <span asp-validation-for="Password" class="error-message"></span>
         </div>
-        <div>
+
+        <div class="button-container">
             <input type="button" onclick="submitForm()" value="Войти" id="loginButton" />
         </div>
     </form>
@@ -36,9 +39,9 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
     <script>
         function submitForm() {
-
             var email = $('#email').val();
             var password = $('#password').val();
 
@@ -60,10 +63,10 @@
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         var data = JSON.parse(xhr.responseText);
-                        window.location.href = data.redirectUrl;
+                        window.location.href = data.redirectUrl; 
                     } else {
                         var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
-                        alert('Ошибка: ' + errorMessage);
+                        alert('Ошибка: ' + errorMessage); 
                     }
                 }
             };
@@ -73,7 +76,7 @@
 
         function parseAuthenticateHeader(header) {
             header = header.replace(/^Digest\s*/, '');
-            var params = { };
+            var params = {};
             var parts = header.split(',');
             parts.forEach(function (part) {
                 var kv = part.split('=');
@@ -104,8 +107,9 @@
         function generateCnonce() {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            for (var i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++) {
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
             return text;
         }
 

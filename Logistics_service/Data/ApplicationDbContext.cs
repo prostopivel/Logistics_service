@@ -28,7 +28,15 @@ namespace Logistics_service.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Конфигурация для Vehicle
+            ConfigureVehicle(modelBuilder);
+            ConfigureRouteAndPoint(modelBuilder);
+            ConfigurePoint(modelBuilder);
+            ConfigureReadyOrder(modelBuilder);
+            ConfigureCustomerOrder(modelBuilder);
+        }
+
+        private void ConfigureVehicle(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Vehicle>()
                 .Property(v => v.Status)
                 .HasDefaultValue(VehicleStatus.Free);
@@ -38,8 +46,10 @@ namespace Logistics_service.Data
                 .WithMany()
                 .HasForeignKey(v => v.GarageId)
                 .OnDelete(DeleteBehavior.Restrict);
+        }
 
-            // Конфигурация для Route и Point (связь многие-ко-многим через RoutePoint)
+        private void ConfigureRouteAndPoint(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<RoutePoint>()
                 .HasKey(rp => new { rp.RouteId, rp.PointId });
 
@@ -58,8 +68,10 @@ namespace Logistics_service.Data
             modelBuilder.Entity<RoutePoint>()
                 .Property(rp => rp.OrderIndex)
                 .IsRequired();
+        }
 
-            // Конфигурация для Point
+        private void ConfigurePoint(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Point>()
                 .HasKey(p => p.Id);
 
@@ -84,8 +96,10 @@ namespace Logistics_service.Data
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                     c => c.ToArray()));
+        }
 
-            // Конфигурация для ReadyOrder
+        private void ConfigureReadyOrder(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<ReadyOrder>(entity =>
             {
                 entity.HasKey(r => r.Id);
@@ -107,8 +121,10 @@ namespace Logistics_service.Data
                       .IsRequired()
                       .HasMaxLength(255);
             });
+        }
 
-            // Конфигурация для CustomerOrder
+        private void ConfigureCustomerOrder(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<CustomerOrder>(entity =>
             {
                 entity.HasKey(r => r.Id);
@@ -120,48 +136,39 @@ namespace Logistics_service.Data
 
         public async Task<Vehicle[]> GetVehiclesAsync()
         {
-            var vehicles = await Vehicles.ToArrayAsync();
+            var vehicles = await Vehicles
+                .Include(v => v.Garage)
+                .AsNoTracking()
+                .ToArrayAsync();
 
-            for (int i = 0; i < vehicles.Length; i++)
-            {
-                vehicles[i].Garage = Points.FirstOrDefault(p => p.Id == vehicles[i].GarageId);
-                vehicles[i] = new Vehicle(vehicles[i]);
-            }
-
-            return vehicles;
+            return vehicles.Select(v => new Vehicle(v)).ToArray();
         }
 
         public async Task<Vehicle?> GetVehicleAsync(int id)
         {
             var vehicle = await Vehicles
                 .Include(v => v.Garage)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(v => v.Id == id);
 
-            if (vehicle is null)
-            {
-                return null;
-            }
-
-            var resVehicle = new Vehicle(vehicle);
-
-            return resVehicle;
+            return vehicle != null ? new Vehicle(vehicle) : null;
         }
 
         public IQueryable<ReadyOrder> GetOrders()
         {
             return ReadyOrders
-                    .Include(o => o.Vehicle)
-                        .ThenInclude(v => v.Garage)
-                    .Include(o => o.Route)
-                        .ThenInclude(r => r.RoutePoints)
-                            .ThenInclude(rp => rp.Point);
+                .Include(o => o.Vehicle)
+                    .ThenInclude(v => v.Garage)
+                .Include(o => o.Route)
+                    .ThenInclude(r => r.RoutePoints)
+                        .ThenInclude(rp => rp.Point);
         }
 
         public ReadyOrder[] GetWaitingOrders(DateTime date)
         {
-            var ord = GetOrders();
-            return ord
+            return GetOrders()
                 .Where(o => o.ArrivalTime.Date == date.Date)
+                .AsNoTracking()
                 .ToArray();
         }
     }

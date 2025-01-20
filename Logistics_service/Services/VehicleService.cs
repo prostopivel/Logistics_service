@@ -15,60 +15,62 @@ namespace Logistics_service.Services
             Vehicles = new List<Vehicle>();
         }
 
-        public async Task AddVehicle(Vehicle vehicle)
+        public async Task AddVehicleAsync(Vehicle vehicle)
         {
-            if (vehicle is not null && vehicle.Id is not null)
+            if (vehicle?.Id == null)
             {
-                using var scope = _serviceProvider.CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
-
-                if (existingVehicle is not null)
-                {
-                    existingVehicle.Status = VehicleStatus.InUse;
-                    await context.SaveChangesAsync();
-
-                    vehicle.Status = VehicleStatus.InUse;
-                    vehicle.SetRoute(await context.Points.ToArrayAsync());
-
-                    Vehicles.Add(vehicle);
-                }
+                return;
             }
+
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
+            if (existingVehicle == null)
+            {
+                return;
+            }
+
+            existingVehicle.Status = VehicleStatus.InUse;
+            await context.SaveChangesAsync();
+
+            vehicle.Status = VehicleStatus.InUse;
+            vehicle.SetRoute(await context.Points.ToArrayAsync());
+
+            Vehicles.Add(vehicle);
         }
 
-        public async Task DeleteVehicle(Vehicle vehicle)
+        public async Task DeleteVehicleAsync(Vehicle vehicle)
         {
-            if (vehicle.Id is not null && vehicle.Id > 0)
+            if (vehicle?.Id == null || vehicle.Id <= 0)
             {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
-
-                    if (existingVehicle is not null)
-                    {
-                        existingVehicle.Status = VehicleStatus.Free;
-                        await context.SaveChangesAsync();
-
-                        Vehicles.Remove(vehicle);
-                    }
-                }
+                return;
             }
+
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var existingVehicle = await context.GetVehicleAsync((int)vehicle.Id);
+            if (existingVehicle == null)
+            {
+                return;
+            }
+
+            existingVehicle.Status = VehicleStatus.Free;
+            await context.SaveChangesAsync();
+
+            Vehicles.Remove(vehicle);
         }
 
         public Vehicle[] GetAllVehicles(Vehicle[] vehicles)
         {
-            int i = 0;
-            foreach (var item in vehicles)
+            for (int i = 0; i < vehicles.Length; i++)
             {
-                var vehicle = Vehicles.FirstOrDefault(v => v.Id == item.Id);
-
-                if (vehicle is not null)
+                var vehicle = Vehicles.FirstOrDefault(v => v.Id == vehicles[i].Id);
+                if (vehicle != null)
                 {
                     vehicles[i] = vehicle;
                 }
-
-                i++;
             }
 
             return vehicles;
@@ -76,16 +78,7 @@ namespace Logistics_service.Services
 
         public Vehicle? GetVehicleById(int id)
         {
-            var vehicle = Vehicles.FirstOrDefault(v => v.Id == id);
-
-            if (vehicle is not null)
-            {
-                return vehicle;
-            }
-            else
-            {
-                return null;
-            }
+            return Vehicles.FirstOrDefault(v => v.Id == id);
         }
     }
 }

@@ -1,19 +1,20 @@
-﻿@using System;
-@using Logistics_service.Models.Service;
-@using Logistics_service.Models.Users;
+﻿@using System
+@using Logistics_service.Models.Service
+@using Logistics_service.Models.Users
 @model User
 
 @{
     Layout = null;
 }
 
-<meta name='realm' content="@ViewBag.RealmHeader">
-<meta name='error' content="@ViewBag.Error">
+<meta name="realm" content="@ViewBag.RealmHeader" />
+<meta name="error" content="@ViewBag.Error" />
 
 <div class="container">
     <h1>Добавить пользователя</h1>
     <form id="addUserForm" asp-action="addUser" method="post" onsubmit="encryptPassword(event, 'POST', '/Admin/addUser')">
         <div asp-validation-summary="All" class="error-message"></div>
+
         <div class="form-group">
             <label asp-for="Email">Email:</label>
             <input id="Email" type="email" asp-for="Email" name="Email" />
@@ -22,9 +23,10 @@
 
         <div class="form-group">
             <label asp-for="PasswordHash">Пароль:</label>
-            <input id="PasswordHash" type="password" asp-for=" PasswordHash" name="PasswordHash" />
+            <input id="PasswordHash" type="password" asp-for="PasswordHash" name="PasswordHash" />
             <span asp-validation-for="PasswordHash" class="error-message"></span>
         </div>
+
         <div class="form-group">
             <label asp-for="Name">Имя:</label>
             <input type="text" asp-for="Name" name="Name" />
@@ -39,6 +41,9 @@
             </select>
             <span asp-validation-for="Role" class="error-message"></span>
         </div>
-        <button type="submit">Добавить</button>
+
+        <div class="button-container">
+            <button type="submit">Добавить</button>
+        </div>
     </form>
 </div>

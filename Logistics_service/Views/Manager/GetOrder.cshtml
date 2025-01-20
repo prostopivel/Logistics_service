@@ -15,7 +15,7 @@
             <th>Адрес доставки</th>
             <th>Время доставки</th>
             <th>Статус</th>
-            <th></th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +31,10 @@
                     <td>@item.ArrivalTime</td>
                     <td>@item.Status</td>
                     <td>
-                        <input type="button" onclick='sendOrder("POST", "/manager/getOrder", @Html.Raw(Json.Serialize(item)))' value="Принять" />
+                        <input type="button"
+                               onclick='sendOrder("POST", "/manager/getOrder", @Html.Raw(Json.Serialize(item)))'
+                               value="Принять"
+                               class="accept-button" />
                     </td>
                 </tr>
             }

@@ -6,10 +6,19 @@ namespace Logistics_service.Static
 {
     public static class GenerateMap
     {
-        public static void SaveMap(ApplicationDbContext _context)
+        public static void SaveMap(ApplicationDbContext context)
         {
-            Point[] points =
-            [
+            var points = CreatePoints();
+            ConfigurePointConnections(points);
+
+            SavePointsToDatabase(context, points);
+            SavePointsToJsonFile(points);
+        }
+
+        private static Point[] CreatePoints()
+        {
+            return new Point[]
+            {
                 new Point("0", 68, 33),
                 new Point("1", 12, 5),
                 new Point("2", 11, 20),
@@ -111,8 +120,11 @@ namespace Logistics_service.Static
                 new Point("98", 83, 1),
                 new Point("99", 93, 57),
                 new Point("100", 6, 63),
-            ];
+            };
+        }
 
+        private static void ConfigurePointConnections(Point[] points)
+        {
             for (int i = 0; i < points.Length; i++)
             {
                 points[i].Index = i;
@@ -219,13 +231,16 @@ namespace Logistics_service.Static
             points[98].AddPoint(points, 31, 97);
             points[99].AddPoint(points, 37, 38);
             points[100].AddPoint(points, 6, 8, 10);
+        }
 
-            foreach (var item in points)
-            {
-                _context.Points.Add(item);
-                _context.SaveChanges();
-            }
+        private static void SavePointsToDatabase(ApplicationDbContext context, Point[] points)
+        {
+            context.Points.AddRange(points);
+            context.SaveChanges();
+        }
 
+        private static void SavePointsToJsonFile(Point[] points)
+        {
             string json = JsonSerializer.Serialize(points, new JsonSerializerOptions
             {
                 WriteIndented = true

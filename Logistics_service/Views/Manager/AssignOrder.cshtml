@@ -1,7 +1,7 @@
-﻿@using System;
-@using Logistics_service.Models;
-@using Logistics_service.Models.Orders;
-@using Logistics_service.Models.MapModels;
+﻿@using System
+@using Logistics_service.Models
+@using Logistics_service.Models.Orders
+@using Logistics_service.Models.MapModels
 @model Tuple<CustomerOrder?, Vehicle[], ReadyOrder[], ReadyOrder[], ManagerMapModel?>
 
 @{
@@ -24,7 +24,7 @@
                     <th>Адрес получения</th>
                     <th>Адрес доставки</th>
                     <th>Время доставки</th>
-                    <th></th>
+                    <th>Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,13 +37,14 @@
                         <td>@Model.Item1.DestinationAddress</td>
                         <td>@Model.Item1.ArrivalTime</td>
                         <td>
-                            <input type="text" id="reason" />
+                            <input type="text" id="reason" placeholder="Причина отказа" />
                             <input type="button" onclick='sendReasonOrder("DELETE", "/manager/rejectOrder", @Html.Raw(Json.Serialize(Model.Item2)))' value="Отклонить" />
                         </td>
                     </tr>
                 }
             </tbody>
-        </table><br />
+        </table>
+        <br />
     </div>
 
     <div>
@@ -80,7 +81,9 @@
                 <span class="error-message" data-valmsg-for="ArrivalTime"></span>
             </div>
 
-            <button type="submit">Отправить</button>
+            <div class="button-container">
+                <button type="submit">Отправить</button>
+            </div>
         </form>
     </div>
 </div>
@@ -92,7 +95,7 @@
             <th>Время поступления</th>
             <th>Email менеджера</th>
             <th>Email заказчика</th>
-            <th>Время выезда/ доставки</th>
+            <th>Время выезда/доставки</th>
             <th>Id транспорта</th>
             <th>Точки маршрута</th>
             <th>Расстояние</th>
@@ -143,7 +146,7 @@
             <th>Время поступления</th>
             <th>Email менеджера</th>
             <th>Email заказчика</th>
-            <th>Время выезда/ доставки</th>
+            <th>Время выезда/доставки</th>
             <th>Id транспорта</th>
             <th>Точки маршрута</th>
             <th>Расстояние</th>
@@ -191,14 +194,15 @@
 
 <div class="image-container" id="imageContainer">
     <img src="/img/map.png" alt="map" class="responsive-image" />
+
     @{
         for (int i = 0; i < Model.Item5.WaitingOrders.Length; i++)
         {
             Model.Item5.WaitingOrders[i] = new Route(Model.Item5.WaitingOrders[i]);
         }
 
-        var waitingOrders = Model?.Item5?.WaitingOrders.SelectMany(route => route.Points).ToArray();
-        var currentOrders = Model?.Item5?.CurrentOrders
+        var waitingOrders = Model.Item5.WaitingOrders.SelectMany(route => route.Points).ToArray();
+        var currentOrders = Model.Item5.CurrentOrders
         .Zip(Model.Item5.CurrentOrdersPoints, (route, currentPoint) =>
         currentPoint != null
         ? new[] { currentPoint }.Concat(route.Points).ToArray()
@@ -208,39 +212,30 @@
 
         foreach (var point in Model.Item5.Points)
         {
+            string buttonStyle = $"left: {@point.PosX}%; top: {@point.PosY}%; z-index: 101;";
             if (Model.Item5.Route is not null && Model.Item5.Route.Contains(point))
             {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 104; background-color: blue;" data-index="@point.Index">
-                    @point.Name
-                </button>
+                buttonStyle += " background-color: blue; z-index: 104;";
             }
             else if (Model.Item5.CurrentOrdersPoints is not null && Model.Item5.CurrentOrdersPoints.Contains(point))
             {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101; background-color: darkred;" data-index="@point.Index">
-                    @point.Name
-                </button>
+                buttonStyle += " background-color: darkred; z-index: 101;";
             }
             else if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
             {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 102; background-color: yellow;" data-index="@point.Index">
-                    @point.Name
-                </button>
+                buttonStyle += " background-color: yellow; z-index: 102;";
             }
             else if (currentOrders.Contains(point))
             {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 103; background-color: red;" data-index="@point.Index">
-                    @point.Name
-                </button>
+                buttonStyle += " background-color: red; z-index: 103;";
             }
-            else
-            {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
-                    @point.Name
-                </button>
-            }
+
+            <button class="point-button" style="@buttonStyle" data-index="@point.Index">
+                @point.Name
+            </button>
         }
 
-        foreach (var item in Model.Item5.Vehicles)
+        foreach (var item in Model.Item5.Vehicles ?? Enumerable.Empty<Vehicle>())
         {
             <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
                 @item.Id
@@ -262,19 +257,16 @@
             <td><input type="number" id="startNum" /></td>
             <td><input type="number" id="endNum" /></td>
             <td>
-                @if (Model.Item5.Distanse is not null)
+                @if (Model.Item5.Distance is not null)
                 {
-                    <p>@Model.Item5.Distanse</p>
+                    <p>@Model.Item5.Distance</p>
                 }
             </td>
         </tr>
     </tbody>
 </table>
 
-<h3>Заказы на дату:</h3>
-<input id="dateSet" type="date"></input>
-<br />
-<button onclick="viewMapLine('POST', '/Manager/viewAssignOrder')">Обновить</button>
+<h3>Заказы на дату:    <input id="dateSet" type="date" />    <button onclick="viewMapLine('POST', '/Manager/viewAssignOrder')">Обновить</button></h3>
 
 <script id="model" type="application/json">
     @Html.Raw(Json.Serialize(Model.Item5.Points))

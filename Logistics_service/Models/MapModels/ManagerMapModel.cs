@@ -1,6 +1,4 @@
-﻿using Logistics_service.Models.Orders;
-
-namespace Logistics_service.Models.MapModels
+﻿namespace Logistics_service.Models.MapModels
 {
     public class ManagerMapModel
     {
@@ -12,23 +10,27 @@ namespace Logistics_service.Models.MapModels
 
         public Point[]? Route { get; set; }
 
-        public double? Distanse { get; set; }
+        public double? Distance { get; set; }
 
         public Point?[] CurrentOrdersPoints { get; set; }
 
         public Vehicle[] Vehicles { get; set; }
 
-        public ManagerMapModel(Point[] points,Route[] waitingOrders, 
-            Route[] currentOrders, Point[]? routes, double? distanse, 
+        /// <summary>
+        /// Конструктор для инициализации модели карты менеджера.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ManagerMapModel(Point[] points, Route[] waitingOrders,
+            Route[] currentOrders, Point[]? routes, double? distance,
             Point?[] currentOrdersPoints, Vehicle[] vehicles)
         {
-            Points = points;
-            WaitingOrders = waitingOrders;
-            CurrentOrders = currentOrders;
+            Points = points ?? throw new ArgumentNullException(nameof(points));
+            WaitingOrders = waitingOrders ?? throw new ArgumentNullException(nameof(waitingOrders));
+            CurrentOrders = currentOrders ?? throw new ArgumentNullException(nameof(currentOrders));
             Route = routes;
-            Distanse = distanse;
-            CurrentOrdersPoints = currentOrdersPoints;
-            Vehicles = vehicles;
+            Distance = distance;
+            CurrentOrdersPoints = currentOrdersPoints ?? throw new ArgumentNullException(nameof(currentOrdersPoints));
+            Vehicles = vehicles ?? throw new ArgumentNullException(nameof(vehicles));
         }
     }
 }

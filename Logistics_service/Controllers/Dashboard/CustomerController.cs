@@ -40,9 +40,9 @@ namespace Logistics_service.Controllers.Dashboard
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
 
-            var reqect = _context.CustomerOrders
+            var rejectedOrders = await _context.CustomerOrders
                 .Where(r => r.Email == email && r.Status == OrderStatus.Reject)
-                .Select(r => new CustomerOrder()
+                .Select(r => new CustomerOrder
                 {
                     Email = r.Email,
                     ArrivalTime = r.ArrivalTime,
@@ -50,12 +50,12 @@ namespace Logistics_service.Controllers.Dashboard
                     DestinationAddress = r.DestinationAddress,
                     Reason = r.Reason.Replace('_', ' ')
                 })
-                .ToArray();
+                .AsNoTracking()
+                .ToArrayAsync();
 
-            var wait = _context.CustomerOrders
-                .Where(w => w.Email == email && w.Status == OrderStatus.Created
-                || w.Status == OrderStatus.ManagerAccepted)
-                .Select(w => new CustomerOrder()
+            var waitingOrders = await _context.CustomerOrders
+                .Where(w => w.Email == email && (w.Status == OrderStatus.Created || w.Status == OrderStatus.ManagerAccepted))
+                .Select(w => new CustomerOrder
                 {
                     Email = w.Email,
                     ArrivalTime = w.ArrivalTime,
@@ -63,12 +63,12 @@ namespace Logistics_service.Controllers.Dashboard
                     DestinationAddress = w.DestinationAddress,
                     Status = w.Status
                 })
-                .ToArray();
+                .AsNoTracking()
+                .ToArrayAsync();
 
-            var ready = _context
-                .GetOrders()
+            var readyOrders = await _context.GetOrders()
                 .Where(r => r.CustomerEmail == email && r.ArrivalTime.Date == date)
-                .Select(r => new ReadyOrder()
+                .Select(r => new ReadyOrder
                 {
                     ArrivalTime = r.ArrivalTime,
                     Email = r.Email,
@@ -77,13 +77,15 @@ namespace Logistics_service.Controllers.Dashboard
                     Vehicle = r.Vehicle,
                     Status = r.Status
                 })
-                .ToArray();
+                .AsNoTracking()
+                .ToArrayAsync();
 
+            var mapModel = await ViewMap(date);
             return View(new Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[], CustomerMapModel>(
-                reqect,
-                wait,
-                ready,
-                await ViewMap(date)));
+                rejectedOrders,
+                waitingOrders,
+                readyOrders,
+                mapModel));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -91,51 +93,52 @@ namespace Logistics_service.Controllers.Dashboard
         public async Task<IActionResult> CreateRequest()
         {
             ViewBag.Error = TempData["Error"];
-            return View(new Tuple<CustomerOrder, Point[]>(
-                new CustomerOrder(),
-                await _context.Points.ToArrayAsync()));
+            var points = await _context.Points.AsNoTracking().ToArrayAsync();
+            return View(new Tuple<CustomerOrder, Point[]>(new CustomerOrder(), points));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("createRequest")]
         public async Task<IActionResult> CreateRequest([FromBody] CustomerOrder order)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var authHeader = HttpContext.Request.Headers.Authorization.ToString();
-                var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
-
-                order.Email = email;
-                order.CreatedAt = DateTime.Now;
-
-                if (order.ArrivalTime.Hour < 8 || order.ArrivalTime.Hour > 17)
-                {
-                    TempData["Error"] = "Указано неверное время! Время работы сервиса с 8 до 17.";
-                    return RedirectToAction("createRequest");
-                }
-
-                order.Status = OrderStatus.Created;
-                _context.CustomerOrders.Add(order);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("customer", "Dashboard");
+                return RedirectToAction("createRequest");
             }
 
-            return RedirectToAction("createRequest");
+            var authHeader = HttpContext.Request.Headers.Authorization.ToString();
+            var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
+
+            order.Email = email;
+            order.CreatedAt = DateTime.Now;
+
+            if (order.ArrivalTime.Hour < 8 || order.ArrivalTime.Hour > 17)
+            {
+                TempData["Error"] = "Указано неверное время! Время работы сервиса с 8 до 17.";
+                return RedirectToAction("createRequest");
+            }
+
+            order.Status = OrderStatus.Created;
+            _context.CustomerOrders.Add(order);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("customer", "Dashboard");
         }
 
         private async Task<CustomerMapModel> ViewMap()
         {
             return await ViewMap(DateTime.Now.Date);
         }
+
         private async Task<CustomerMapModel> ViewMap(DateTime date)
         {
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
-            var points = await _context.Points.ToArrayAsync();
+
+            var points = await _context.Points.AsNoTracking().ToArrayAsync();
 
             var waitingOrders = _context.GetWaitingOrders(date)
-                .Where(o => o.Status == ReadyOrderStatus.Accepted)
+                .Where(o => o.Status == ReadyOrderStatus.Accepted && o.CustomerEmail == email)
                 .ToArray();
 
             var currentOrders = date == DateTime.Now.Date

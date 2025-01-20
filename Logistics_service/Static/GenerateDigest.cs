@@ -8,84 +8,78 @@ namespace Logistics_service.Static
 {
     public static class GenerateDigest
     {
-        public static string errorMessage = "Неизвестная ошибка!";
-        public static IConfiguration _configuration;
-        public static ApplicationDbContext _context;
+        public static string ErrorMessage { get; private set; } = "Неизвестная ошибка!";
+        public static IConfiguration Configuration { get; set; }
+        public static ApplicationDbContext Context { get; set; }
 
-        public static async Task<bool> Auth(string authHeader,
-            string expectedNonce, IConfiguration configuration, ApplicationDbContext context)
+        public static async Task<bool> Auth(string authHeader, string expectedNonce, IConfiguration configuration, ApplicationDbContext context)
         {
-            _configuration = configuration;
-            _context = context;
+            Configuration = configuration;
+            Context = context;
+
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Digest "))
             {
-                errorMessage = "Неправильный дайджест!";
+                ErrorMessage = "Неправильный дайджест!";
                 return false;
             }
 
-            var authParams = ParseAuthorizationHeader(authHeader.Substring("Digest ".Length));
+            var authParams = ParseAuthorizationHeader(authHeader["Digest ".Length..]);
 
             var expectedRole = await ValidateDigestToken(authParams, expectedNonce);
-
             if (expectedRole == null)
             {
                 return false;
             }
 
-            if (!Enum.TryParse(typeof(UserRole), authParams["role"], true, out var role))
+            if (!Enum.TryParse(authParams["role"], true, out UserRole role))
             {
-                errorMessage = "Неправильная роль!";
+                ErrorMessage = "Неправильная роль!";
                 return false;
             }
-            return expectedRole == (UserRole)role;
+
+            return expectedRole == role;
         }
 
         private static async Task<UserRole?> ValidateDigestToken(Dictionary<string, string> authParams, string expectedNonce)
         {
             var username = authParams["username"];
             var nonce = authParams["nonce"];
-            var uri = authParams["uri"];
-            var nc = authParams["nc"];
-            var cnonce = authParams["cnonce"];
             var response = authParams["response"];
 
             if (nonce != expectedNonce)
             {
-                errorMessage = "Неправильный nonce!";
+                ErrorMessage = "Неправильный nonce!";
                 return null;
             }
 
-            var expectedResponse = await ComputeDigestResponse(username, nonce, uri, nc, cnonce);
-
+            var expectedResponse = await ComputeDigestResponse(username, nonce, authParams["uri"], authParams["nc"], authParams["cnonce"]);
             if (expectedResponse == null)
             {
                 return null;
             }
-            else if (response != expectedResponse.Item1)
+
+            if (response != expectedResponse.Item1)
             {
-                errorMessage = "Неправильный response!";
+                ErrorMessage = "Неправильный response!";
                 return null;
             }
-            else
-            {
-                return expectedResponse.Item2;
-            }
+
+            return expectedResponse.Item2;
         }
 
         private static async Task<Tuple<string, UserRole>?> ComputeDigestResponse(string username, string nonce, string uri, string nc, string cnonce)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == username);
+            var user = await Context.Users.FirstOrDefaultAsync(u => u.Email == username);
             if (user == null)
             {
-                errorMessage = "Пользователь не найден!";
+                ErrorMessage = "Пользователь не найден!";
                 return null;
             }
 
-            string realm = _configuration["Realm"];
-            string qop = _configuration["Qop"];
+            string realm = Configuration["Realm"];
+            string qop = Configuration["Qop"];
 
             var A2 = $"POST:{uri}";
-
             var HA1 = user.PasswordHash;
             var HA2 = ComputeMD5(A2);
 
@@ -106,13 +100,19 @@ namespace Logistics_service.Static
             {
                 header = header.Substring("Digest ".Length);
             }
+
             var paramsDict = new Dictionary<string, string>();
             var parts = header.Split(',');
+
             foreach (var part in parts)
             {
                 var kv = part.Split('=');
-                paramsDict[kv[0].Trim()] = kv[1].Trim('"');
+                if (kv.Length == 2)
+                {
+                    paramsDict[kv[0].Trim()] = kv[1].Trim('"');
+                }
             }
+
             return paramsDict;
         }
 

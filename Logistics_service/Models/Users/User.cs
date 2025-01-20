@@ -25,7 +25,7 @@ namespace Logistics_service.Models.Users
 
         public override string ToString()
         {
-            return string.Format($"{Id, -3}: {Name, -15} | {Email, -25} | {Role, -8}");
+            return string.Format($"{Id,-3}: {Name,-15} | {Email,-25} | {Role,-8}");
         }
     }
 }

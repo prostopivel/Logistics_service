@@ -1,4 +1,4 @@
-﻿@using System;
+﻿@using System
 @model Logistics_service.Models.Vehicle[]
 
 @{
@@ -44,9 +44,10 @@
                                 }
                             </p>
                         }
+
                         @if (item.Routes is not null)
                         {
-                            @foreach (var route in item.Routes)
+                            foreach (var route in item.Routes)
                             {
                                 <p>
                                     @route.Value.DepartureTime - @route.Key: @((int)route.Value.Distance) м
@@ -58,5 +59,8 @@
             }
         </tbody>
     </table>
-    <button onclick="auth(`GET`, `/Admin/addTransport`)">Добавить транспорт</button>
+
+    <div class="button-container">
+        <button onclick="auth('GET', '/Admin/addTransport')">Добавить транспорт</button>
+    </div>
 </div>

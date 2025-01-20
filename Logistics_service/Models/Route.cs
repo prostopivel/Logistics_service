@@ -9,7 +9,7 @@ namespace Logistics_service.Models
         public int? Id { get; set; }
 
         [NotMapped]
-        private Queue<Point> _points { get; set; }
+        private Queue<Point> _points { get; set; } = new Queue<Point>();
 
         public double Distance { get; set; }
 
@@ -19,33 +19,49 @@ namespace Logistics_service.Models
         public string? CustomerEmail { get; set; }
 
         [NotMapped]
-        public List<Point> Points => new List<Point>(_points ?? Enumerable.Empty<Point>());
+        public List<Point> Points => _points.ToList();
 
         public ICollection<RoutePoint> RoutePoints { get; set; } = new List<RoutePoint>();
 
+        /// <summary>
+        /// Конструктор по умолчанию.
+        /// </summary>
         public Route() { }
 
+        /// <summary>
+        /// Конструктор для инициализации маршрута с массивом точек и расстоянием.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public Route(Point[] points, double distance)
         {
-            RoutePoints = new List<RoutePoint>();
-
-            int i = 0;
-            foreach (var item in points)
+            if (points == null)
             {
-                RoutePoints.Add(new RoutePoint(item.Id, i++));
+                throw new ArgumentNullException(nameof(points), "Массив точек не может быть null.");
+            }
+
+            RoutePoints = new List<RoutePoint>();
+            for (int i = 0; i < points.Length; i++)
+            {
+                RoutePoints.Add(new RoutePoint(points[i].Id, i));
             }
 
             Distance = distance;
         }
 
+        /// <summary>
+        /// Конструктор для копирования маршрута.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public Route(Route route)
         {
-            _points = new Queue<Point>();
-
-            foreach (var item in route.RoutePoints.OrderBy(r => r.OrderIndex))
+            if (route == null)
             {
-                _points.Enqueue(item.Point);
+                throw new ArgumentNullException(nameof(route), "Маршрут не может быть null.");
             }
+
+            _points = new Queue<Point>(route.RoutePoints
+                .OrderBy(r => r.OrderIndex)
+                .Select(r => r.Point));
 
             Distance = route.Distance;
             DepartureTime = route.DepartureTime;
@@ -54,26 +70,36 @@ namespace Logistics_service.Models
             RoutePoints = route.RoutePoints;
         }
 
+        /// <summary>
+        /// Добавляет точку в очередь маршрута.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public void EnqueuePoint(Point point)
         {
+            if (point == null)
+            {
+                throw new ArgumentNullException(nameof(point), "Точка не может быть null.");
+            }
+
             _points.Enqueue(point);
         }
 
+        /// <summary>
+        /// Удаляет и возвращает точку из очереди маршрута.
+        /// </summary>
+        /// <returns>Точка маршрута или null, если очередь пуста.</returns>
         public Point? DequeuePoint()
         {
-            if (_points.Count > 0)
-            {
-                return _points.Dequeue();
-            }
-            else
-            {
-                return null;
-            }
+            return _points.Count > 0 ? _points.Dequeue() : null;
         }
 
+        /// <summary>
+        /// Добавляет массив точек в начало очереди маршрута.
+        /// </summary>
+        /// <param name="points">Массив точек для добавления.</param>
         public void AddPoints(Point[] points)
         {
-            if (points is null || points.Length == 0)
+            if (points == null || points.Length == 0)
             {
                 return;
             }

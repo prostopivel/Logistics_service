@@ -1,5 +1,5 @@
-﻿@using Logistics_service.Models.Orders;
-@using Logistics_service.Models.MapModels;
+﻿@using Logistics_service.Models.Orders
+@using Logistics_service.Models.MapModels
 @model Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[], CustomerMapModel>
 
 @{
@@ -60,7 +60,6 @@
     </tbody>
 </table>
 
-
 <h2>Принятые заказы:</h2>
 <table>
     <thead>
@@ -108,6 +107,7 @@
         }
     </tbody>
 </table>
+
 <br />
 
 <div class="image-container" id="imageContainer">
@@ -119,8 +119,8 @@
             Model.Item4.WaitingOrders[i] = new Route(Model.Item4.WaitingOrders[i]);
         }
 
-        var waitingOrders = Model?.Item4.WaitingOrders.SelectMany(route => route.Points).ToArray();
-        var currentOrders = Model?.Item4.CurrentOrders
+        var waitingOrders = Model.Item4.WaitingOrders.SelectMany(route => route.Points).ToArray();
+        var currentOrders = Model.Item4.CurrentOrders
         .Zip(Model.Item4.CurrentOrdersPoints, (route, currentPoint) =>
         currentPoint != null
         ? new[] { currentPoint }.Concat(route.Points).ToArray()
@@ -130,27 +130,26 @@
 
         foreach (var point in Model.Item4.Points)
         {
-            if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
+            string buttonStyle = $"left: {@point.PosX}%; top: {@point.PosY}%; z-index: 101;";
+            if (Model.Item4.CurrentOrdersPoints is not null && Model.Item4.CurrentOrdersPoints.Contains(point))
             {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 102; background-color: yellow;" data-index="@point.Index">
-                    @point.Name
-                </button>
+                buttonStyle += " background-color: darkred; z-index: 101;";
+            }
+            else if (waitingOrders.Contains(point) && !currentOrders.Contains(point))
+            {
+                buttonStyle += " background-color: yellow; z-index: 102;";
             }
             else if (currentOrders.Contains(point))
             {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 103; background-color: red;" data-index="@point.Index">
-                    @point.Name
-                </button>
+                buttonStyle += " background-color: red; z-index: 103;";
             }
-            else
-            {
-                <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
-                    @point.Name
-                </button>
-            }
+
+            <button class="point-button" style="@buttonStyle" data-index="@point.Index">
+                @point.Name
+            </button>
         }
 
-        foreach (var item in Model.Item4.Vehicles)
+        foreach (var item in Model.Item4.Vehicles ?? Enumerable.Empty<Vehicle>())
         {
             <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
                 @item.Id
@@ -159,11 +158,7 @@
     }
 </div>
 
-<h3>Заказы на дату:</h3>
-<input id="dateSet" type="date"></input>
-<br />
-
-<button onclick="viewMapRedLine('GET', '/Customer/ViewOrders')">Обновить</button>
+<h3>Заказы на дату:    <input id="dateSet" type="date" />    <button onclick="viewMapRedLine('GET', '/Customer/ViewOrders')">Обновить</button></h3>
 
 <script id="model" type="application/json">
     @Html.Raw(Json.Serialize(Model.Item4.Points))

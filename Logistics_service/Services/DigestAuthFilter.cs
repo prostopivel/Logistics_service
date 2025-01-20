@@ -20,12 +20,11 @@ namespace Logistics_service.Services
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var authHeader = context.HttpContext.Request.Headers.Authorization.ToString();
-
             var opaque = context.HttpContext.Session.GetString("Opaque");
 
             if (opaque == null)
             {
-                ReturnResult();
+                ReturnUnauthorizedResult(context);
                 return;
             }
 
@@ -33,36 +32,37 @@ namespace Logistics_service.Services
 
             if (expectedNonce == null)
             {
-                ReturnResult();
+                ReturnUnauthorizedResult(context);
                 return;
             }
 
             if (!await GenerateDigest.Auth(authHeader, expectedNonce, _configuration, _context))
             {
-                ReturnResult();
+                ReturnUnauthorizedResult(context);
                 return;
-            }
-
-            void ReturnResult()
-            {
-                var cont = GenerateJson(context);
-                if (cont == null)
-                    context.Result = new RedirectToActionResult("Unauthorized", "Error", new { errorMessage = "Авторизация не пройдена!" });
-                context.Result = cont;
             }
         }
 
-        private IActionResult? GenerateJson(AuthorizationFilterContext context)
+        private void ReturnUnauthorizedResult(AuthorizationFilterContext context)
+        {
+            var jsonResult = GenerateJsonResult(context);
+            context.Result = jsonResult ?? new RedirectToActionResult("Unauthorized", "Error", new { errorMessage = "Авторизация не пройдена!" });
+        }
+
+        private IActionResult? GenerateJsonResult(AuthorizationFilterContext context)
         {
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
 
             var opaque = context.HttpContext.Session.GetString("Opaque");
             if (opaque == null)
+            {
                 return null;
+            }
 
             string nonce = GenerateDigest.GenerateRandom();
             context.HttpContext.Session.SetString(opaque, nonce);
+
             return new JsonResult(new
             {
                 realm,
@@ -73,7 +73,6 @@ namespace Logistics_service.Services
             {
                 StatusCode = StatusCodes.Status401Unauthorized
             };
-
         }
     }
 }

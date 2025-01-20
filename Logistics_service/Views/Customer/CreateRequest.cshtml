@@ -1,17 +1,18 @@
-﻿@using Logistics_service.Models.Orders;
+﻿@using Logistics_service.Models.Orders
 @model Tuple<CustomerOrder, Point[]>
 
 @{
     Layout = null;
 }
 
-<meta name='realm' content="@ViewBag.RealmHeader">
+<meta name="realm" content="@ViewBag.RealmHeader">
 <h2 class="error-message">@ViewBag.Error</h2>
 
 <div class="container">
     <h1>Оставить заявку</h1>
     <form id="createOrderForm" asp-action="createRequest" method="post" onsubmit="createOrder(event, 'POST', '/customer/createRequest')">
         <div asp-validation-summary="All" class="error-message"></div>
+
         <div class="form-group">
             <label asp-for="Item1.BeginningAddress">Адрес получения:</label>
             <input id="BeginningAddress" type="text" asp-for="Item1.BeginningAddress" name="BeginningAddress" />
@@ -20,19 +21,21 @@
 
         <div class="form-group">
             <label asp-for="Item1.DestinationAddress">Адрес доставки:</label>
-            <input id="DestinationAddress" type="text" asp-for=" Item1.DestinationAddress" name="DestinationAddress" />
+            <input id="DestinationAddress" type="text" asp-for="Item1.DestinationAddress" name="DestinationAddress" />
             <span asp-validation-for="Item1.DestinationAddress" class="error-message"></span>
         </div>
+
         <div class="form-group">
             <label asp-for="Item1.ArrivalTime">Время доставки:</label>
             <input type="datetime-local" asp-for="Item1.ArrivalTime" name="ArrivalTime" asp-format="{0:yyyy-MM-ddTHH:mm}" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
             <span asp-validation-for="Item1.ArrivalTime" class="error-message"></span>
         </div>
-        <button type="submit">Отправить</button>
+
+        <div class="button-container">
+            <button type="submit">Отправить</button>
+        </div>
     </form>
 </div>
-
-<br />
 
 <div class="image-container" id="imageContainer">
     <img src="/img/map.png" alt="map" class="responsive-image" />

@@ -1,6 +1,6 @@
-﻿@using System;
-@using Logistics_service.Models;
-@using Logistics_service.Models.Orders;
+﻿@using System
+@using Logistics_service.Models
+@using Logistics_service.Models.Orders
 
 @model Tuple<Vehicle[], ReadyOrder?>
 
@@ -14,7 +14,6 @@
 <h2 class="error-message">@ViewBag.Error</h2>
 
 <div class="container">
-    
     <div>
         <h2>Выбранный заказ:</h2>
         <table>
@@ -23,7 +22,7 @@
                     <th>Время поступления</th>
                     <th>Email менеджера</th>
                     <th>Email заказчика</th>
-                    <th>Время выезда/ доставки</th>
+                    <th>Время выезда/доставки</th>
                     <th>Id транспорта</th>
                     <th>Точки маршрута</th>
                     <th>Расстояние</th>
@@ -99,7 +98,9 @@
                 <span class="error-message" data-valmsg-for="ArrivalTime"></span>
             </div>
 
-            <button type="submit">Отправить</button>
+            <div class="button-container">
+                <button type="submit">Отправить</button>
+            </div>
         </form>
     </div>
 
@@ -127,17 +128,17 @@
                     </td>
                     <td>@item.Speed</td>
                     <td>@item.Status</td>
-                    @if (item.Routes != null)
-                    {
-                        <td>
-                            @foreach (var route in item.Routes)
+                    <td>
+                        @if (item.Routes != null)
+                        {
+                            foreach (var route in item.Routes)
                             {
                                 <p>
                                     @route.Value.DepartureTime - @route.Key: @((int)route.Value.Distance) м
                                 </p>
                             }
-                        </td>
-                    }
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

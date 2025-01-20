@@ -1,4 +1,7 @@
 ﻿using Logistics_service.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Logistics_service.Static
 {
@@ -6,6 +9,11 @@ namespace Logistics_service.Static
     {
         public static Tuple<Point[], double> FindShortestPath(Point[] points, Point startPoint, Point endPoint)
         {
+            if (points == null || startPoint == null || endPoint == null)
+            {
+                throw new ArgumentNullException("Points, startPoint, and endPoint cannot be null.");
+            }
+
             var distances = new Dictionary<Point, double>();
             var previous = new Dictionary<Point, Point>();
             var priorityQueue = new SortedSet<(double Distance, Point Point)>(new DistancePointComparer());
@@ -24,12 +32,20 @@ namespace Logistics_service.Static
                 priorityQueue.Remove(priorityQueue.Min);
 
                 if (currentPoint == endPoint)
+                {
                     break;
+                }
 
                 for (int i = 0; i < currentPoint.ConnectedPointsIndexes.Length; i++)
                 {
                     int neighborIndex = currentPoint.ConnectedPointsIndexes[i];
-                    Point neighbor = points.First(p => p.Index == neighborIndex);
+                    Point neighbor = points.FirstOrDefault(p => p.Index == neighborIndex);
+
+                    if (neighbor == null)
+                    {
+                        continue; 
+                    }
+
                     double edgeDistance = currentPoint.Distances[i];
                     double newDistance = currentDistance + edgeDistance;
 
@@ -43,14 +59,20 @@ namespace Logistics_service.Static
                 }
             }
 
+            var path = ReconstructPath(previous, endPoint);
+
+            return new Tuple<Point[], double>(path.ToArray(), distances[endPoint]);
+        }
+
+        private static List<Point> ReconstructPath(Dictionary<Point, Point> previous, Point endPoint)
+        {
             var path = new List<Point>();
-            for (var point = endPoint; point is not null; point = previous[point])
+            for (var point = endPoint; point != null; point = previous[point])
             {
                 path.Add(point);
             }
             path.Reverse();
-
-            return new Tuple<Point[], double>(path.ToArray(), distances[endPoint]);
+            return path;
         }
     }
 
@@ -58,7 +80,12 @@ namespace Logistics_service.Static
     {
         public int Compare((double Distance, Point Point) x, (double Distance, Point Point) y)
         {
-            return x.Distance.CompareTo(y.Distance);
+            int distanceComparison = x.Distance.CompareTo(y.Distance);
+            if (distanceComparison != 0)
+            {
+                return distanceComparison;
+            }
+            return x.Point.Index.CompareTo(y.Point.Index); 
         }
     }
 }

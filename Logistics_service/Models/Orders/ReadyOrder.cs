@@ -5,46 +5,69 @@ namespace Logistics_service.Models.Orders
 {
     public class ReadyOrder : Order, ICloneable
     {
+        [Required(ErrorMessage = "CustomerEmail is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string CustomerEmail { get; set; }
 
         public int? RouteId { get; set; }
 
+        [Required(ErrorMessage = "Route is required")]
         public virtual Route Route { get; set; }
 
         public int? VehicleId { get; set; }
 
+        [Required(ErrorMessage = "Vehicle is required")]
         public virtual Vehicle Vehicle { get; set; }
 
+        [Required(ErrorMessage = "ArrivalTime is required")]
         public DateTime ArrivalTime { get; set; }
 
         public ReadyOrderStatus? Status { get; set; }
 
-        public ReadyOrder() { }
+        /// <summary>
+        /// Конструктор по умолчанию.
+        /// </summary>
+        public ReadyOrder()
+        {
+            CustomerEmail = string.Empty;
+            Route = new Route();
+            Vehicle = new Vehicle();
+        }
 
+        /// <summary>
+        /// Конструктор для инициализации заказа с маршрутом, транспортным средством, временем прибытия и электронной почтой клиента.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Выбрасывается, если route или vehicle равны null.</exception>
         public ReadyOrder(Route route, Vehicle vehicle, DateTime arrivalTime, string customerEmail)
         {
-            Route = route;
+            Route = route ?? throw new ArgumentNullException(nameof(route));
             RouteId = route.Id;
-            Vehicle = vehicle;
+            Vehicle = vehicle ?? throw new ArgumentNullException(nameof(vehicle));
             VehicleId = vehicle.Id;
             ArrivalTime = arrivalTime;
-            CustomerEmail = customerEmail;
+            CustomerEmail = customerEmail ?? throw new ArgumentNullException(nameof(customerEmail));
             Status = ReadyOrderStatus.Created;
             SetTime(Vehicle.Speed);
         }
 
-        public void SetTime(int Speed)
+        /// <summary>
+        /// Устанавливает время отправления на основе скорости транспортного средства.
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void SetTime(int speed)
         {
-            var time = ArrivalTime;
-            var dist = Route.Distance;
+            if (Route == null || Route.Distance == null)
+            {
+                throw new InvalidOperationException("Route and Distance must be set.");
+            }
 
-            var travelTime = TimeSpan.FromSeconds((int)(dist / Speed));
-            Route.DepartureTime = time - travelTime;
+            var travelTime = TimeSpan.FromSeconds((int)(Route.Distance / speed));
+            Route.DepartureTime = ArrivalTime - travelTime;
         }
 
         public object Clone()
         {
-            return new ReadyOrder()
+            return new ReadyOrder
             {
                 Id = Id,
                 CustomerEmail = CustomerEmail,
