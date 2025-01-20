@@ -85,6 +85,7 @@ namespace Logistics_service.Controllers
         [HttpGet("assignOrder/{date}")]
         public async Task<IActionResult> AssignOrder(DateTime date, int start = 0, int end = 0)
         {
+            ViewBag.Error = TempData["Error"] as string;
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
 
@@ -134,13 +135,13 @@ namespace Logistics_service.Controllers
 
             if (!_cache.TryGetValue($"CurrentOrder_{email}", out var cachedOrder))
             {
-                ViewBag.Error = "Заказ еще не принят!";
+                TempData["Error"] = "Заказ еще не принят!";
                 return RedirectToAction("assignOrder");
             }
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Error = "Неверные данные!";
+                TempData["Error"] = "Неверные данные!";
                 return RedirectToAction("assignOrder");
             }
 
@@ -149,7 +150,7 @@ namespace Logistics_service.Controllers
             if (order.StartPointId < 0 || order.StartPointId >= points.Length ||
                 order.EndPointId < 0 || order.EndPointId >= points.Length)
             {
-                ViewBag.Error = "Неверные индексы точек!";
+                TempData["Error"] = "Неверные индексы точек!";
                 return RedirectToAction("assignOrder");
             }
 
@@ -163,14 +164,14 @@ namespace Logistics_service.Controllers
             var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == order.VehicleId);
             if (vehicle == null)
             {
-                ViewBag.Error = "Неверный индекс транспорта!";
+                TempData["Error"] = "Неверный индекс транспорта!";
                 return RedirectToAction("assignOrder");
             }
 
             var readyOrder = new ReadyOrder(route, vehicle, order.ArrivalTime, order.CustomerEmail);
             if (readyOrder.Route?.DepartureTime == null)
             {
-                ViewBag.Error = "Время выезда не указано!";
+                TempData["Error"] = "Время выезда не указано!";
                 return RedirectToAction("assignOrder");
             }
 
@@ -179,7 +180,7 @@ namespace Logistics_service.Controllers
                 (r.Route.DepartureTime >= readyOrder.Route.DepartureTime && r.Route.DepartureTime <= readyOrder.ArrivalTime ||
                  r.ArrivalTime >= readyOrder.Route.DepartureTime && r.ArrivalTime <= readyOrder.ArrivalTime)))
             {
-                ViewBag.Error = "Данное время уже занято!";
+                TempData["Error"] = "Данное время уже занято!";
                 return RedirectToAction("assignOrder");
             }
 
@@ -200,7 +201,7 @@ namespace Logistics_service.Controllers
                 return RedirectToAction("manager", "Dashboard");
             }
 
-            ViewBag.Error = "Заказ не найден!";
+            TempData["Error"] = "Заказ не найден!";
             return RedirectToAction("assignOrder");
         }
 
@@ -208,12 +209,18 @@ namespace Logistics_service.Controllers
         [HttpDelete("rejectOrder")]
         public async Task<IActionResult> RejectOrder([FromBody] CustomerOrder order)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Неверные данные!";
+                return View("assignOrder");
+            }
+
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
 
             if (!_cache.TryGetValue($"CurrentOrder_{email}", out _))
             {
-                ViewBag.Error = "Заказ еще не принят!";
+                TempData["Error"] = "Заказ еще не принят!";
                 return View("assignOrder");
             }
 
@@ -222,7 +229,7 @@ namespace Logistics_service.Controllers
             var rejectOrder = await _context.CustomerOrders.FirstOrDefaultAsync(o => o.Id == order.Id);
             if (rejectOrder == null)
             {
-                ViewBag.Error = "Заказ отсутствует!";
+                TempData["Error"] = "Заказ отсутствует!";
                 return View("assignOrder");
             }
 
@@ -246,11 +253,12 @@ namespace Logistics_service.Controllers
         [HttpGet("viewAssignOrders/{date}")]
         public async Task<IActionResult> ViewAssignOrders(DateTime date)
         {
+            ViewBag.Error = TempData["Error"] as string;
             var waitingOrders = _context.GetWaitingOrders(date)
                 .Where(o => o.Status == ReadyOrderStatus.Accepted)
                 .ToArray();
 
-            var currentOrders = date == DateTime.Now.Date
+            var currentOrders = date == DateTime.Now.Date || date == default
                 ? _waitingOrder.GetCurrentOrders().Values.ToArray()
                 : Array.Empty<ReadyOrder>();
 
@@ -299,7 +307,7 @@ namespace Logistics_service.Controllers
 
             if (start < 0 || start >= mapModel.Points.Length || end < 0 || end >= mapModel.Points.Length)
             {
-                ViewBag.Error = $"Не входят в диапазон от 0 до {mapModel.Points.Length}!";
+                TempData["Error"] = $"Не входят в диапазон от 0 до {mapModel.Points.Length}!";
                 return mapModel;
             }
 

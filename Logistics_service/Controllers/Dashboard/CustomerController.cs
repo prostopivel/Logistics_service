@@ -67,7 +67,7 @@ namespace Logistics_service.Controllers.Dashboard
                 .ToArrayAsync();
 
             var readyOrders = await _context.GetOrders()
-                .Where(r => r.CustomerEmail == email && r.ArrivalTime.Date == date)
+                .Where(r => r.CustomerEmail == email && r.ArrivalTime.Date == date.Date)
                 .Select(r => new ReadyOrder
                 {
                     ArrivalTime = r.ArrivalTime,
@@ -141,7 +141,7 @@ namespace Logistics_service.Controllers.Dashboard
                 .Where(o => o.Status == ReadyOrderStatus.Accepted && o.CustomerEmail == email)
                 .ToArray();
 
-            var currentOrders = date == DateTime.Now.Date
+            var currentOrders = date == DateTime.Now.Date || date == default
                 ? _waitingOrder.GetCurrentOrders().Values
                     .Where(o => o.CustomerEmail == email)
                     .ToArray()

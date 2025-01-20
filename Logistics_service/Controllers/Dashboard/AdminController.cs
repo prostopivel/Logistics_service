@@ -32,6 +32,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("viewAllCustomers")]
         public async Task<ActionResult> ViewAllCustomers()
         {
+            ViewBag.Error = TempData["Error"] as string;
             var customers = await _context.Customers.AsNoTracking().ToListAsync();
             return View(customers);
         }
@@ -40,6 +41,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("viewAllManagers")]
         public async Task<ActionResult> ViewAllManagers()
         {
+            ViewBag.Error = TempData["Error"] as string;
             var managers = await _context.Managers.AsNoTracking().ToListAsync();
             var administrators = await _context.Administrators.AsNoTracking().ToListAsync();
             return View(new Tuple<List<Manager>, List<Administrator>>(managers, administrators));
@@ -49,8 +51,10 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpDelete("deleteCustomer/{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            await DeleteUserAsync(id);
-            var customers = await _context.Customers.AsNoTracking().ToListAsync();
+            if (await _context.Users.FirstOrDefaultAsync(c => c.Id == id) is Customer)
+            {
+                await DeleteUserAsync(id);
+            }
             return await ViewAllCustomers();
         }
 
@@ -185,7 +189,7 @@ namespace Logistics_service.Controllers.Dashboard
                 }
             }
 
-            return await ViewAllOrders(DateTime.Now);
+            return await ViewAllOrders(DateTime.Now.Date);
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -211,7 +215,7 @@ namespace Logistics_service.Controllers.Dashboard
         {
             if (!_context.ReadyOrders.Any(o => o.Id == order.Id))
             {
-                return await ViewAllOrders(DateTime.Now);
+                return await ViewAllOrders(DateTime.Now.Date);
             }
 
             var dbOrder = await _context.GetOrders()
@@ -304,6 +308,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("manageTransport")]
         public async Task<IActionResult> ManageTransport()
         {
+            ViewBag.Error = TempData["Error"] as string;
             var vehicles = _vehicleService.GetAllVehicles(await _context.GetVehiclesAsync());
             return View(vehicles);
         }
@@ -312,6 +317,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("addTransport")]
         public IActionResult AddTransport()
         {
+            ViewBag.Error = TempData["Error"] as string;
             return View();
         }
 
@@ -326,14 +332,14 @@ namespace Logistics_service.Controllers.Dashboard
                 !int.TryParse(root.GetProperty("GarageId").GetString(), out int garageId))
             {
                 TempData["Error"] = "Неверные данные!";
-                return View();
+                return RedirectToAction("addTransport");
             }
 
             var point = await _context.Points.FirstOrDefaultAsync(p => p.Index == garageId);
             if (point == null)
             {
                 TempData["Error"] = "Точка не найдена!";
-                return View();
+                return RedirectToAction("addTransport");
             }
 
             _context.Vehicles.Add(new Vehicle(point, speed));

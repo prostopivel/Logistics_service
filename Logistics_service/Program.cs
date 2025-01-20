@@ -52,7 +52,7 @@ namespace Logistics_service
                 serverOptions.ListenAnyIP(5000);
                 serverOptions.ListenAnyIP(5001, listenOptions =>
                 {
-                    listenOptions.UseHttps();
+                    listenOptions.UseHttps("C:\\Certificates\\localhost.pfx", "Pivel2005");
                 });
             });
         }
@@ -123,10 +123,10 @@ namespace Logistics_service
                 Console.WriteLine($"Host Name: {hostName}");
 
                 var ipAddresses = Dns.GetHostAddresses(hostName)
-                    .Where(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) // Только IPv4
+                    .Where(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     .ToList();
 
-                if (ipAddresses.Count == 0)
+                if (ipAddresses.Count != 0)
                 {
                     Console.WriteLine("Local IP Addresses:");
                     foreach (var ip in ipAddresses)

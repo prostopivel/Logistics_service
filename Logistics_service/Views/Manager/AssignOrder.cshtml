@@ -38,7 +38,7 @@
                         <td>@Model.Item1.ArrivalTime</td>
                         <td>
                             <input type="text" id="reason" placeholder="Причина отказа" />
-                            <input type="button" onclick='sendReasonOrder("DELETE", "/manager/rejectOrder", @Html.Raw(Json.Serialize(Model.Item2)))' value="Отклонить" />
+                            <input type="button" onclick='sendReasonOrder("DELETE", "/manager/rejectOrder", @Html.Raw(Json.Serialize(Model.Item1)))' value="Отклонить" />
                         </td>
                     </tr>
                 }
