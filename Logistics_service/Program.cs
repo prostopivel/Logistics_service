@@ -13,7 +13,15 @@ namespace Logistics_service
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            ConfigureKestrel(builder);
+            if (builder.Environment.IsProduction())
+            {
+                builder.WebHost.ConfigureKestrel((context, serverOptions) =>
+                {
+                    var kestrelSection = context.Configuration.GetSection("Kestrel");
+                    serverOptions.Configure(kestrelSection);
+                });
+            }
+
             ConfigureServices(builder.Services, builder.Configuration);
 
             var app = builder.Build();
@@ -43,18 +51,6 @@ namespace Logistics_service
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
-        }
-
-        private static void ConfigureKestrel(WebApplicationBuilder builder)
-        {
-            builder.WebHost.ConfigureKestrel(serverOptions =>
-            {
-                serverOptions.ListenAnyIP(5000);
-                serverOptions.ListenAnyIP(5001, listenOptions =>
-                {
-                    listenOptions.UseHttps("C:\\Certificates\\localhost.pfx", "Pivel2005");
-                });
-            });
         }
 
         private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
