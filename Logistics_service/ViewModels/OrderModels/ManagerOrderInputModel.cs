@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Logistics_service.Models.Orders
+namespace Logistics_service.ViewModels.OrderModels
 {
-    public class ManagerOrder
+    public class ManagerOrderInputModel
     {
         public int? Id { get; set; }
 
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string? CustomerEmail { get; set; }
 
         [Required(ErrorMessage = "StartPointId is required")]
@@ -23,12 +22,5 @@ namespace Logistics_service.Models.Orders
 
         [Required(ErrorMessage = "ArrivalTime is required")]
         public DateTime ArrivalTime { get; set; }
-
-        /// <summary>
-        /// Конструктор по умолчанию.
-        /// </summary>
-        public ManagerOrder()
-        {
-        }
     }
 }

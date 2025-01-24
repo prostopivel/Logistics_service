@@ -8,26 +8,24 @@ namespace Logistics_service.Models
     public class Vehicle
     {
         [Key]
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
-        [Required(ErrorMessage = "Speed is required")]
         public int Speed { get; init; } = 15;
 
-        [Required(ErrorMessage = "Garage is required")]
         public int GarageId { get; set; }
 
-        public Point? Garage { get; set; }
+        public Point Garage { get; set; }
 
-        public VehicleStatus? Status { get; set; }
-
-        [NotMapped]
-        public double? PosX { get; set; }
+        public VehicleStatus Status { get; set; }
 
         [NotMapped]
-        public double? PosY { get; set; }
+        public double PosX { get; set; }
 
         [NotMapped]
-        public double? CurrentDistance { get; private set; }
+        public double PosY { get; set; }
+
+        [NotMapped]
+        public double CurrentDistance { get; private set; }
 
         [NotMapped]
         public Point? CurrentPoint { get; private set; }
@@ -61,7 +59,7 @@ namespace Logistics_service.Models
             GarageId = point.Index;
             Speed = speed;
             Status = VehicleStatus.Free;
-            CurrentPoint = (Point?)Garage?.Clone();
+            CurrentPoint = (Point)Garage.Clone();
         }
 
         /// <summary>
@@ -76,10 +74,10 @@ namespace Logistics_service.Models
             }
 
             Id = vehicle.Id;
-            Garage = (Point?)vehicle.Garage?.Clone();
+            Garage = (Point)vehicle.Garage.Clone();
             GarageId = vehicle.GarageId;
             Speed = vehicle.Speed;
-            CurrentPoint = (Point?)vehicle.Garage?.Clone();
+            CurrentPoint = (Point)vehicle.Garage.Clone();
             _routes = new SortedDictionary<DateTime, Route>();
             Status = vehicle.Status;
         }
@@ -136,23 +134,13 @@ namespace Logistics_service.Models
             }
         }
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Vehicle vehicle && Id == vehicle.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Speed, GarageId);
-        }
-
         /// <summary>
         /// Устанавливает следующую точку назначения.
         /// </summary>
         private void SetDestination()
         {
-            PosX = CurrentPoint?.PosX;
-            PosY = CurrentPoint?.PosY;
+            PosX = CurrentPoint.PosX;
+            PosY = CurrentPoint.PosY;
 
             CurrentPoint = CurrentRoute?.DequeuePoint();
         }
@@ -161,7 +149,7 @@ namespace Logistics_service.Models
         /// Обновляет местоположение транспортного средства.
         /// </summary>
         /// <returns>True, если местоположение обновлено, иначе False.</returns>
-        public bool UpdateLocation(int time)
+        public bool UpdateLocation(double time)
         {
             if (CurrentPoint == null)
             {

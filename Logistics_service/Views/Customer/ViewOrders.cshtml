@@ -1,6 +1,8 @@
-﻿@using Logistics_service.Models.Orders
-@using Logistics_service.Models.MapModels
-@model Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[], CustomerMapModel>
+﻿@using Logistics_service.ViewModels.OrderModels
+@using Logistics_service.ViewModels.MapModels
+@using Logistics_service.ViewModels
+@using System.Globalization
+@model Tuple<CustomerOrderOutputModel[], CustomerOrderOutputModel[], ReadyOrderOutputModel[], CustomerMapModel>
 
 @{
     Layout = null;
@@ -91,9 +93,9 @@
                     <td>
                         @if (item.Route is not null)
                         {
-                            @foreach (var point in item.Route.Points)
+                            @foreach (var point in item.Route.RoutePoints)
                             {
-                                <span>@point.Index</span>
+                                <span>@point.Name</span>
                             }
                         }
                     </td>
@@ -116,12 +118,7 @@
     <img src="/img/map.png" alt="map" class="responsive-image" />
 
     @{
-        for (int i = 0; i < Model.Item4.WaitingOrders.Length; i++)
-        {
-            Model.Item4.WaitingOrders[i] = new Route(Model.Item4.WaitingOrders[i]);
-        }
-
-        var waitingOrders = Model.Item4.WaitingOrders.SelectMany(route => route.Points).ToArray();
+        var waitingOrders = Model.Item4.WaitingOrders.SelectMany(route => route.RoutePoints).ToArray();
         var currentOrders = Model.Item4.CurrentOrders
         .Zip(Model.Item4.CurrentOrdersPoints, (route, currentPoint) =>
         currentPoint != null
@@ -151,9 +148,11 @@
             </button>
         }
 
-        foreach (var item in Model.Item4.Vehicles ?? Enumerable.Empty<Vehicle>())
+        foreach (var item in Model.Item4.Vehicles ?? Enumerable.Empty<VehicleOutputModel>())
         {
-            <button class="point-button" style="left: @((int)item.PosX)%; top: @((int)item.PosY)%; z-index: 105; background-color: white;" data-index="@item.Id">
+            <button class="point-button"
+                    style="left: @item.PosX.ToString(CultureInfo.InvariantCulture)%; top: @item.PosY.ToString(CultureInfo.InvariantCulture)%; z-index: 105; background-color: white;"
+                    data-index="@item.Id">
                 @item.Id
             </button>
         }

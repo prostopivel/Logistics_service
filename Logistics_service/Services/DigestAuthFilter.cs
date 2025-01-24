@@ -1,5 +1,4 @@
-﻿using Logistics_service.Data;
-using Logistics_service.Static;
+﻿using Logistics_service.Static;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Data;

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Logistics_service.Models.Service
+namespace Logistics_service.ViewModels
 {
-    public class LoginRequest
+    public class LoginRequestInputModel
     {
         [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }

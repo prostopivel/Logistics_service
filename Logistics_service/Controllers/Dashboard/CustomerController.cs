@@ -1,9 +1,11 @@
-﻿using Logistics_service.Data;
+﻿using AutoMapper;
 using Logistics_service.Models;
-using Logistics_service.Models.MapModels;
 using Logistics_service.Models.Orders;
 using Logistics_service.Services;
 using Logistics_service.Static;
+using Logistics_service.ViewModels;
+using Logistics_service.ViewModels.MapModels;
+using Logistics_service.ViewModels.OrderModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,14 +18,15 @@ namespace Logistics_service.Controllers.Dashboard
         private readonly ApplicationDbContext _context;
         private readonly WaitingOrderService _waitingOrder;
         private readonly VehicleService _vehicleService;
-
+        private readonly IMapper _mapper;
         public CustomerController(IConfiguration configuration, ApplicationDbContext context,
-            WaitingOrderService waitingOrder, VehicleService vehicleService)
+            WaitingOrderService waitingOrder, VehicleService vehicleService, IMapper mapper)
         {
             _configuration = configuration;
             _context = context;
             _waitingOrder = waitingOrder;
             _vehicleService = vehicleService;
+            _mapper = mapper;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -37,6 +40,8 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("viewOrders/{date}")]
         public async Task<IActionResult> ViewOrders([FromRoute] DateTime date)
         {
+            ViewData["Title"] = "viewOrders";
+
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
 
@@ -81,10 +86,11 @@ namespace Logistics_service.Controllers.Dashboard
                 .ToArrayAsync();
 
             var mapModel = await ViewMap(date);
-            return View(new Tuple<CustomerOrder[], CustomerOrder[], ReadyOrder[], CustomerMapModel>(
-                rejectedOrders,
-                waitingOrders,
-                readyOrders,
+            return View(new Tuple<CustomerOrderOutputModel[],
+                CustomerOrderOutputModel[], ReadyOrderOutputModel[], CustomerMapModel>(
+                _mapper.Map<CustomerOrderOutputModel[]>(rejectedOrders),
+                _mapper.Map<CustomerOrderOutputModel[]>(waitingOrders),
+                _mapper.Map<ReadyOrderOutputModel[]>(readyOrders),
                 mapModel));
         }
 
@@ -92,34 +98,41 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("createRequest")]
         public async Task<IActionResult> CreateRequest()
         {
+            ViewData["Title"] = "createRequest";
             ViewBag.Error = TempData["Error"];
+
             var points = await _context.Points.AsNoTracking().ToArrayAsync();
-            return View(new Tuple<CustomerOrder, Point[]>(new CustomerOrder(), points));
+            return View(new Tuple<CustomerOrderInputModel, PointOutputModel[]>(
+                new CustomerOrderInputModel(),
+                _mapper.Map<PointOutputModel[]>(points)));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("createRequest")]
-        public async Task<IActionResult> CreateRequest([FromBody] CustomerOrder order)
+        public async Task<IActionResult> CreateRequest([FromBody] CustomerOrderInputModel order)
         {
             if (!ModelState.IsValid)
             {
+                TempData["Error"] = "Неверные данные!";
                 return RedirectToAction("createRequest");
             }
+
+            var customerOrder = _mapper.Map<CustomerOrder>(order);
 
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
 
-            order.Email = email;
-            order.CreatedAt = DateTime.Now;
+            customerOrder.Email = email;
+            customerOrder.CreatedAt = DateTime.Now;
 
-            if (order.ArrivalTime.Hour < 8 || order.ArrivalTime.Hour > 17)
+            if (customerOrder.ArrivalTime.Hour < 8 || customerOrder.ArrivalTime.Hour > 17)
             {
                 TempData["Error"] = "Указано неверное время! Время работы сервиса с 8 до 17.";
                 return RedirectToAction("createRequest");
             }
 
-            order.Status = OrderStatus.Created;
-            _context.CustomerOrders.Add(order);
+            customerOrder.Status = OrderStatus.Created;
+            _context.CustomerOrders.Add(customerOrder);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("customer", "Dashboard");
@@ -137,8 +150,9 @@ namespace Logistics_service.Controllers.Dashboard
 
             var points = await _context.Points.AsNoTracking().ToArrayAsync();
 
-            var waitingOrders = _context.GetWaitingOrders(date)
+            var waitingOrdersRoutes = _context.GetWaitingOrders(date)
                 .Where(o => o.Status == ReadyOrderStatus.Accepted && o.CustomerEmail == email)
+                .Select(order => order.Route)
                 .ToArray();
 
             var currentOrders = date == DateTime.Now.Date || date == default
@@ -147,16 +161,24 @@ namespace Logistics_service.Controllers.Dashboard
                     .ToArray()
                 : Array.Empty<ReadyOrder>();
 
+            var currentOrdersRoutes = currentOrders
+                .Select(order => order.Route)
+                .ToArray();
+
+            var vehiclesPoints = currentOrders
+                .Select(order => order.Vehicle.CurrentPoint)
+                .ToArray();
+
             var vehicles = _vehicleService.Vehicles
                 .Where(v => v.CurrentRoute?.CustomerEmail == email)
                 .ToArray();
 
             return new CustomerMapModel(
-                points,
-                waitingOrders.Select(order => order.Route).ToArray(),
-                currentOrders.Select(order => order.Route).ToArray(),
-                vehicles,
-                currentOrders.Select(order => order.Vehicle.CurrentPoint).ToArray());
+                _mapper.Map<PointOutputModel[]>(points),
+                _mapper.Map<RouteOutputModel[]>(waitingOrdersRoutes),
+                _mapper.Map<RouteOutputModel[]>(currentOrdersRoutes),
+                _mapper.Map<VehicleOutputModel[]>(vehicles),
+                _mapper.Map<PointOutputModel[]>(vehiclesPoints));
         }
     }
 }

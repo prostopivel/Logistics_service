@@ -1,141 +1,31 @@
-﻿using Logistics_service.Data;
+﻿using AutoMapper;
 using Logistics_service.Models;
-using Logistics_service.Models.MapModels;
 using Logistics_service.Models.Orders;
-using Logistics_service.Models.Users;
 using Logistics_service.Services;
 using Logistics_service.Static;
+using Logistics_service.ViewModels;
+using Logistics_service.ViewModels.MapModels;
+using Logistics_service.ViewModels.OrderModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace Logistics_service.Controllers.Dashboard
 {
     [Route("[controller]")]
     public class AdminController : Controller
     {
-        private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
         private readonly WaitingOrderService _waitingOrder;
         private readonly VehicleService _vehicleService;
+        private readonly IMapper _mapper;
 
-        public AdminController(IConfiguration configuration, ApplicationDbContext context,
-            WaitingOrderService waitingOrder, VehicleService vehicleService)
+        public AdminController(ApplicationDbContext context, WaitingOrderService waitingOrder, 
+            VehicleService vehicleService, IMapper mapper)
         {
-            _configuration = configuration;
             _context = context;
             _waitingOrder = waitingOrder;
             _vehicleService = vehicleService;
-        }
-
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpGet("viewAllCustomers")]
-        public async Task<ActionResult> ViewAllCustomers()
-        {
-            ViewBag.Error = TempData["Error"] as string;
-            var customers = await _context.Customers.AsNoTracking().ToListAsync();
-            return View(customers);
-        }
-
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpGet("viewAllManagers")]
-        public async Task<ActionResult> ViewAllManagers()
-        {
-            ViewBag.Error = TempData["Error"] as string;
-            var managers = await _context.Managers.AsNoTracking().ToListAsync();
-            var administrators = await _context.Administrators.AsNoTracking().ToListAsync();
-            return View(new Tuple<List<Manager>, List<Administrator>>(managers, administrators));
-        }
-
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpDelete("deleteCustomer/{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
-        {
-            if (await _context.Users.FirstOrDefaultAsync(c => c.Id == id) is Customer)
-            {
-                await DeleteUserAsync(id);
-            }
-            return await ViewAllCustomers();
-        }
-
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpDelete("deleteManager/{id}")]
-        public async Task<IActionResult> DeleteManager(int id)
-        {
-            await DeleteUserAsync(id);
-            return await ViewAllManagers();
-        }
-
-        private async Task DeleteUserAsync(int id)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
-            if (user is not null && user.Role != UserRole.Administrator)
-            {
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
-                Console.WriteLine($"Deleted user: {user.Email}");
-            }
-        }
-
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpGet("addUser")]
-        public IActionResult AddUser()
-        {
-            ViewBag.Error = TempData["Error"] as string;
-            ViewBag.RealmHeader = _configuration["Realm"];
-            return View();
-        }
-
-        [ServiceFilter(typeof(DigestAuthFilter))]
-        [HttpPost("addUser")]
-        public async Task<ActionResult> AddUser([FromBody] User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("addUser");
-            }
-
-            if (!await AddUserAsync(user))
-            {
-                TempData["Error"] = "Пользователь с данной почтой уже существует!";
-                return RedirectToAction("addUser");
-            }
-
-            return RedirectToAction("administrator", "Dashboard");
-        }
-
-        private async Task<bool> AddUserAsync(User user)
-        {
-            if (await _context.Users.AnyAsync(c => c.Email == user.Email))
-            {
-                return false;
-            }
-
-            try
-            {
-                switch (user.Role)
-                {
-                    case UserRole.Customer:
-                        _context.Customers.Add(new Customer(user));
-                        break;
-                    case UserRole.Manager:
-                        _context.Managers.Add(new Manager(user));
-                        break;
-                    case UserRole.Administrator:
-                        _context.Administrators.Add(new Administrator(user));
-                        break;
-                    default:
-                        return false;
-                }
-
-                await _context.SaveChangesAsync();
-                Console.WriteLine($"Added user: {user.Email}");
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            _mapper = mapper;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -149,7 +39,9 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("viewAllOrders/{date}")]
         public async Task<IActionResult> ViewAllOrders([FromRoute] DateTime date)
         {
+            ViewData["Title"] = "viewAllOrders";
             ViewBag.Error = TempData["Error"] as string;
+
             var managerOrders = await _context.GetOrders()
                 .Where(o => o.Status == ReadyOrderStatus.Created)
                 .AsNoTracking()
@@ -164,10 +56,11 @@ namespace Logistics_service.Controllers.Dashboard
                 : Array.Empty<ReadyOrder>();
 
             var mapModel = await ViewMap(date);
-            return View("viewAllOrders", new Tuple<ReadyOrder[], ReadyOrder[], ReadyOrder[], AdminMapModel>(
-                managerOrders,
-                waitingOrders,
-                currentOrders,
+            return View("viewAllOrders", new Tuple<ReadyOrderOutputModel[],
+                ReadyOrderOutputModel[], ReadyOrderOutputModel[], AdminMapModel>(
+                _mapper.Map<ReadyOrderOutputModel[]>(managerOrders),
+                _mapper.Map<ReadyOrderOutputModel[]>(waitingOrders),
+                _mapper.Map<ReadyOrderOutputModel[]>(currentOrders),
                 mapModel));
         }
 
@@ -183,9 +76,9 @@ namespace Logistics_service.Controllers.Dashboard
                 order.Status = ReadyOrderStatus.Accepted;
                 await _context.SaveChangesAsync();
 
-                if (order.ArrivalTime.Date == DateTime.Now.Date && order.Id.HasValue)
+                if (order.ArrivalTime.Date == DateTime.Now.Date)
                 {
-                    _waitingOrder.Orders.TryAdd(order.Route.DepartureTime.Value, order.Id.Value);
+                    _waitingOrder.Orders.TryAdd(order.Route.DepartureTime, order.Id);
                 }
             }
 
@@ -196,7 +89,9 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("fixOrder/{id}")]
         public async Task<IActionResult> FixOrder([FromRoute] int id)
         {
+            ViewData["Title"] = "fixOrder";
             ViewBag.Error = TempData["Error"] as string;
+
             var order = await _context.GetOrders()
                 .FirstOrDefaultAsync(o => o.Id == id);
 
@@ -206,12 +101,14 @@ namespace Logistics_service.Controllers.Dashboard
             }
 
             var vehicles = _vehicleService.GetAllVehicles(await _context.GetVehiclesAsync());
-            return View(new Tuple<Vehicle[], ReadyOrder?>(vehicles, order));
+            return View(new Tuple<VehicleOutputModel[], ReadyOrderOutputModel?>(
+                _mapper.Map<VehicleOutputModel[]>(vehicles),
+                _mapper.Map<ReadyOrderOutputModel?>(order)));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("fixOrder")]
-        public async Task<IActionResult> FixOrder([FromBody] ManagerOrder order)
+        public async Task<IActionResult> FixOrder([FromBody] ManagerOrderInputModel order)
         {
             if (!_context.ReadyOrders.Any(o => o.Id == order.Id))
             {
@@ -290,14 +187,14 @@ namespace Logistics_service.Controllers.Dashboard
 
             await _context.SaveChangesAsync();
 
-            if (dbOrder.ArrivalTime.Date == DateTime.Now.Date && dbOrder.Id.HasValue)
+            if (dbOrder.ArrivalTime.Date <= DateTime.Now.Date)
             {
                 _waitingOrder.Orders
-                    .Where(kvp => kvp.Value == dbOrder.Id.Value)
-                    .ToList() 
+                    .Where(kvp => kvp.Value == dbOrder.Id)
+                    .ToList()
                     .ForEach(kvp => _waitingOrder.Orders.TryRemove(kvp.Key, out _));
 
-                _waitingOrder.Orders.TryAdd(dbOrder.Route.DepartureTime.Value, dbOrder.Id.Value);
+                _waitingOrder.Orders.TryAdd(dbOrder.Route.DepartureTime, dbOrder.Id);
             }
 
             return RedirectToAction("viewAllOrders");
@@ -308,41 +205,41 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("manageTransport")]
         public async Task<IActionResult> ManageTransport()
         {
+            ViewData["Title"] = "manageTransport";
             ViewBag.Error = TempData["Error"] as string;
+
             var vehicles = _vehicleService.GetAllVehicles(await _context.GetVehiclesAsync());
-            return View(vehicles);
+            return View(_mapper.Map<VehicleOutputModel[]>(vehicles));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("addTransport")]
         public IActionResult AddTransport()
         {
+            ViewData["Title"] = "addTransport";
             ViewBag.Error = TempData["Error"] as string;
+
             return View();
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("addTransport")]
-        public async Task<IActionResult> AddTransport([FromBody] dynamic vehicle)
+        public async Task<IActionResult> AddTransport([FromBody] VehicleInputModel vehicle)
         {
-            using JsonDocument doc = JsonDocument.Parse(vehicle.ToString());
-            JsonElement root = doc.RootElement;
-
-            if (!int.TryParse(root.GetProperty("Speed").GetString(), out int speed) ||
-                !int.TryParse(root.GetProperty("GarageId").GetString(), out int garageId))
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Неверные данные!";
                 return RedirectToAction("addTransport");
             }
 
-            var point = await _context.Points.FirstOrDefaultAsync(p => p.Index == garageId);
+            var point = await _context.Points.FirstOrDefaultAsync(p => p.Index == vehicle.GarageId);
             if (point == null)
             {
                 TempData["Error"] = "Точка не найдена!";
                 return RedirectToAction("addTransport");
             }
 
-            _context.Vehicles.Add(new Vehicle(point, speed));
+            _context.Vehicles.Add(new Vehicle(point, vehicle.Speed));
             await _context.SaveChangesAsync();
 
             return RedirectToAction("administrator", "Dashboard");
@@ -357,22 +254,31 @@ namespace Logistics_service.Controllers.Dashboard
         {
             var points = await _context.Points.AsNoTracking().ToArrayAsync();
 
-            var waitingOrders = _context.GetWaitingOrders(date)
+            var waitingOrdersRoutes = _context.GetWaitingOrders(date)
                 .Where(o => o.Status == ReadyOrderStatus.Accepted)
+                .Select(order => order.Route)
                 .ToArray();
 
             var currentOrders = date == DateTime.Now.Date || date == default
                 ? _waitingOrder.GetCurrentOrders().Values.ToArray()
                 : Array.Empty<ReadyOrder>();
 
+            var currentOrdersRoutes = currentOrders
+                .Select(order => order.Route)
+                .ToArray();
+
+            var vehiclesPoints = currentOrders
+                .Select(order => order.Vehicle.CurrentPoint)
+                .ToArray();
+
             var vehicles = _vehicleService.Vehicles.ToArray();
 
             return new AdminMapModel(
-                points,
-                waitingOrders.Select(order => order.Route).ToArray(),
-                currentOrders.Select(order => order.Route).ToArray(),
-                vehicles,
-                currentOrders.Select(order => order.Vehicle.CurrentPoint).ToArray());
+                _mapper.Map<PointOutputModel[]>(points),
+                _mapper.Map<RouteOutputModel[]>(waitingOrdersRoutes),
+                _mapper.Map<RouteOutputModel[]>(currentOrdersRoutes),
+                _mapper.Map<VehicleOutputModel[]>(vehicles),
+                _mapper.Map<PointOutputModel[]>(vehiclesPoints));
         }
     }
 }

@@ -1,28 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Logistics_service.Models.Orders
 {
     public class ReadyOrder : Order, ICloneable
     {
-        [Required(ErrorMessage = "CustomerEmail is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string CustomerEmail { get; set; }
 
-        public int? RouteId { get; set; }
+        public int RouteId { get; set; }
 
-        [Required(ErrorMessage = "Route is required")]
-        public virtual Route Route { get; set; }
+        public Route Route { get; set; }
 
-        public int? VehicleId { get; set; }
+        public int VehicleId { get; set; }
 
-        [Required(ErrorMessage = "Vehicle is required")]
-        public virtual Vehicle Vehicle { get; set; }
+        public Vehicle Vehicle { get; set; }
 
-        [Required(ErrorMessage = "ArrivalTime is required")]
         public DateTime ArrivalTime { get; set; }
 
-        public ReadyOrderStatus? Status { get; set; }
+        public ReadyOrderStatus Status { get; set; }
 
         /// <summary>
         /// Конструктор по умолчанию.

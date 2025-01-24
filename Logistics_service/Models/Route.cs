@@ -6,17 +6,17 @@ namespace Logistics_service.Models
     public class Route
     {
         [Key]
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         [NotMapped]
         private Queue<Point> _points { get; set; } = new Queue<Point>();
 
         public double Distance { get; set; }
 
-        public DateTime? DepartureTime { get; set; }
+        public DateTime DepartureTime { get; set; }
 
         [NotMapped]
-        public string? CustomerEmail { get; set; }
+        public string CustomerEmail { get; set; }
 
         [NotMapped]
         public List<Point> Points => _points.ToList();
@@ -34,7 +34,7 @@ namespace Logistics_service.Models
         /// <exception cref="ArgumentNullException"></exception>
         public Route(Point[] points, double distance)
         {
-            if (points == null)
+            if (points is null)
             {
                 throw new ArgumentNullException(nameof(points), "Массив точек не может быть null.");
             }
@@ -54,7 +54,7 @@ namespace Logistics_service.Models
         /// <exception cref="ArgumentNullException"></exception>
         public Route(Route route)
         {
-            if (route == null)
+            if (route is null)
             {
                 throw new ArgumentNullException(nameof(route), "Маршрут не может быть null.");
             }
@@ -76,7 +76,7 @@ namespace Logistics_service.Models
         /// <exception cref="ArgumentNullException"></exception>
         public void EnqueuePoint(Point point)
         {
-            if (point == null)
+            if (point is null)
             {
                 throw new ArgumentNullException(nameof(point), "Точка не может быть null.");
             }
@@ -99,7 +99,7 @@ namespace Logistics_service.Models
         /// <param name="points">Массив точек для добавления.</param>
         public void AddPoints(Point[] points)
         {
-            if (points == null || points.Length == 0)
+            if (points is null || points.Length == 0)
             {
                 return;
             }

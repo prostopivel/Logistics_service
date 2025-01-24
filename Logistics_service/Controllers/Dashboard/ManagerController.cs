@@ -1,9 +1,11 @@
-﻿using Logistics_service.Data;
+﻿using AutoMapper;
 using Logistics_service.Models;
-using Logistics_service.Models.MapModels;
 using Logistics_service.Models.Orders;
 using Logistics_service.Services;
 using Logistics_service.Static;
+using Logistics_service.ViewModels;
+using Logistics_service.ViewModels.MapModels;
+using Logistics_service.ViewModels.OrderModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -17,20 +19,23 @@ namespace Logistics_service.Controllers
         private readonly WaitingOrderService _waitingOrder;
         private readonly ApplicationDbContext _context;
         private readonly IMemoryCache _cache;
+        private readonly IMapper _mapper;
 
         public ManagerController(ApplicationDbContext context, IMemoryCache cache,
-            WaitingOrderService waitingOrder, VehicleService vehicleService)
+            WaitingOrderService waitingOrder, VehicleService vehicleService, IMapper mapper)
         {
             _context = context;
             _cache = cache;
             _vehicleService = vehicleService;
             _waitingOrder = waitingOrder;
+            _mapper = mapper;
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpGet("getOrder")]
         public async Task<IActionResult> GetOrder()
         {
+            ViewData["Title"] = "getOrder";
             ViewBag.Error = TempData["Error"] as string;
 
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
@@ -46,12 +51,12 @@ namespace Logistics_service.Controllers
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            return View(orders);
+            return View(_mapper.Map<CustomerOrderOutputModel[]>(orders));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("getOrder")]
-        public async Task<IActionResult> GetOrder([FromBody] CustomerOrder order)
+        public async Task<IActionResult> GetOrder([FromBody] CustomerOrderOutputModel order)
         {
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
@@ -85,6 +90,7 @@ namespace Logistics_service.Controllers
         [HttpGet("assignOrder/{date}")]
         public async Task<IActionResult> AssignOrder(DateTime date, int start = 0, int end = 0)
         {
+            ViewData["Title"] = "assignOrder";
             ViewBag.Error = TempData["Error"] as string;
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
@@ -104,11 +110,12 @@ namespace Logistics_service.Controllers
                 ? await ViewMap(date)
                 : await AddMapLine(date, start, end);
 
-            return View(new Tuple<CustomerOrder?, Vehicle[], ReadyOrder[], ReadyOrder[], ManagerMapModel?>(
-                order,
-                vehicles,
-                waitingOrders,
-                currentOrders,
+            return View(new Tuple<CustomerOrderOutputModel?, VehicleOutputModel[],
+                ReadyOrderOutputModel[], ReadyOrderOutputModel[], ManagerMapModel>(
+                _mapper.Map<CustomerOrderOutputModel?>(order),
+                _mapper.Map<VehicleOutputModel[]>(vehicles),
+                _mapper.Map<ReadyOrderOutputModel[]>(waitingOrders),
+                _mapper.Map<ReadyOrderOutputModel[]>(currentOrders),
                 mapModel));
         }
 
@@ -128,7 +135,7 @@ namespace Logistics_service.Controllers
 
         [ServiceFilter(typeof(DigestAuthFilter))]
         [HttpPost("assignOrder")]
-        public async Task<IActionResult> AssignOrder([FromBody] ManagerOrder order)
+        public async Task<IActionResult> AssignOrder([FromBody] ManagerOrderInputModel order)
         {
             var authHeader = HttpContext.Request.Headers.Authorization.ToString();
             var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
@@ -253,7 +260,9 @@ namespace Logistics_service.Controllers
         [HttpGet("viewAssignOrders/{date}")]
         public async Task<IActionResult> ViewAssignOrders(DateTime date)
         {
+            ViewData["Title"] = "viewAssignOrders";
             ViewBag.Error = TempData["Error"] as string;
+
             var waitingOrders = _context.GetWaitingOrders(date)
                 .Where(o => o.Status == ReadyOrderStatus.Accepted)
                 .ToArray();
@@ -265,10 +274,11 @@ namespace Logistics_service.Controllers
             var vehicles = _vehicleService.GetAllVehicles(await _context.GetVehiclesAsync());
             var mapModel = await ViewMap(date);
 
-            return View(new Tuple<ReadyOrder[], ReadyOrder[], Vehicle[], ManagerMapModel?>(
-                waitingOrders,
-                currentOrders,
-                vehicles,
+            return View(new Tuple<ReadyOrderOutputModel[], ReadyOrderOutputModel[],
+                VehicleOutputModel[], ManagerMapModel>(
+                _mapper.Map<ReadyOrderOutputModel[]>(waitingOrders),
+                _mapper.Map<ReadyOrderOutputModel[]>(currentOrders),
+                _mapper.Map<VehicleOutputModel[]>(vehicles),
                 mapModel));
         }
 
@@ -281,42 +291,77 @@ namespace Logistics_service.Controllers
         {
             var points = await _context.Points.AsNoTracking().ToArrayAsync();
 
-            var waitingOrders = _context.GetWaitingOrders(date)
+            var waitingOrdersRoutes = _context.GetWaitingOrders(date)
                 .Where(o => o.Status == ReadyOrderStatus.Accepted)
-                .ToArray();
+                .Select(order => order.Route).ToArray();
 
             var currentOrders = date == DateTime.Now.Date || date == default
-                ? _waitingOrder.GetCurrentOrders().Values.ToArray()
+                ? _waitingOrder.GetCurrentOrders().Values
                 : Array.Empty<ReadyOrder>();
+
+            var currentOrdersRoutes = currentOrders
+                .Select(order => order.Route)
+                .ToArray();
+
+            var vehiclesPoints = currentOrders
+                .Select(order => order.Vehicle.CurrentPoint)
+                .ToArray();
 
             var vehicles = _vehicleService.Vehicles.ToArray();
 
             return new ManagerMapModel(
-                points,
-                waitingOrders.Select(order => order.Route).ToArray(),
-                currentOrders.Select(order => order.Route).ToArray(),
+                _mapper.Map<PointOutputModel[]>(points),
+                _mapper.Map<RouteOutputModel[]>(waitingOrdersRoutes),
+                _mapper.Map<RouteOutputModel[]>(currentOrdersRoutes),
                 null,
                 null,
-                currentOrders.Select(order => order.Vehicle.CurrentPoint).ToArray(),
-                vehicles);
+                _mapper.Map<PointOutputModel[]>(vehiclesPoints),
+                _mapper.Map<VehicleOutputModel[]>(vehicles));
         }
 
         public async Task<ManagerMapModel> AddMapLine(DateTime date, int start, int end)
         {
-            var mapModel = await ViewMap(date);
+            var points = await _context.Points.AsNoTracking().ToArrayAsync();
 
-            if (start < 0 || start >= mapModel.Points.Length || end < 0 || end >= mapModel.Points.Length)
+            var waitingOrdersRoutes = _context.GetWaitingOrders(date)
+                .Where(o => o.Status == ReadyOrderStatus.Accepted)
+                .Select(order => order.Route).ToArray();
+
+            var currentOrders = date == DateTime.Now.Date || date == default
+                ? _waitingOrder.GetCurrentOrders().Values
+                : Array.Empty<ReadyOrder>();
+
+            var currentOrdersRoutes = currentOrders
+                .Select(order => order.Route)
+                .ToArray();
+
+            var vehiclesPoints = currentOrders
+                .Select(order => order.Vehicle.CurrentPoint)
+                .ToArray();
+
+            var vehicles = _vehicleService.Vehicles.ToArray();
+
+            var mapModel = new ManagerMapModel(
+                _mapper.Map<PointOutputModel[]>(points),
+                _mapper.Map<RouteOutputModel[]>(waitingOrdersRoutes),
+                _mapper.Map<RouteOutputModel[]>(currentOrdersRoutes),
+                null,
+                null,
+                _mapper.Map<PointOutputModel[]>(vehiclesPoints),
+                _mapper.Map<VehicleOutputModel[]>(vehicles));
+
+            if (start < 0 || start >= points.Length || end < 0 || end >= points.Length)
             {
-                TempData["Error"] = $"Не входят в диапазон от 0 до {mapModel.Points.Length}!";
+                TempData["Error"] = $"Не входят в диапазон от 0 до {points.Length}!";
                 return mapModel;
             }
 
-            var startPoint = mapModel.Points[start];
-            var endPoint = mapModel.Points[end];
+            var startPoint = points[start];
+            var endPoint = points[end];
 
-            var route = DijkstraAlgorithm.FindShortestPath(mapModel.Points, startPoint, endPoint);
+            var route = DijkstraAlgorithm.FindShortestPath(points, startPoint, endPoint);
 
-            mapModel.Route = route.Item1;
+            mapModel.Route = _mapper.Map<PointOutputModel[]>(route.Item1);
             mapModel.Distance = route.Item2;
 
             return mapModel;

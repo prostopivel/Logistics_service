@@ -21,6 +21,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("administrator")]
         public IActionResult Administrator()
         {
+            ViewData["Title"] = "administrator";
             return View();
         }
 
@@ -28,6 +29,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("manager")]
         public IActionResult Manager()
         {
+            ViewData["Title"] = "manager";
             return View();
         }
 
@@ -35,6 +37,7 @@ namespace Logistics_service.Controllers.Dashboard
         [HttpGet("customer")]
         public IActionResult Customer()
         {
+            ViewData["Title"] = "customer";
             return View();
         }
 

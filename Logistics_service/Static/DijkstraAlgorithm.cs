@@ -67,7 +67,7 @@ namespace Logistics_service.Static
         private static List<Point> ReconstructPath(Dictionary<Point, Point> previous, Point endPoint)
         {
             var path = new List<Point>();
-            for (var point = endPoint; point != null; point = previous[point])
+            for (var point = endPoint; point is not null; point = previous[point])
             {
                 path.Add(point);
             }

@@ -1,18 +1,17 @@
 ﻿@using System
-@using Logistics_service.Models.Users
-@model Tuple<List<Manager>, List<Administrator>>
+@model Logistics_service.ViewModels.UserOutputModel[]
 
 @{
     Layout = null;
 }
 
-<title>ViewAllManagers</title>
+<title>ViewAllCustomers</title>
 <link rel="stylesheet" href="styles.css">
 
 <h2 class="error-message">@ViewBag.Error</h2>
 
 <div class="container">
-    <h1>Список менеджеров и администраторов</h1>
+    <h1>Список пользователей</h1>
     <table>
         <thead>
             <tr>
@@ -24,7 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Item1)
+            @foreach (var item in Model)
             {
                 <tr>
                     <td>@item.Id</td>
@@ -35,7 +34,7 @@
                         <input type="image"
                                src="/img/delete.jpg"
                                alt="Удалить"
-                               onclick="auth('DELETE', '/Admin/deleteManager/@item.Id')"
+                               onclick="auth('DELETE', '/Admin/deleteCustomer/@item.Id')"
                                name="deleteButton"
                                width="45"
                                height="45"
@@ -43,21 +42,6 @@
                     </td>
                 </tr>
             }
-
-            @foreach (var item in Model.Item2)
-            {
-                <tr>
-                    <td>@item.Id</td>
-                    <td>@item.Name</td>
-                    <td>@item.Email</td>
-                    <td>@item.Role</td>
-                    <td></td> 
-                </tr>
-            }
         </tbody>
     </table>
-
-    <div class="button-container">
-        <button onclick="auth('GET', '/Admin/addUser')">Добавить пользователя</button>
-    </div>
 </div>

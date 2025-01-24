@@ -1,5 +1,5 @@
 ﻿@using System
-@model Logistics_service.Models.Vehicle[]
+@model Logistics_service.ViewModels.VehicleOutputModel[]
 
 @{
     Layout = null;
@@ -40,7 +40,7 @@
                         {
                             <p>
                                 @item.CurrentRoute.DepartureTime: @((int)item.CurrentRoute.Distance) м
-                                @foreach (var point in item.CurrentRoute.Points)
+                                @foreach (var point in item.CurrentRoute.RoutePoints)
                                 {
                                     <span>@point.Name</span>
                                 }

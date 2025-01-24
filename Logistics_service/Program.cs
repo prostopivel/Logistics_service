@@ -1,4 +1,3 @@
-using Logistics_service.Data;
 using Logistics_service.Services;
 using Logistics_service.Static;
 using Microsoft.EntityFrameworkCore;
@@ -80,6 +79,8 @@ namespace Logistics_service
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            services.AddAutoMapper(typeof(MapperService).Assembly);
 
             services.AddSingleton<VehicleService>();
             services.AddMemoryCache();

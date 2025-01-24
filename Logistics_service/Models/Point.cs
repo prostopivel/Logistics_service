@@ -20,7 +20,7 @@ namespace Logistics_service.Models
 
         public int Index { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         public int PosX { get; set; }
 
@@ -41,7 +41,7 @@ namespace Logistics_service.Models
         /// <summary>
         /// Конструктор для инициализации точки с именем и координатами.
         /// </summary>
-        public Point(string? name, int posX, int posY)
+        public Point(string name, int posX, int posY)
         {
             Name = name;
             PosX = posX;

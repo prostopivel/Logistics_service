@@ -1,5 +1,4 @@
-﻿using Logistics_service.Data;
-using Logistics_service.Models;
+﻿using Logistics_service.Models;
 using Logistics_service.Models.Orders;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
@@ -8,15 +7,17 @@ namespace Logistics_service.Services
 {
     public class WaitingOrderService : BackgroundService
     {
+        private TimeSpan _lastExecutionTime = TimeSpan.Zero;
+        private int _baseDelay = 1000; 
         private DateTime _updateOrdersTime;
+
         private readonly IServiceProvider _serviceProvider;
         private readonly VehicleService _vehicleService;
         private readonly ConcurrentDictionary<int, ReadyOrder> _currentOrders;
 
         public ConcurrentDictionary<DateTime, int> Orders { get; init; }
 
-        public WaitingOrderService(ILogger<WaitingOrderService> logger,
-            VehicleService vehicleService, IServiceProvider serviceProvider)
+        public WaitingOrderService(VehicleService vehicleService, IServiceProvider serviceProvider)
         {
             Orders = new ConcurrentDictionary<DateTime, int>();
             _currentOrders = new ConcurrentDictionary<int, ReadyOrder>();
@@ -29,17 +30,20 @@ namespace Logistics_service.Services
         public ConcurrentDictionary<int, ReadyOrder> GetCurrentOrders() =>
             new ConcurrentDictionary<int, ReadyOrder>(_currentOrders);
 
-        public async Task AddOrderAsync(int id)
+        public async Task AddOrderAsync(int id, CancellationToken stoppingToken)
         {
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var order = await context.GetOrders()
                 .FirstOrDefaultAsync(o => o.Id == id);
 
-            if (order == null)
+            if (order is null)
             {
                 return;
             }
+
+            order.Status = ReadyOrderStatus.Running;
+            await context.SaveChangesAsync(stoppingToken);
 
             order.Route = new Models.Route(order.Route)
             {
@@ -53,15 +57,17 @@ namespace Logistics_service.Services
             }
 
             await _vehicleService.AddVehicleAsync(order.Vehicle);
-            _currentOrders.TryAdd(order.Id ?? 0, order);
+            _currentOrders.TryAdd(order.Id, order);
 
-            Console.WriteLine($"Заказ с Id {order.Id} начался в {DateTime.Now}");
+            Console.WriteLine($"Order with Id {order.Id} started in {DateTime.Now}");
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                var startTime = DateTime.UtcNow;
+
                 var now = DateTime.Now;
 
                 if (now >= _updateOrdersTime)
@@ -70,10 +76,27 @@ namespace Logistics_service.Services
                     _updateOrdersTime = new DateTime(now.Year, now.Month, now.Day + 1, 8, 0, 0);
                 }
 
-                await ProcessCurrentOrdersAsync(stoppingToken);
-                await UpdateVehicleLocationsAsync(stoppingToken);
+                int adaptiveDelay = CalculateDelay();
 
-                await Task.Delay(1000, stoppingToken);
+                await ProcessCurrentOrdersAsync(stoppingToken);
+                await UpdateVehicleLocationsAsync(stoppingToken, adaptiveDelay);
+
+                _lastExecutionTime = DateTime.UtcNow - startTime;
+
+
+                await Task.Delay(adaptiveDelay, stoppingToken);
+            }
+        }
+
+        private int CalculateDelay()
+        {
+            if (_lastExecutionTime.TotalMilliseconds > _baseDelay)
+            {
+                return Math.Min(3000, _baseDelay + (int)(_lastExecutionTime.TotalMilliseconds - _baseDelay));
+            }
+            else
+            {
+                return Math.Max(100, _baseDelay - (int)(_baseDelay - _lastExecutionTime.TotalMilliseconds));
             }
         }
 
@@ -89,15 +112,12 @@ namespace Logistics_service.Services
             {
                 if (order.Status == ReadyOrderStatus.Accepted || order.Status == ReadyOrderStatus.Running)
                 {
-                    order.Status = ReadyOrderStatus.Running;
-                    if (order.Route != null && order.Route.DepartureTime != null && order.Id != null)
+                    if (order.Route is not null)
                     {
-                        Orders.TryAdd((DateTime)order.Route.DepartureTime, (int)order.Id);
+                        Orders.TryAdd(order.Route.DepartureTime, order.Id);
                     }
                 }
             }
-
-            await context.SaveChangesAsync(stoppingToken);
         }
 
         private async Task ProcessCurrentOrdersAsync(CancellationToken stoppingToken)
@@ -106,17 +126,17 @@ namespace Logistics_service.Services
 
             if (!currentOrder.Equals(default(KeyValuePair<DateTime, int>)))
             {
-                await AddOrderAsync(currentOrder.Value);
+                await AddOrderAsync(currentOrder.Value, stoppingToken);
                 Orders.TryRemove(currentOrder.Key, out _);
             }
         }
 
-        private async Task UpdateVehicleLocationsAsync(CancellationToken stoppingToken)
+        private async Task UpdateVehicleLocationsAsync(CancellationToken stoppingToken, int delaytime)
         {
             for (int i = 0; i < _vehicleService.Vehicles.Count; i++)
             {
                 var vehicle = _vehicleService.Vehicles[i];
-                if (!vehicle.UpdateLocation(2))
+                if (!vehicle.UpdateLocation(delaytime / 1000d))
                 {
                     var order = _currentOrders.FirstOrDefault(o => o.Value.VehicleId == vehicle.Id);
 
@@ -135,7 +155,7 @@ namespace Logistics_service.Services
                         _currentOrders.TryRemove(order);
                         await _vehicleService.DeleteVehicleAsync(vehicle);
 
-                        Console.WriteLine($"Заказ с Id {order.Value.Id} закончился в {DateTime.Now}");
+                        Console.WriteLine($"Order with Id {order.Value.Id} ended in {DateTime.Now}");
                     }
                 }
             }

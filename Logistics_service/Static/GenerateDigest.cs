@@ -1,5 +1,5 @@
-﻿using Logistics_service.Data;
-using Logistics_service.Models.Users;
+﻿using Logistics_service.Models.Users;
+using Logistics_service.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;

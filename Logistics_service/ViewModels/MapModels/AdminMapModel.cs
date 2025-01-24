@@ -1,22 +1,25 @@
-﻿namespace Logistics_service.Models.MapModels
+﻿using Logistics_service.Models;
+
+namespace Logistics_service.ViewModels.MapModels
 {
     public class AdminMapModel
     {
-        public Point[] Points { get; set; }
+        public PointOutputModel[] Points { get; set; }
 
-        public Route[] WaitingOrders { get; set; }
+        public RouteOutputModel[] WaitingOrders { get; set; }
 
-        public Route[] CurrentOrders { get; set; }
+        public RouteOutputModel[] CurrentOrders { get; set; }
 
-        public Vehicle[] Vehicles { get; set; }
+        public VehicleOutputModel[] Vehicles { get; set; }
 
-        public Point?[] CurrentOrdersPoints { get; set; }
+        public PointOutputModel?[] CurrentOrdersPoints { get; set; }
 
         /// <summary>
         /// Конструктор для инициализации модели карты администратора.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        public AdminMapModel(Point[] points, Route[] waitingOrders, Route[] currentOrders, Vehicle[] vehicles, Point?[] currentOrdersPoints)
+        public AdminMapModel(PointOutputModel[] points, RouteOutputModel[] waitingOrders, 
+            RouteOutputModel[] currentOrders, VehicleOutputModel[] vehicles, PointOutputModel?[] currentOrdersPoints)
         {
             Points = points ?? throw new ArgumentNullException(nameof(points));
             WaitingOrders = waitingOrders ?? throw new ArgumentNullException(nameof(waitingOrders));

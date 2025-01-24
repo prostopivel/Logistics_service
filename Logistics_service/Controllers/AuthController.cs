@@ -1,7 +1,9 @@
-﻿using Logistics_service.Data;
+﻿using AutoMapper;
 using Logistics_service.Models;
 using Logistics_service.Models.Users;
+using Logistics_service.Services;
 using Logistics_service.Static;
+using Logistics_service.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +18,24 @@ namespace Logistics_service.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
         private string _errorMessage = "Неизвестная ошибка!";
 
-        public AuthController(ApplicationDbContext context, IConfiguration configuration)
+        public AuthController(ApplicationDbContext context, IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
             GenerateDigest.Configuration = configuration;
             GenerateDigest.Context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("logIn")]
         [AllowAnonymous]
         public IActionResult LogIn()
         {
+            ViewData["Title"] = "logIn";
+
             string realm = _configuration["Realm"];
             string qop = _configuration["Qop"];
             string nonce = GenerateDigest.GenerateRandom();
@@ -47,7 +53,9 @@ namespace Logistics_service.Controllers
         [AllowAnonymous]
         public IActionResult Registration()
         {
+            ViewData["Title"] = "registration";
             ViewBag.RealmHeader = _configuration["Realm"];
+
             return View();
         }
 
@@ -69,10 +77,17 @@ namespace Logistics_service.Controllers
 
         [HttpPost("registration")]
         [AllowAnonymous]
-        public async Task<IActionResult> Registration(Customer customer)
+        public async Task<IActionResult> Registration(UserInputModel user)
         {
             if (ModelState.IsValid)
             {
+                if (_mapper.Map<User>(user) is not User customerUser)
+                {
+                    return JsonReturn("Unauthorized", "Error", new { errorMessage = "Неверные данные при маппинге!" });
+                }
+
+                var customer = new Customer(customerUser);
+
                 customer.Role = UserRole.Customer;
 
                 if (!await AddCustomerAsync(customer))

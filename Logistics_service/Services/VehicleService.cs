@@ -1,5 +1,4 @@
-﻿using Logistics_service.Data;
-using Logistics_service.Models;
+﻿using Logistics_service.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Logistics_service.Services

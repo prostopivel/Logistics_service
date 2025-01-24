@@ -7,21 +7,15 @@ namespace Logistics_service.Models.Orders
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
-        public virtual string? Email { get; set; }
+        public string Email { get; set; }
 
-        public DateTime? CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public override bool Equals(object? obj)
         {
-            if (obj is not Order order)
-            {
-                return false;
-            }
-
-            return Id == order.Id;
+            return obj is Order order && Id == order.Id;
         }
 
         public override int GetHashCode()

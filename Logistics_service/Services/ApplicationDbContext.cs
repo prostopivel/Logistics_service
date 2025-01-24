@@ -4,7 +4,7 @@ using Logistics_service.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Logistics_service.Data
+namespace Logistics_service.Services
 {
     public class ApplicationDbContext : DbContext
     {

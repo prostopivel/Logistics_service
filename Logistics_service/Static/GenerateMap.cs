@@ -1,5 +1,5 @@
-﻿using Logistics_service.Data;
-using Logistics_service.Models;
+﻿using Logistics_service.Models;
+using Logistics_service.Services;
 using System.Text.Json;
 
 namespace Logistics_service.Static
