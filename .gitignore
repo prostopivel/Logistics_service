@@ -5,6 +5,11 @@ Logistics_service/Migrations/
 
 .vs/
 
+Logistics_service/Logistics\ service.csproj.user
+Logistics_service/Logistics\ service.sln
+Logistics_service/appsettings.Development.json
+
+*.editorconfig
 *.log
 *.user
 *.suo
