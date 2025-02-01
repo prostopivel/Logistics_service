@@ -18,6 +18,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("administrator")]
         public IActionResult Administrator()
         {
@@ -26,6 +27,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpGet("manager")]
         public IActionResult Manager()
         {
@@ -34,6 +36,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager, UserRole.Customer)]
         [HttpGet("customer")]
         public IActionResult Customer()
         {

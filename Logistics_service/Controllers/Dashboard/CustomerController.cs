@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Logistics_service.Models;
 using Logistics_service.Models.Orders;
+using Logistics_service.Models.Users;
 using Logistics_service.Services;
 using Logistics_service.Static;
 using Logistics_service.ViewModels;
@@ -30,6 +31,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager, UserRole.Customer)]
         [HttpGet("viewOrders")]
         public async Task<IActionResult> ViewOrders()
         {
@@ -37,6 +39,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager, UserRole.Customer)]
         [HttpGet("viewOrders/{date}")]
         public async Task<IActionResult> ViewOrders([FromRoute] DateTime date)
         {
@@ -60,28 +63,11 @@ namespace Logistics_service.Controllers.Dashboard
 
             var waitingOrders = await _context.CustomerOrders
                 .Where(w => w.Email == email && (w.Status == OrderStatus.Created || w.Status == OrderStatus.ManagerAccepted))
-                .Select(w => new CustomerOrder
-                {
-                    Email = w.Email,
-                    ArrivalTime = w.ArrivalTime,
-                    BeginningAddress = w.BeginningAddress,
-                    DestinationAddress = w.DestinationAddress,
-                    Status = w.Status
-                })
                 .AsNoTracking()
                 .ToArrayAsync();
 
             var readyOrders = await _context.GetOrders()
                 .Where(r => r.CustomerEmail == email && r.ArrivalTime.Date == date.Date)
-                .Select(r => new ReadyOrder
-                {
-                    ArrivalTime = r.ArrivalTime,
-                    Email = r.Email,
-                    CustomerEmail = r.CustomerEmail,
-                    Route = r.Route,
-                    Vehicle = r.Vehicle,
-                    Status = r.Status
-                })
                 .AsNoTracking()
                 .ToArrayAsync();
 
@@ -95,6 +81,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager, UserRole.Customer)]
         [HttpGet("createRequest")]
         public async Task<IActionResult> CreateRequest()
         {
@@ -108,6 +95,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager, UserRole.Customer)]
         [HttpPost("createRequest")]
         public async Task<IActionResult> CreateRequest([FromBody] CustomerOrderInputModel order)
         {

@@ -23,6 +23,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("viewAllCustomers")]
         public async Task<ActionResult> ViewAllCustomers()
         {
@@ -35,6 +36,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("viewAllManagers")]
         public async Task<ActionResult> ViewAllManagers()
         {
@@ -50,6 +52,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpDelete("deleteCustomer/{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
@@ -62,6 +65,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpDelete("deleteManager/{id}")]
         public async Task<IActionResult> DeleteManager(int id)
         {
@@ -81,6 +85,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("addUser")]
         public IActionResult AddUser()
         {
@@ -92,6 +97,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpPost("addUser")]
         public async Task<ActionResult> AddUser([FromBody] UserInputModel user)
         {

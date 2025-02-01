@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Logistics_service.Models;
 using Logistics_service.Models.Orders;
+using Logistics_service.Models.Users;
 using Logistics_service.Services;
 using Logistics_service.Static;
 using Logistics_service.ViewModels;
@@ -32,6 +33,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpGet("getOrder")]
         public async Task<IActionResult> GetOrder()
         {
@@ -55,6 +57,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpPost("getOrder")]
         public async Task<IActionResult> GetOrder([FromBody] CustomerOrderOutputModel order)
         {
@@ -80,6 +83,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpGet("assignOrder")]
         public async Task<IActionResult> AssignOrder(int start = 0, int end = 0)
         {
@@ -87,6 +91,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpGet("assignOrder/{date}")]
         public async Task<IActionResult> AssignOrder(DateTime date, int start = 0, int end = 0)
         {
@@ -120,6 +125,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpPost("viewAssignOrder")]
         public IActionResult ViewAssignOrder([FromBody] LineMapModel? line = null)
         {
@@ -127,6 +133,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpPost("viewAssignOrder/{date}")]
         public IActionResult ViewAssignOrder([FromRoute] DateTime date, [FromBody] LineMapModel? line = null)
         {
@@ -134,6 +141,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpPost("assignOrder")]
         public async Task<IActionResult> AssignOrder([FromBody] ManagerOrderInputModel order)
         {
@@ -213,6 +221,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpDelete("rejectOrder")]
         public async Task<IActionResult> RejectOrder([FromBody] CustomerOrder order)
         {
@@ -250,6 +259,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpGet("viewAssignOrders")]
         public async Task<IActionResult> ViewAssignOrders()
         {
@@ -257,6 +267,7 @@ namespace Logistics_service.Controllers
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager)]
         [HttpGet("viewAssignOrders/{date}")]
         public async Task<IActionResult> ViewAssignOrders(DateTime date)
         {

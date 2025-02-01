@@ -73,7 +73,7 @@ namespace Logistics_service.Services
                 if (now >= _updateOrdersTime)
                 {
                     await UpdateOrdersAsync(stoppingToken);
-                    _updateOrdersTime = new DateTime(now.Year, now.Month, now.Day + 1, 8, 0, 0);
+                    _updateOrdersTime = DateTime.Now.AddDays(1);
                 }
 
                 int adaptiveDelay = CalculateDelay();

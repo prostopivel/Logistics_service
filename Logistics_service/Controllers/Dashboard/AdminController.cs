@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Logistics_service.Models;
 using Logistics_service.Models.Orders;
+using Logistics_service.Models.Users;
 using Logistics_service.Services;
 using Logistics_service.Static;
 using Logistics_service.ViewModels;
@@ -29,6 +30,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("viewAllOrders")]
         public async Task<IActionResult> ViewAllOrders()
         {
@@ -36,6 +38,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("viewAllOrders/{date}")]
         public async Task<IActionResult> ViewAllOrders([FromRoute] DateTime date)
         {
@@ -65,6 +68,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpDelete("assignOrder")]
         public async Task<IActionResult> AssignOrder([FromBody] int id)
         {
@@ -86,6 +90,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("fixOrder/{id}")]
         public async Task<IActionResult> FixOrder([FromRoute] int id)
         {
@@ -107,6 +112,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpPost("fixOrder")]
         public async Task<IActionResult> FixOrder([FromBody] ManagerOrderInputModel order)
         {
@@ -200,8 +206,8 @@ namespace Logistics_service.Controllers.Dashboard
             return RedirectToAction("viewAllOrders");
         }
 
-        [ResponseCache(NoStore = true, Duration = 0)]
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("manageTransport")]
         public async Task<IActionResult> ManageTransport()
         {
@@ -213,6 +219,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpGet("addTransport")]
         public IActionResult AddTransport()
         {
@@ -223,6 +230,7 @@ namespace Logistics_service.Controllers.Dashboard
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
         [HttpPost("addTransport")]
         public async Task<IActionResult> AddTransport([FromBody] VehicleInputModel vehicle)
         {

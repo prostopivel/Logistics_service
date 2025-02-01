@@ -1,7 +1,7 @@
-﻿using Logistics_service.Static;
+﻿using Logistics_service.Models.Users;
+using Logistics_service.Static;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Data;
 
 namespace Logistics_service.Services
 {
@@ -39,6 +39,26 @@ namespace Logistics_service.Services
             {
                 ReturnUnauthorizedResult(context);
                 return;
+            }
+
+            var authorizeRoleAttributes = context.ActionDescriptor.EndpointMetadata
+                .OfType<AuthorizeRoleAttribute>()
+                .ToList();
+
+            if (authorizeRoleAttributes.Any())
+            {
+                var userRoleHeader = GenerateDigest.ParseAuthorizationHeader(authHeader)["role"];
+                if (string.IsNullOrEmpty(userRoleHeader) || !Enum.TryParse(userRoleHeader, out UserRole userRole))
+                {
+                    ReturnUnauthorizedResult(context);
+                    return;
+                }
+
+                if (!authorizeRoleAttributes.Any(attr => attr.AllowedRoles.Contains(userRole)))
+                {
+                    ReturnUnauthorizedResult(context);
+                    return;
+                }
             }
         }
 
