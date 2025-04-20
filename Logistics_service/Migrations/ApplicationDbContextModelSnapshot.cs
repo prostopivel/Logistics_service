@@ -172,6 +172,70 @@ namespace Logistics_service.Migrations
                     b.ToTable("RoutePoints");
                 });
 
+            modelBuilder.Entity("Logistics_service.Models.Statistic.EntryInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateOfEntry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserEntrysStatistic");
+                });
+
+            modelBuilder.Entity("Logistics_service.Models.Statistic.UserOrderStatistic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PointId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PointId");
+
+                    b.ToTable("UserOrdersStatistic");
+                });
+
+            modelBuilder.Entity("Logistics_service.Models.UserMark", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PointId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PointId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserMarkes");
+                });
+
             modelBuilder.Entity("Logistics_service.Models.Users.User", b =>
                 {
                     b.Property<int>("Id")
@@ -292,6 +356,36 @@ namespace Logistics_service.Migrations
                     b.Navigation("Point");
 
                     b.Navigation("Route");
+                });
+
+            modelBuilder.Entity("Logistics_service.Models.Statistic.UserOrderStatistic", b =>
+                {
+                    b.HasOne("Logistics_service.Models.Point", "Point")
+                        .WithMany()
+                        .HasForeignKey("PointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Point");
+                });
+
+            modelBuilder.Entity("Logistics_service.Models.UserMark", b =>
+                {
+                    b.HasOne("Logistics_service.Models.Point", "Point")
+                        .WithMany()
+                        .HasForeignKey("PointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Logistics_service.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Point");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Logistics_service.Models.Vehicle", b =>

@@ -1,0 +1,48 @@
+﻿@using Logistics_service.Models.Statistic;
+
+@model IEnumerable<EntryInfo>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Статистика входов";
+}
+
+<div id="containerBox">
+    <h2>Статистика входов пользователей</h2>
+
+    <div class="search-panel">
+        <div class="search-group">
+            <label>Поиск по IP:</label>
+            <input type="text" id="ipSearch" placeholder="Введите IP-адрес">
+            <button onclick="searchByIp()">Найти</button>
+        </div>
+
+        <div class="search-group">
+            <label>Поиск по дате:</label>
+            <input type="date" id="dateSearch">
+            <button onclick="searchByDate()">Найти</button>
+        </div>
+
+        <button onclick="loadAllStatistics()">Показать все</button>
+    </div>
+
+    <table class="statistics-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата и время входа</th>
+                <th>IP-адрес</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in Model)
+            {
+                <tr>
+                    <td>@entry.Id</td>
+                    <td>@entry.DateOfEntry.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                    <td>@entry.IpAddress</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

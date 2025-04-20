@@ -1,0 +1,49 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    Layout = null;
+}
+
+<div id="containerBox">
+    <h2>Статистика заказов по точкам</h2>
+
+    <div class="mb-4">
+        <button onclick="initChart()"
+                class="btn btn-primary">
+            Обновить статистику
+        </button>
+    </div>
+
+    <div style="height: 400px; width: 100%">
+        <canvas id="statsChart"></canvas>
+    </div>
+
+    <table class="table mt-4">
+        <thead class="thead-light">
+            <tr>
+                <th>Точка</th>
+                <th>Кол-во заказов</th>
+                <th>Последний заказ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PointName</td>
+                    <td>@item.Count</td>
+                    <td>@item.LastDate.ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script id="pointStatisticsData" type="application/json">
+    @Html.Raw(Json.Serialize(new
+        {
+            Labels = Model.Select(x => x.PointName),
+            Counts = Model.Select(x => x.Count),
+            LastDates = Model.Select(x => x.LastDate.ToString("dd.MM.yyyy"))
+        }))
+</script>

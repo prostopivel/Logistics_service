@@ -1,5 +1,6 @@
 ﻿using Logistics_service.Models;
 using Logistics_service.Models.Orders;
+using Logistics_service.Models.Statistic;
 using Logistics_service.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -9,15 +10,30 @@ namespace Logistics_service.Services
     public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+
         public DbSet<Customer> Customers { get; set; }
+
         public DbSet<Manager> Managers { get; set; }
+
         public DbSet<Administrator> Administrators { get; set; }
+
         public DbSet<Point> Points { get; set; }
+
         public DbSet<Vehicle> Vehicles { get; set; }
+
         public DbSet<ReadyOrder> ReadyOrders { get; set; }
+
         public DbSet<CustomerOrder> CustomerOrders { get; set; }
+
         public DbSet<Models.Route> Routes { get; set; }
+
         public DbSet<RoutePoint> RoutePoints { get; set; } // Промежуточная таблица
+
+        public DbSet<UserMark> UserMarkes { get; set; }
+
+        public DbSet<UserOrderStatistic> UserOrdersStatistic { get; set; }
+
+        public DbSet<EntryInfo> UserEntrysStatistic { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

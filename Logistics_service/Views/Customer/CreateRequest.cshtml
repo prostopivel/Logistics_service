@@ -1,6 +1,6 @@
 ﻿@using Logistics_service.ViewModels.OrderModels
 @using Logistics_service.ViewModels
-@model Tuple<CustomerOrderInputModel, PointOutputModel[]>
+@model Tuple<CustomerOrderInputModel, PointOutputModel[], Marker[]>
 
 @{
     Layout = null;
@@ -43,11 +43,34 @@
 
     @foreach (var point in Model.Item2)
     {
-        <button class="point-button" style="left: @point.PosX%; top: @point.PosY%; z-index: 101;" data-index="@point.Index">
+        <button class="point-button"
+                style="left: @($"{point.PosX}%"); top: @($"{point.PosY}%"); z-index: 101;"
+                data-index="@point.Index"
+                onclick="selectMarker('@point.Name.Replace("'", "\\'")', this)">
             @point.Name
         </button>
     }
+
+    @foreach (var marker in Model.Item3)
+    {
+        if (marker?.Point != null)
+        {
+            <button class="point-button" style="left: @($"{marker.Point.PosX}%"); top: @($"{marker.Point.PosY}%"); z-index: 101; background-color: blue;"
+                    data-index="@marker.Point.Index"
+                    onclick="selectMarker('@marker.Point.Name.Replace("'", "\\'")', this)">
+                @marker.Point.Name
+            </button>
+        }
+    }
 </div>
+
+<h3>
+    Заказы на дату:
+    <input id="dateSet" type="date" />
+    <button onclick="viewMapRedLine('GET', '/Customer/createRequest')">Обновить</button>
+    <button onclick="addMarker()">Добавить метку</button>
+    <button onclick="deleteMarker()">Удалить метку</button>
+</h3>
 
 <script id="model" type="application/json">
     @Html.Raw(Json.Serialize(Model.Item2))

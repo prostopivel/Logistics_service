@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Logistics_service.Models;
 using Logistics_service.Models.Orders;
+using Logistics_service.Models.Statistic;
 using Logistics_service.Models.Users;
 using Logistics_service.Services;
 using Logistics_service.Static;
@@ -9,6 +10,7 @@ using Logistics_service.ViewModels.MapModels;
 using Logistics_service.ViewModels.OrderModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Logistics_service.Controllers.Dashboard
 {
@@ -84,6 +86,10 @@ namespace Logistics_service.Controllers.Dashboard
                 {
                     _waitingOrder.Orders.TryAdd(order.Route.DepartureTime, order.Id);
                 }
+
+                var stat = new UserOrderStatistic(order.CreatedAt, order.Route.RoutePoints.First().Point);
+                _context.UserOrdersStatistic.Add(stat);
+                await _context.SaveChangesAsync();
             }
 
             return await ViewAllOrders(DateTime.Now.Date);
@@ -251,6 +257,61 @@ namespace Logistics_service.Controllers.Dashboard
             await _context.SaveChangesAsync();
 
             return RedirectToAction("administrator", "Dashboard");
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
+        [HttpGet("getStatistics")]
+        public async Task<IActionResult> GetStatistics()
+        {
+            var statistics = await _context.UserEntrysStatistic
+                .OrderByDescending(e => e.DateOfEntry)
+                .ToListAsync();
+            return View(statistics);
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
+        [HttpGet("getStatistics/byIp/{ipAddress}")]
+        public async Task<IActionResult> GetStatisticsByIp([FromRoute] string ipAddress)
+        {
+            var statistics = await _context.UserEntrysStatistic
+                .Where(e => e.IpAddress == ipAddress)
+                .OrderByDescending(e => e.DateOfEntry)
+                .ToListAsync();
+            return View("GetStatistics", statistics);
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
+        [HttpGet("getStatistics/byDate/{date}")]
+        public async Task<IActionResult> GetStatisticsByDate([FromRoute] DateTime date)
+        {
+            var statistics = await _context.UserEntrysStatistic
+                .Where(e => e.DateOfEntry.Date == date.Date)
+                .OrderByDescending(e => e.DateOfEntry)
+                .ToListAsync();
+            return View("GetStatistics", statistics);
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator)]
+        [HttpGet("getPointStatistics")]
+        public async Task<IActionResult> GetPointStatistic()
+        {
+            var statistics = await _context.UserOrdersStatistic
+                .Include(s => s.Point)
+                .GroupBy(s => s.Point.Name)
+                .Select(g => new
+                {
+                    PointName = g.Key,
+                    Count = g.Count(),
+                    LastDate = g.Max(s => s.Date)
+                })
+                .OrderByDescending(x => x.Count)
+                .ToListAsync();
+
+            return View(statistics);
         }
 
         public async Task<AdminMapModel> ViewMap()

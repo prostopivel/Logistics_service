@@ -1,4 +1,6 @@
-﻿function encryptPassword(event, request, uri) {
+﻿let lastSelectedPoint = null;
+
+function encryptPassword(event, request, uri) {
     event.preventDefault();
 
     var email = document.getElementById('Email').value;
@@ -106,6 +108,41 @@ function sendReasonOrder(request, uri, data) {
     data.Reason = reason;
 
     auth(request, uri, JSON.stringify(data));
+}
+
+function selectMarker(name, element) {
+    document.querySelectorAll('.point-button').forEach(btn => {
+        btn.style.boxShadow = 'none';
+    });
+
+    element.style.boxShadow = '0 0 10px 5px rgba(0, 255, 0, 0.7)';
+    lastSelectedMarker = name;
+}
+
+function addMarker() {
+    if (!lastSelectedMarker) {
+        alert("Сначала выберите метку на карте!");
+        return;
+    }
+
+    auth('POST', '/customer/addMarker', JSON.stringify(lastSelectedMarker));
+
+    setTimeout(() => {
+        viewMapRedLine('GET', '/Customer/createRequest');
+    }, 1000);
+}
+
+function deleteMarker() {
+    if (!lastSelectedMarker) {
+        alert("Сначала выберите метку на карте!");
+        return;
+    }
+
+    auth('POST', '/customer/deleteMarker', JSON.stringify(lastSelectedMarker));
+
+    setTimeout(() => {
+        viewMapRedLine('GET', '/Customer/createRequest');
+    }, 1000);
 }
 
 function sendDate(request, uri) {
@@ -227,5 +264,73 @@ function fillModelRedLine() {
     if (modelElementLine2) {
         var modelRedLine2 = JSON.parse(modelElementLine2.textContent);
         FillColorButtons(modelRedLine2, 'red');
+    }
+}
+
+function searchByIp() {
+    const ip = document.getElementById('ipSearch').value.trim();
+    if (ip) {
+        auth('GET', `/Admin/getStatistics/byIp/${encodeURIComponent(ip)}`);
+    } else {
+        alert('Пожалуйста, введите IP-адрес');
+    }
+}
+
+function searchByDate() {
+    const dateInput = document.getElementById('dateSearch').value;
+    if (dateInput) {
+        auth('GET', `/Admin/getStatistics/byDate/${dateInput}`);
+    } else {
+        alert('Пожалуйста, выберите дату');
+    }
+}
+
+function loadAllStatistics() {
+    auth('GET', '/Admin/getStatistics');
+}
+
+function graph() {
+    auth(`GET`, `/Admin/getPointStatistics`);
+
+    setTimeout(() => {
+        if (document.getElementById('imageContainer')) {
+            initChart();
+        }
+    }, 1000);
+}
+
+function initChart() {
+    const pointData = JSON.parse(document.getElementById('pointStatisticsData').textContent);
+
+    console.log("Parsed pointData:", pointData);
+
+    try {
+        const ctx = document.getElementById('statsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: pointData.labels,
+                datasets: [{
+                    label: 'Количество заказов',
+                    data: pointData.counts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    } catch (e) {
+        console.error("Error initializing chart:", e);
     }
 }

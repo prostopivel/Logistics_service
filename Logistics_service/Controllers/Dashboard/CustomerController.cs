@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Logistics_service.Models;
 using Logistics_service.Models.Orders;
+using Logistics_service.Models.Statistic;
 using Logistics_service.Models.Users;
 using Logistics_service.Services;
 using Logistics_service.Static;
@@ -9,6 +10,7 @@ using Logistics_service.ViewModels.MapModels;
 using Logistics_service.ViewModels.OrderModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Logistics_service.Controllers.Dashboard
 {
@@ -56,7 +58,7 @@ namespace Logistics_service.Controllers.Dashboard
                     ArrivalTime = r.ArrivalTime,
                     BeginningAddress = r.BeginningAddress,
                     DestinationAddress = r.DestinationAddress,
-                    Reason = r.Reason.Replace('_', ' ')
+                    Reason = r.Reason == null ? string.Empty : r.Reason.Replace('_', ' ')
                 })
                 .AsNoTracking()
                 .ToArrayAsync();
@@ -88,10 +90,23 @@ namespace Logistics_service.Controllers.Dashboard
             ViewData["Title"] = "createRequest";
             ViewBag.Error = TempData["Error"];
 
-            var points = await _context.Points.AsNoTracking().ToArrayAsync();
-            return View(new Tuple<CustomerOrderInputModel, PointOutputModel[]>(
+            var authHeader = HttpContext.Request.Headers.Authorization.ToString();
+            var email = GenerateDigest.ParseAuthorizationHeader(authHeader)["username"];
+
+            var points = await _context.Points
+                .AsNoTracking()
+                .ToArrayAsync();
+            var markers = await _context.UserMarkes
+                .Where(m => m.User.Email == email)
+                .Include(m => m.User)
+                .Include(m => m.Point)
+                .AsNoTracking()
+                .ToArrayAsync();
+
+            return View(new Tuple<CustomerOrderInputModel, PointOutputModel[], Marker[]>(
                 new CustomerOrderInputModel(),
-                _mapper.Map<PointOutputModel[]>(points)));
+                _mapper.Map<PointOutputModel[]>(points),
+                markers == null ? new Marker[0] : markers));
         }
 
         [ServiceFilter(typeof(DigestAuthFilter))]
@@ -124,6 +139,80 @@ namespace Logistics_service.Controllers.Dashboard
             await _context.SaveChangesAsync();
 
             return RedirectToAction("customer", "Dashboard");
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager, UserRole.Customer)]
+        [HttpPost("addMarker")]
+        public async Task<IActionResult> AddMarker([FromBody] string markerName)
+        {
+            if (string.IsNullOrEmpty(markerName))
+            {
+                TempData["Error"] = "Неверное название метки!";
+                return RedirectToAction("addMarker");
+            }
+
+            var authHeader = HttpContext.Request.Headers.Authorization.ToString();
+            if (string.IsNullOrEmpty(authHeader))
+            {
+                TempData["Error"] = "Требуется авторизация!";
+                return RedirectToAction("createRequest");
+            }
+
+            var authParams = GenerateDigest.ParseAuthorizationHeader(authHeader);
+            var email = authParams["username"];
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                TempData["Error"] = "Пользователь не найден!";
+                return RedirectToAction("createRequest");
+            }
+
+            var point = await _context.Points.FirstOrDefaultAsync(p => p.Name == markerName);
+            if (point == null)
+            {
+                TempData["Error"] = "Метка не найдена!";
+                return RedirectToAction("createRequest");
+            }
+
+            if (await _context.UserMarkes.AnyAsync(m => m.PointId == point.Id && m.UserId == user.Id))
+            {
+                TempData["Error"] = "Метка уже существует!";
+                return RedirectToAction("createRequest");
+            }
+
+            var newMark = new UserMark(user, point);
+            _context.UserMarkes.Add(newMark);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("createRequest");
+        }
+
+        [ServiceFilter(typeof(DigestAuthFilter))]
+        [AuthorizeRole(UserRole.Administrator, UserRole.Manager, UserRole.Customer)]
+        [HttpPost("deleteMarker")]
+        public async Task<IActionResult> DeleteMarker([FromBody] string markerName)
+        {
+            if (string.IsNullOrEmpty(markerName) || !int.TryParse(markerName, out int pointId))
+            {
+                TempData["Error"] = "Неверное название метки!";
+                return RedirectToAction("addMarker");
+            }
+
+            var marker = await _context.UserMarkes
+                .FirstOrDefaultAsync(m => m.Point.Name == markerName);
+
+            if (marker == null)
+            {
+                TempData["Error"] = "Метка не найдена!";
+                return RedirectToAction("addMarker");
+            }
+
+            _context.UserMarkes.Remove(marker);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("createRequest");
         }
 
         private async Task<CustomerMapModel> ViewMap()
